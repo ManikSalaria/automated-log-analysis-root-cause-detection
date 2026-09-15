@@ -358,7 +358,7 @@ Partition Policy                 | Incident-level Stratified Split (70% Train, 1
 
 ---
 
-## 12. Development Roadmap (Future Phases / Review 2)
+## 12. Development Roadmap (Future Phases)
 
 The architecture is modularized to support advanced deep learning models without rewriting the ingestion, parsing, and storage foundation:
 
