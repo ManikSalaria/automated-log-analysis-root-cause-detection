@@ -238,7 +238,7 @@ trace-platform/
 ### 7.1 Backend Setup
 ```bash
 # 1. Clone the repository
-git clone <repository-url>
+git clone <https://github.com/ManikSalaria/automated-log-analysis-root-cause-detection.git>
 cd trace-platform
 
 # 2. Create and activate a Python 3.11 virtual environment
