@@ -1,0 +1,63 @@
+{
+  "metadata_version": "1.0.0",
+  "project": "TRACE — AI-Powered CI/CD Log Intelligence Platform",
+  "academic_institution": "The National Institute of Engineering, Mysore — Dept of ISE",
+  "provenance_recorded_at": "2026-09-15T22:37:30Z",
+  "active_raw_datasets": [
+    {
+      "filename": "1130.txt",
+      "relative_path": "backend/data/raw/1130.txt",
+      "data_classification": "AUTHENTIC_USER_SUPPLIED",
+      "source_type": "Distributed Microservices Structured Telemetry",
+      "source_path": "C:\\Users\\hp\\Downloads\\1130.txt",
+      "file_size_bytes": 191426,
+      "line_count": 1500,
+      "md5_checksum_verified": true,
+      "description": "Continuous microservice transaction log covering 6 interconnected services (auth, order, payment, inventory, notification, api-gateway) with timestamps, trace IDs, span IDs, latencies, HTTP status codes, and cascading failure events."
+    },
+    {
+      "filename": "Jenkins_Log_Under_1MB.txt",
+      "relative_path": "backend/data/raw/Jenkins_Log_Under_1MB.txt",
+      "data_classification": "AUTHENTIC_USER_SUPPLIED",
+      "source_type": "Real CI/CD Jenkins Pipeline & Pytest Automation Output",
+      "source_path": "C:\\Users\\hp\\Downloads\\Jenkins_Log_Under_1MB.txt",
+      "file_size_bytes": 424551,
+      "line_count": 1576,
+      "md5_checksum_verified": true,
+      "description": "Authentic Jenkins CI/CD qualification build log (HPE VME build #157) containing Morpheus automation pytest runs, cluster API calls, datastore creation errors, GFS2 I/O errors, and test assertions."
+    },
+    {
+      "filename": "jenkins_gist_crash.log",
+      "relative_path": "backend/data/raw/jenkins_gist_crash.log",
+      "data_classification": "AUTHENTIC_USER_SUPPLIED_BENCHMARK",
+      "source_type": "Jenkins Core JVM Startup Runtime Crash",
+      "source_url": "https://gist.githubusercontent.com/KnifeHand/d4255657ee0693e9b4948707bd63fe03/raw",
+      "file_size_bytes": 210699,
+      "line_count": 2450,
+      "md5_checksum_verified": true,
+      "description": "Complete public GitHub Gist log of Jenkins core startup crash, detailing Jetty server initialization, Winstone servlet engine, and deep Stapler/Jelly Java exception stack traces."
+    }
+  ],
+  "corpus_summary": {
+    "total_authentic_files": 3,
+    "total_authentic_bytes": 826676,
+    "total_authentic_lines": 5526,
+    "synthetic_files_in_active_raw": 0,
+    "augmented_files_in_active_raw": 0
+  },
+  "archived_deprecated_samples": {
+    "archive_directory": "backend/data/archive_deprecated_samples",
+    "status": "REMOVED_FROM_ACTIVE_PIPELINE",
+    "files": [
+      "deprecated_jenkins_vme_qualify_sample.log (3,330 bytes, 28 lines)",
+      "deprecated_microservices_cascade_sample.log (13,734 bytes, 80 lines)",
+      "deprecated_jenkins_gist_crash_sample.log (1,708 bytes, 24 lines)",
+      "deprecated_synthetic_labeled_logs_dataset.csv (500 rows, artificial augmentations)"
+    ]
+  },
+  "data_integrity_rules": {
+    "rule_1": "Never label synthetic or augmented data as authentic Jenkins data.",
+    "rule_2": "Held-out test set must be strictly isolated before any training or augmentation.",
+    "rule_3": "No synthetic perturbations may share seed IDs across train/val/test boundaries."
+  }
+}

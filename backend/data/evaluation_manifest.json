@@ -1,0 +1,210 @@
+{
+  "model_name": "Academic Baseline (TF-IDF + Random Forest)",
+  "dataset_split": "Held-out Test (15% partitioned before training)",
+  "accuracy": 0.9298,
+  "precision_macro": 0.9326,
+  "recall_macro": 0.9226,
+  "f1_macro": 0.9134,
+  "sample_count": 57,
+  "feature_dimension": 1500,
+  "training_time_sec": 0.276,
+  "avg_latency_ms": 32.97,
+  "p95_latency_ms": 35.63,
+  "evaluated_at": "2026-09-15 17:24:35 UTC",
+  "classes": [
+    "AUTHENTICATION_SECURITY_ERROR",
+    "DATABASE_AND_CACHE_TIMEOUT",
+    "ENVIRONMENT_AND_PIPELINE_ERROR",
+    "INTERNAL_APPLICATION_LOGIC_ERROR",
+    "MESSAGE_BROKER_FAILURE",
+    "NETWORK_DEPENDENCY_FAILURE",
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR",
+    "RESOURCE_EXHAUSTION_CRASH",
+    "STORAGE_AND_IO_ERROR",
+    "TEST_ASSERTION_FAILURE"
+  ],
+  "confusion_matrix": [
+    [
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      20,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      6,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      11,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2
+    ]
+  ],
+  "per_class_metrics": {
+    "AUTHENTICATION_SECURITY_ERROR": {
+      "precision": 0.75,
+      "recall": 1.0,
+      "f1": 0.8571,
+      "support": 3.0
+    },
+    "DATABASE_AND_CACHE_TIMEOUT": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 4.0
+    },
+    "ENVIRONMENT_AND_PIPELINE_ERROR": {
+      "precision": 0.9091,
+      "recall": 0.9524,
+      "f1": 0.9302,
+      "support": 21.0
+    },
+    "INTERNAL_APPLICATION_LOGIC_ERROR": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 4.0
+    },
+    "MESSAGE_BROKER_FAILURE": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 1.0
+    },
+    "NETWORK_DEPENDENCY_FAILURE": {
+      "precision": 1.0,
+      "recall": 0.8571,
+      "f1": 0.9231,
+      "support": 7.0
+    },
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR": {
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6667,
+      "support": 2.0
+    },
+    "RESOURCE_EXHAUSTION_CRASH": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 1.0
+    },
+    "STORAGE_AND_IO_ERROR": {
+      "precision": 1.0,
+      "recall": 0.9167,
+      "f1": 0.9565,
+      "support": 12.0
+    },
+    "TEST_ASSERTION_FAILURE": {
+      "precision": 0.6667,
+      "recall": 1.0,
+      "f1": 0.8,
+      "support": 2.0
+    }
+  }
+}

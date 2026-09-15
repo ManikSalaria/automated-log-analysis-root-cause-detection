@@ -1,0 +1,1500 @@
+2026-09-15T09:00:00.123Z INFO [auth-service] request_id=req-356787 status=200 latency_ms=18 Configuration loaded successfully
+2026-09-15T09:00:05.123Z INFO [auth-service] [node-05] request_id=req-542417 trace_id=trace-1533224 Cache lookup completed
+2026-09-15T09:00:10.123Z INFO auth-service node-05 trace=trace-8038374 span=span-38893 latency_ms=62 HTTP request completed
+2026-09-15T09:00:15.123Z INFO [auth-service] [node-02] request_id=req-832052 trace_id=trace-8090293 Database connection established
+2026-09-15T09:00:20.123Z INFO [order-service] request_id=req-197251 status=200 latency_ms=50 Order created successfully
+2026-09-15T09:00:25.123Z INFO auth-service node-04 trace=trace-3094235 span=span-59615 latency_ms=15 Message published to queue
+2026-09-15T09:00:30.123Z INFO [api-gateway] [node-03] request_id=req-705397 trace_id=trace-4226067 Configuration loaded successfully
+2026-09-15T09:00:35.123Z INFO auth-service node-02 trace=trace-7377459 span=span-46434 latency_ms=63 Configuration loaded successfully
+2026-09-15T09:00:40.123Z DEBUG [order-service] request_id=req-802729 status=200 latency_ms=14 HTTP request completed
+2026-09-15T09:00:45.123Z DEBUG [user-service] request_id=req-271339 status=200 latency_ms=39 Configuration loaded successfully
+2026-09-15T09:00:50.123Z INFO user-service node-03 trace=trace-1938483 span=span-40021 latency_ms=9 Order created successfully
+2026-09-15T09:00:55.123Z INFO [payment-service] request_id=req-852787 status=200 latency_ms=68 Payment request accepted
+2026-09-15T09:01:00.123Z INFO order-service node-02 trace=trace-5408072 span=span-86622 latency_ms=59 HTTP request completed
+2026-09-15T09:01:05.123Z INFO [payment-service] request_id=req-617488 status=200 latency_ms=19 Database connection established
+2026-09-15T09:01:10.123Z DEBUG user-service node-04 trace=trace-2065818 span=span-60432 latency_ms=53 HTTP request completed
+2026-09-15T09:01:15.123Z INFO [api-gateway] request_id=req-813328 status=200 latency_ms=73 User authentication successful
+2026-09-15T09:01:20.123Z INFO [order-service] [node-04] request_id=req-265840 trace_id=trace-8612220 Message published to queue
+2026-09-15T09:01:25.123Z INFO auth-service node-03 trace=trace-9517169 span=span-89818 latency_ms=30 Database connection established
+2026-09-15T09:01:30.123Z INFO api-gateway node-05 trace=trace-6438436 span=span-74042 latency_ms=7 Health check passed
+2026-09-15T09:01:35.123Z INFO [notification-service] [node-03] request_id=req-351083 trace_id=trace-1971823 Health check passed
+2026-09-15T09:01:40.123Z INFO notification-service node-01 trace=trace-9937326 span=span-26483 latency_ms=21 Configuration loaded successfully
+2026-09-15T09:01:45.123Z INFO [payment-service] request_id=req-653306 status=200 latency_ms=74 Worker started
+2026-09-15T09:01:50.123Z INFO [order-service] [node-04] request_id=req-804314 trace_id=trace-7264956 Inventory updated successfully
+2026-09-15T09:01:55.123Z INFO [auth-service] [node-03] request_id=req-122056 trace_id=trace-4860684 Request processed successfully
+2026-09-15T09:02:00.123Z INFO [auth-service] [node-02] request_id=req-170674 trace_id=trace-1527021 Message published to queue
+2026-09-15T09:02:05.123Z INFO [inventory-service] [node-02] request_id=req-665427 trace_id=trace-3219824 Inventory updated successfully
+2026-09-15T09:02:10.123Z INFO notification-service node-04 trace=trace-2582524 span=span-22704 latency_ms=60 Order created successfully
+2026-09-15T09:02:15.123Z INFO notification-service node-01 trace=trace-2651177 span=span-17944 latency_ms=56 Worker started
+2026-09-15T09:02:20.123Z INFO auth-service node-02 trace=trace-4191175 span=span-80292 latency_ms=62 Database connection established
+2026-09-15T09:02:25.123Z DEBUG [inventory-service] request_id=req-179046 status=200 latency_ms=17 Request processed successfully
+2026-09-15T09:02:30.123Z INFO notification-service node-01 trace=trace-4965789 span=span-31798 latency_ms=57 Inventory updated successfully
+2026-09-15T09:02:35.123Z INFO inventory-service node-01 trace=trace-7358113 span=span-10282 latency_ms=54 User authentication successful
+2026-09-15T09:02:40.123Z INFO [user-service] [node-05] request_id=req-794022 trace_id=trace-9164991 User authentication successful
+2026-09-15T09:02:45.123Z INFO api-gateway node-05 trace=trace-6261415 span=span-17492 latency_ms=11 HTTP request completed
+2026-09-15T09:02:50.123Z INFO [notification-service] [node-05] request_id=req-265080 trace_id=trace-1954280 Database connection established
+2026-09-15T09:02:55.123Z INFO [user-service] request_id=req-523389 status=200 latency_ms=36 HTTP request completed
+2026-09-15T09:03:00.123Z ERROR auth-service node-04 trace=trace-9770838 span=span-51467 latency_ms=2755 Null pointer while processing order
+2026-09-15T09:03:05.123Z INFO [user-service] request_id=req-579434 status=200 latency_ms=6 Inventory updated successfully
+2026-09-15T09:03:10.123Z INFO auth-service node-01 trace=trace-4576135 span=span-76307 latency_ms=38 Database connection established
+2026-09-15T09:03:15.123Z INFO payment-service node-03 trace=trace-3646552 span=span-67433 latency_ms=74 Worker started
+2026-09-15T09:03:20.123Z INFO notification-service node-05 trace=trace-6022741 span=span-96951 latency_ms=18 Database connection established
+2026-09-15T09:03:25.123Z WARN [auth-service] request_id=req-262998 status=429 latency_ms=566 Slow query detected
+2026-09-15T09:03:30.123Z INFO order-service node-05 trace=trace-5213115 span=span-16658 latency_ms=16 Configuration loaded successfully
+2026-09-15T09:03:35.123Z INFO [auth-service] request_id=req-449759 status=200 latency_ms=38 Database connection established
+2026-09-15T09:03:40.123Z INFO [user-service] [node-04] request_id=req-688153 trace_id=trace-1162230 Worker started
+2026-09-15T09:03:45.123Z INFO notification-service node-03 trace=trace-3484601 span=span-66333 latency_ms=21 Request processed successfully
+2026-09-15T09:03:50.123Z INFO [notification-service] [node-01] request_id=req-475190 trace_id=trace-4524499 Configuration loaded successfully
+2026-09-15T09:03:55.123Z INFO api-gateway node-04 trace=trace-3592974 span=span-41029 latency_ms=25 Database connection established
+2026-09-15T09:04:00.123Z ERROR user-service node-03 trace=trace-7907400 span=span-97806 latency_ms=1685 HTTP 500 returned by dependency
+2026-09-15T09:04:05.123Z INFO [notification-service] [node-04] request_id=req-333238 trace_id=trace-4348276 User authentication successful
+2026-09-15T09:04:10.123Z INFO user-service node-02 trace=trace-6507321 span=span-46517 latency_ms=13 User authentication successful
+2026-09-15T09:04:15.123Z INFO [inventory-service] request_id=req-447235 status=200 latency_ms=38 Database connection established
+2026-09-15T09:04:20.123Z INFO [order-service] request_id=req-213668 status=200 latency_ms=45 Payment request accepted
+2026-09-15T09:04:25.123Z INFO auth-service node-04 trace=trace-4188992 span=span-43386 latency_ms=10 Worker started
+2026-09-15T09:04:30.123Z ERROR [notification-service] request_id=req-820221 status=503 latency_ms=3371 Connection refused by payment service
+2026-09-15T09:04:35.123Z INFO user-service node-03 trace=trace-6188935 span=span-97410 latency_ms=57 Order created successfully
+2026-09-15T09:04:40.123Z INFO [api-gateway] request_id=req-301158 status=200 latency_ms=53 Configuration loaded successfully
+2026-09-15T09:04:45.123Z INFO api-gateway node-05 trace=trace-7812810 span=span-81819 latency_ms=5 User authentication successful
+2026-09-15T09:04:50.123Z INFO [notification-service] request_id=req-736130 status=200 latency_ms=61 Inventory updated successfully
+2026-09-15T09:04:55.123Z INFO [inventory-service] request_id=req-790855 status=200 latency_ms=70 Configuration loaded successfully
+2026-09-15T09:05:00.123Z INFO [auth-service] [node-02] request_id=req-805477 trace_id=trace-6207974 Database connection established
+2026-09-15T09:05:05.123Z WARN inventory-service node-05 trace=trace-2221854 span=span-69692 latency_ms=936 Slow query detected
+2026-09-15T09:05:10.123Z INFO [payment-service] request_id=req-887443 status=200 latency_ms=33 Database connection established
+2026-09-15T09:05:15.123Z INFO [auth-service] request_id=req-361303 status=200 latency_ms=22 Inventory updated successfully
+2026-09-15T09:05:20.123Z INFO [api-gateway] request_id=req-432711 status=200 latency_ms=69 Payment request accepted
+2026-09-15T09:05:25.123Z INFO payment-service node-04 trace=trace-5348512 span=span-42406 latency_ms=40 Message published to queue
+2026-09-15T09:05:30.123Z INFO order-service node-04 trace=trace-5793722 span=span-40735 latency_ms=39 Order created successfully
+2026-09-15T09:05:35.123Z INFO [auth-service] [node-02] request_id=req-258157 trace_id=trace-4879923 Worker started
+2026-09-15T09:05:40.123Z WARN [inventory-service] request_id=req-668969 status=503 latency_ms=947 Request latency above threshold
+2026-09-15T09:05:45.123Z INFO auth-service node-05 trace=trace-9002392 span=span-10772 latency_ms=50 User authentication successful
+2026-09-15T09:05:50.123Z INFO notification-service node-04 trace=trace-4700025 span=span-73993 latency_ms=33 User authentication successful
+2026-09-15T09:05:55.123Z INFO [inventory-service] request_id=req-801364 status=200 latency_ms=64 Database connection established
+2026-09-15T09:06:00.123Z INFO inventory-service node-05 trace=trace-1454696 span=span-21003 latency_ms=59 Database connection established
+2026-09-15T09:06:05.123Z DEBUG order-service node-04 trace=trace-4551070 span=span-69598 latency_ms=46 Order created successfully
+2026-09-15T09:06:10.123Z INFO [notification-service] request_id=req-364525 status=200 latency_ms=7 Worker started
+2026-09-15T09:06:15.123Z WARN [order-service] [node-02] request_id=req-781725 trace_id=trace-2151225 External service response delayed
+2026-09-15T09:06:20.123Z INFO [api-gateway] [node-02] request_id=req-350132 trace_id=trace-3117636 HTTP request completed
+2026-09-15T09:06:25.123Z INFO [order-service] request_id=req-275939 status=200 latency_ms=44 Health check passed
+2026-09-15T09:06:30.123Z ERROR [order-service] request_id=req-810250 status=502 latency_ms=1634 Connection refused by payment service
+2026-09-15T09:06:35.123Z INFO [notification-service] request_id=req-944657 status=200 latency_ms=10 Order created successfully
+2026-09-15T09:06:40.123Z INFO [order-service] [node-01] request_id=req-630538 trace_id=trace-6724909 Inventory updated successfully
+2026-09-15T09:06:45.123Z INFO [order-service] request_id=req-841666 status=200 latency_ms=27 Worker started
+2026-09-15T09:06:50.123Z INFO [order-service] request_id=req-947458 status=200 latency_ms=60 Worker started
+2026-09-15T09:06:55.123Z INFO notification-service node-02 trace=trace-2453962 span=span-46559 latency_ms=62 Cache lookup completed
+2026-09-15T09:07:00.123Z INFO user-service node-04 trace=trace-1481506 span=span-74789 latency_ms=46 Database connection established
+2026-09-15T09:07:05.123Z INFO [notification-service] [node-03] request_id=req-456871 trace_id=trace-5691890 Message published to queue
+2026-09-15T09:07:10.123Z INFO [payment-service] request_id=req-353080 status=200 latency_ms=76 Cache lookup completed
+2026-09-15T09:07:15.123Z INFO user-service node-04 trace=trace-1289293 span=span-22196 latency_ms=42 Cache lookup completed
+2026-09-15T09:07:20.123Z INFO order-service node-05 trace=trace-8939993 span=span-82544 latency_ms=72 Order created successfully
+2026-09-15T09:07:25.123Z INFO [api-gateway] [node-03] request_id=req-468900 trace_id=trace-8612582 User authentication successful
+2026-09-15T09:07:30.123Z DEBUG [payment-service] request_id=req-225362 status=200 latency_ms=29 Cache lookup completed
+2026-09-15T09:07:35.123Z INFO [user-service] [node-05] request_id=req-897135 trace_id=trace-9801946 Health check passed
+2026-09-15T09:07:40.123Z INFO [order-service] [node-02] request_id=req-416950 trace_id=trace-1237370 User authentication successful
+2026-09-15T09:07:45.123Z INFO [api-gateway] [node-03] request_id=req-831295 trace_id=trace-3118618 Health check passed
+2026-09-15T09:07:50.123Z INFO inventory-service node-04 trace=trace-6716097 span=span-34164 latency_ms=11 User authentication successful
+2026-09-15T09:07:55.123Z WARN [auth-service] [node-04] request_id=req-615633 trace_id=trace-2242892 Request latency above threshold
+2026-09-15T09:08:00.123Z INFO auth-service node-05 trace=trace-7982241 span=span-89471 latency_ms=33 Message published to queue
+2026-09-15T09:08:05.123Z INFO [inventory-service] [node-03] request_id=req-717113 trace_id=trace-8194570 HTTP request completed
+2026-09-15T09:08:10.123Z INFO [user-service] request_id=req-899787 status=200 latency_ms=32 User authentication successful
+2026-09-15T09:08:15.123Z WARN payment-service node-02 trace=trace-2259379 span=span-30517 latency_ms=1112 Cache miss rate increased
+2026-09-15T09:08:20.123Z ERROR [order-service] [node-03] request_id=req-837135 trace_id=trace-8617381 HTTP 500 returned by dependency
+2026-09-15T09:08:25.123Z INFO user-service node-02 trace=trace-3386328 span=span-19359 latency_ms=12 Database connection established
+2026-09-15T09:08:30.123Z INFO notification-service node-05 trace=trace-8367772 span=span-26299 latency_ms=64 Worker started
+2026-09-15T09:08:35.123Z INFO [order-service] [node-05] request_id=req-666211 trace_id=trace-9284509 HTTP request completed
+2026-09-15T09:08:40.123Z INFO [user-service] request_id=req-733039 status=200 latency_ms=16 Cache lookup completed
+2026-09-15T09:08:45.123Z INFO api-gateway node-05 trace=trace-5521644 span=span-85529 latency_ms=10 Database connection established
+2026-09-15T09:08:50.123Z INFO inventory-service node-03 trace=trace-8312936 span=span-93202 latency_ms=67 Health check passed
+2026-09-15T09:08:55.123Z INFO [order-service] request_id=req-802685 status=200 latency_ms=47 Payment request accepted
+2026-09-15T09:09:00.123Z INFO user-service node-04 trace=trace-1615675 span=span-69614 latency_ms=16 Order created successfully
+2026-09-15T09:09:05.123Z INFO notification-service node-04 trace=trace-1019311 span=span-96200 latency_ms=74 Inventory updated successfully
+2026-09-15T09:09:10.123Z WARN api-gateway node-03 trace=trace-9363326 span=span-91973 latency_ms=566 External service response delayed
+2026-09-15T09:09:15.123Z INFO [order-service] request_id=req-832168 status=200 latency_ms=8 Configuration loaded successfully
+2026-09-15T09:09:20.123Z INFO [user-service] [node-02] request_id=req-425845 trace_id=trace-1229419 Health check passed
+2026-09-15T09:09:25.123Z INFO [auth-service] request_id=req-223172 status=200 latency_ms=42 Message published to queue
+2026-09-15T09:09:30.123Z INFO notification-service node-04 trace=trace-5089126 span=span-69871 latency_ms=75 Database connection established
+2026-09-15T09:09:35.123Z DEBUG api-gateway node-05 trace=trace-3290229 span=span-19150 latency_ms=40 Payment request accepted
+2026-09-15T09:09:40.123Z INFO [api-gateway] request_id=req-960408 status=200 latency_ms=43 HTTP request completed
+2026-09-15T09:09:45.123Z INFO [inventory-service] request_id=req-568238 status=200 latency_ms=47 Message published to queue
+2026-09-15T09:09:50.123Z INFO order-service node-02 trace=trace-5006492 span=span-84946 latency_ms=54 Cache lookup completed
+2026-09-15T09:09:55.123Z ERROR [user-service] request_id=req-839485 status=500 latency_ms=1834 Transaction rollback initiated
+2026-09-15T09:10:00.123Z INFO [order-service] [node-01] request_id=req-986088 trace_id=trace-8387112 Inventory updated successfully
+2026-09-15T09:10:05.123Z INFO [inventory-service] request_id=req-178463 status=200 latency_ms=48 HTTP request completed
+2026-09-15T09:10:10.123Z INFO [auth-service] request_id=req-993744 status=200 latency_ms=45 Configuration loaded successfully
+2026-09-15T09:10:15.123Z INFO [inventory-service] request_id=req-137642 status=200 latency_ms=41 Cache lookup completed
+2026-09-15T09:10:20.123Z WARN auth-service node-01 trace=trace-3791137 span=span-49251 latency_ms=264 Database connection pool nearing capacity
+2026-09-15T09:10:25.123Z INFO [inventory-service] [node-02] request_id=req-356059 trace_id=trace-9911492 Configuration loaded successfully
+2026-09-15T09:10:30.123Z DEBUG [auth-service] [node-05] request_id=req-501126 trace_id=trace-5040453 Database connection established
+2026-09-15T09:10:35.123Z INFO [order-service] request_id=req-367729 status=200 latency_ms=41 Configuration loaded successfully
+2026-09-15T09:10:40.123Z DEBUG inventory-service node-03 trace=trace-6018975 span=span-93746 latency_ms=59 Worker started
+2026-09-15T09:10:45.123Z INFO [order-service] request_id=req-503380 status=200 latency_ms=35 Payment request accepted
+2026-09-15T09:10:50.123Z INFO [order-service] request_id=req-123005 status=200 latency_ms=6 HTTP request completed
+2026-09-15T09:10:55.123Z INFO auth-service node-05 trace=trace-9333700 span=span-47512 latency_ms=34 HTTP request completed
+2026-09-15T09:11:00.123Z INFO [payment-service] request_id=req-362801 status=200 latency_ms=17 Configuration loaded successfully
+2026-09-15T09:11:05.123Z ERROR [notification-service] [node-04] request_id=req-134985 trace_id=trace-7121355 HTTP 500 returned by dependency
+2026-09-15T09:11:10.123Z INFO notification-service node-05 trace=trace-9906224 span=span-75771 latency_ms=39 Database connection established
+2026-09-15T09:11:15.123Z INFO [inventory-service] [node-03] request_id=req-882824 trace_id=trace-6682698 Health check passed
+2026-09-15T09:11:20.123Z INFO payment-service node-04 trace=trace-7136687 span=span-21836 latency_ms=55 Request processed successfully
+2026-09-15T09:11:25.123Z INFO inventory-service node-03 trace=trace-5398338 span=span-86619 latency_ms=53 Configuration loaded successfully
+2026-09-15T09:11:30.123Z WARN [payment-service] request_id=req-126240 status=200 latency_ms=1100 Slow query detected
+2026-09-15T09:11:35.123Z INFO [inventory-service] [node-01] request_id=req-246566 trace_id=trace-1760793 Inventory updated successfully
+2026-09-15T09:11:40.123Z WARN [api-gateway] request_id=req-507524 status=200 latency_ms=999 Cache miss rate increased
+2026-09-15T09:11:45.123Z WARN [inventory-service] [node-05] request_id=req-527940 trace_id=trace-5693260 Request latency above threshold
+2026-09-15T09:11:50.123Z INFO [auth-service] [node-03] request_id=req-670913 trace_id=trace-7017548 User authentication successful
+2026-09-15T09:11:55.123Z INFO notification-service node-04 trace=trace-4558545 span=span-94109 latency_ms=7 Request processed successfully
+2026-09-15T09:12:00.123Z INFO [payment-service] [node-05] request_id=req-315173 trace_id=trace-2151087 HTTP request completed
+2026-09-15T09:12:05.123Z INFO [payment-service] [node-03] request_id=req-911984 trace_id=trace-3475548 User authentication successful
+2026-09-15T09:12:10.123Z INFO [api-gateway] [node-03] request_id=req-937302 trace_id=trace-3927575 Database connection established
+2026-09-15T09:12:15.123Z INFO [notification-service] [node-02] request_id=req-717457 trace_id=trace-6431983 User authentication successful
+2026-09-15T09:12:20.123Z DEBUG [inventory-service] request_id=req-219169 status=200 latency_ms=62 Order created successfully
+2026-09-15T09:12:25.123Z INFO inventory-service node-05 trace=trace-1727544 span=span-96363 latency_ms=71 User authentication successful
+2026-09-15T09:12:30.123Z INFO [auth-service] request_id=req-602248 status=200 latency_ms=18 Inventory updated successfully
+2026-09-15T09:12:35.123Z INFO [auth-service] request_id=req-437758 status=200 latency_ms=21 User authentication successful
+2026-09-15T09:12:40.123Z INFO [api-gateway] request_id=req-499407 status=200 latency_ms=63 Message published to queue
+2026-09-15T09:12:45.123Z INFO notification-service node-01 trace=trace-4607488 span=span-66370 latency_ms=62 Cache lookup completed
+2026-09-15T09:12:50.123Z INFO [inventory-service] request_id=req-536196 status=200 latency_ms=59 Order created successfully
+2026-09-15T09:12:55.123Z INFO [payment-service] [node-04] request_id=req-170394 trace_id=trace-2530497 Payment request accepted
+2026-09-15T09:13:00.123Z INFO order-service node-02 trace=trace-2006313 span=span-86869 latency_ms=76 Message published to queue
+2026-09-15T09:13:05.123Z INFO inventory-service node-03 trace=trace-8095702 span=span-16743 latency_ms=41 HTTP request completed
+2026-09-15T09:13:10.123Z INFO [api-gateway] [node-05] request_id=req-323072 trace_id=trace-3595941 Cache lookup completed
+2026-09-15T09:13:15.123Z INFO [api-gateway] request_id=req-220465 status=200 latency_ms=33 Payment request accepted
+2026-09-15T09:13:20.123Z INFO [notification-service] [node-05] request_id=req-743378 trace_id=trace-1440466 Request processed successfully
+2026-09-15T09:13:25.123Z INFO [notification-service] request_id=req-456331 status=200 latency_ms=28 Database connection established
+2026-09-15T09:13:30.123Z INFO auth-service node-02 trace=trace-1514340 span=span-22026 latency_ms=72 Cache lookup completed
+2026-09-15T09:13:35.123Z INFO [order-service] [node-02] request_id=req-488028 trace_id=trace-6228407 HTTP request completed
+2026-09-15T09:13:40.123Z INFO payment-service node-02 trace=trace-1834876 span=span-98338 latency_ms=15 User authentication successful
+2026-09-15T09:13:45.123Z INFO [inventory-service] [node-05] request_id=req-563516 trace_id=trace-7948850 Message published to queue
+2026-09-15T09:13:50.123Z INFO [auth-service] [node-03] request_id=req-811163 trace_id=trace-9164342 Request processed successfully
+2026-09-15T09:13:55.123Z INFO api-gateway node-01 trace=trace-4429650 span=span-49507 latency_ms=32 Database connection established
+2026-09-15T09:14:00.123Z INFO [auth-service] request_id=req-621546 status=200 latency_ms=21 Payment request accepted
+2026-09-15T09:14:05.123Z INFO [api-gateway] [node-05] request_id=req-973835 trace_id=trace-6941939 Worker started
+2026-09-15T09:14:10.123Z INFO [inventory-service] request_id=req-428267 status=200 latency_ms=56 Worker started
+2026-09-15T09:14:15.123Z INFO auth-service node-04 trace=trace-6448705 span=span-32527 latency_ms=63 Worker started
+2026-09-15T09:14:20.123Z WARN notification-service node-01 trace=trace-8309439 span=span-87184 latency_ms=960 Queue depth above normal
+2026-09-15T09:14:25.123Z INFO [payment-service] [node-03] request_id=req-916964 trace_id=trace-3820798 Configuration loaded successfully
+2026-09-15T09:14:30.123Z INFO payment-service node-03 trace=trace-3477824 span=span-40968 latency_ms=18 Database connection established
+2026-09-15T09:14:35.123Z DEBUG [api-gateway] request_id=req-897143 status=200 latency_ms=68 Inventory updated successfully
+2026-09-15T09:14:40.123Z INFO inventory-service node-05 trace=trace-6422534 span=span-92210 latency_ms=45 Database connection established
+2026-09-15T09:14:45.123Z WARN inventory-service node-03 trace=trace-5608259 span=span-87518 latency_ms=785 Retrying connection to dependency
+2026-09-15T09:14:50.123Z INFO [auth-service] request_id=req-972097 status=200 latency_ms=16 HTTP request completed
+2026-09-15T09:14:55.123Z INFO [inventory-service] [node-05] request_id=req-681242 trace_id=trace-1688246 Configuration loaded successfully
+2026-09-15T09:15:00.123Z INFO [inventory-service] request_id=req-258189 status=200 latency_ms=18 Order created successfully
+2026-09-15T09:15:05.123Z WARN user-service node-02 trace=trace-5156449 span=span-67377 latency_ms=895 Queue depth above normal
+2026-09-15T09:15:10.123Z INFO [inventory-service] request_id=req-912085 status=200 latency_ms=11 Configuration loaded successfully
+2026-09-15T09:15:15.123Z INFO [order-service] request_id=req-685066 status=200 latency_ms=37 Worker started
+2026-09-15T09:15:20.123Z INFO api-gateway node-02 trace=trace-2367376 span=span-86380 latency_ms=23 Order created successfully
+2026-09-15T09:15:25.123Z INFO [user-service] request_id=req-235215 status=200 latency_ms=76 Payment request accepted
+2026-09-15T09:15:30.123Z INFO notification-service node-02 trace=trace-9831414 span=span-22249 latency_ms=59 Message published to queue
+2026-09-15T09:15:35.123Z ERROR [order-service] [node-02] request_id=req-324597 trace_id=trace-6733317 Null pointer while processing order
+2026-09-15T09:15:40.123Z INFO [notification-service] [node-01] request_id=req-632351 trace_id=trace-9833734 HTTP request completed
+2026-09-15T09:15:45.123Z INFO payment-service node-02 trace=trace-3777286 span=span-67366 latency_ms=10 Payment request accepted
+2026-09-15T09:15:50.123Z INFO [payment-service] [node-04] request_id=req-740255 trace_id=trace-5780297 Message published to queue
+2026-09-15T09:15:55.123Z INFO notification-service node-04 trace=trace-4255051 span=span-58213 latency_ms=78 Inventory updated successfully
+2026-09-15T09:16:00.123Z INFO [notification-service] request_id=req-627335 status=200 latency_ms=25 Cache lookup completed
+2026-09-15T09:16:05.123Z DEBUG [order-service] request_id=req-772324 status=200 latency_ms=75 Health check passed
+2026-09-15T09:16:10.123Z INFO [notification-service] request_id=req-398910 status=200 latency_ms=39 Inventory updated successfully
+2026-09-15T09:16:15.123Z DEBUG [inventory-service] [node-01] request_id=req-332823 trace_id=trace-8568671 Payment request accepted
+2026-09-15T09:16:20.123Z INFO order-service node-02 trace=trace-2369112 span=span-59140 latency_ms=33 Request processed successfully
+2026-09-15T09:16:25.123Z INFO notification-service node-03 trace=trace-3450300 span=span-28035 latency_ms=9 User authentication successful
+2026-09-15T09:16:30.123Z INFO [payment-service] [node-04] request_id=req-570392 trace_id=trace-1088100 User authentication successful
+2026-09-15T09:16:35.123Z INFO api-gateway node-05 trace=trace-8101036 span=span-24573 latency_ms=41 Cache lookup completed
+2026-09-15T09:16:40.123Z DEBUG [payment-service] request_id=req-769989 status=200 latency_ms=19 Inventory updated successfully
+2026-09-15T09:16:45.123Z INFO [user-service] [node-05] request_id=req-702980 trace_id=trace-5059048 Payment request accepted
+2026-09-15T09:16:50.123Z INFO payment-service node-05 trace=trace-4142605 span=span-97080 latency_ms=15 Message published to queue
+2026-09-15T09:16:55.123Z WARN [api-gateway] request_id=req-631971 status=503 latency_ms=239 Cache miss rate increased
+2026-09-15T09:17:00.123Z INFO [order-service] [node-03] request_id=req-883618 trace_id=trace-1272499 Order created successfully
+2026-09-15T09:17:05.123Z INFO [user-service] request_id=req-908977 status=200 latency_ms=10 Order created successfully
+2026-09-15T09:17:10.123Z INFO [user-service] [node-02] request_id=req-970720 trace_id=trace-8795078 Database connection established
+2026-09-15T09:17:15.123Z INFO inventory-service node-01 trace=trace-4382135 span=span-15741 latency_ms=30 Request processed successfully
+2026-09-15T09:17:20.123Z INFO [api-gateway] [node-04] request_id=req-955015 trace_id=trace-8942330 Configuration loaded successfully
+2026-09-15T09:17:25.123Z INFO notification-service node-01 trace=trace-6568772 span=span-45811 latency_ms=20 Order created successfully
+2026-09-15T09:17:30.123Z INFO user-service node-04 trace=trace-6688090 span=span-34486 latency_ms=68 Worker started
+2026-09-15T09:17:35.123Z INFO [notification-service] request_id=req-379676 status=200 latency_ms=15 Payment request accepted
+2026-09-15T09:17:40.123Z INFO [payment-service] request_id=req-408036 status=200 latency_ms=15 Order created successfully
+2026-09-15T09:17:45.123Z INFO inventory-service node-05 trace=trace-8149041 span=span-31842 latency_ms=61 Order created successfully
+2026-09-15T09:17:50.123Z ERROR [notification-service] request_id=req-744718 status=504 latency_ms=3776 Connection refused by payment service
+2026-09-15T09:17:55.123Z INFO [user-service] [node-02] request_id=req-132653 trace_id=trace-3395441 Request processed successfully
+2026-09-15T09:18:00.123Z WARN notification-service node-03 trace=trace-7423230 span=span-84349 latency_ms=1071 Queue depth above normal
+2026-09-15T09:18:05.123Z INFO notification-service node-01 trace=trace-3310140 span=span-79397 latency_ms=51 Payment request accepted
+2026-09-15T09:18:10.123Z INFO [payment-service] request_id=req-127172 status=200 latency_ms=71 Payment request accepted
+2026-09-15T09:18:15.123Z WARN [notification-service] [node-03] request_id=req-838237 trace_id=trace-8487220 Slow query detected
+2026-09-15T09:18:20.123Z DEBUG auth-service node-04 trace=trace-8467726 span=span-21506 latency_ms=45 Configuration loaded successfully
+2026-09-15T09:18:25.123Z INFO [api-gateway] request_id=req-404466 status=200 latency_ms=27 Order created successfully
+2026-09-15T09:18:30.123Z INFO [payment-service] request_id=req-348235 status=200 latency_ms=51 Message published to queue
+2026-09-15T09:18:35.123Z INFO [notification-service] request_id=req-236074 status=200 latency_ms=44 Payment request accepted
+2026-09-15T09:18:40.123Z INFO api-gateway node-04 trace=trace-7869154 span=span-85353 latency_ms=14 Database connection established
+2026-09-15T09:18:45.123Z INFO [inventory-service] request_id=req-813145 status=200 latency_ms=21 Message published to queue
+2026-09-15T09:18:50.123Z INFO [notification-service] [node-02] request_id=req-553633 trace_id=trace-9436654 Message published to queue
+2026-09-15T09:18:55.123Z INFO [payment-service] [node-03] request_id=req-843788 trace_id=trace-4782763 User authentication successful
+2026-09-15T09:19:00.123Z INFO [user-service] request_id=req-387782 status=200 latency_ms=43 HTTP request completed
+2026-09-15T09:19:05.123Z WARN [user-service] [node-02] request_id=req-720556 trace_id=trace-3586950 External service response delayed
+2026-09-15T09:19:10.123Z WARN [user-service] request_id=req-377511 status=200 latency_ms=1169 Queue depth above normal
+2026-09-15T09:19:15.123Z INFO user-service node-03 trace=trace-5108369 span=span-99783 latency_ms=56 User authentication successful
+2026-09-15T09:19:20.123Z WARN auth-service node-02 trace=trace-7972975 span=span-73471 latency_ms=444 Request latency above threshold
+2026-09-15T09:19:25.123Z INFO [order-service] [node-03] request_id=req-518084 trace_id=trace-3193891 Message published to queue
+2026-09-15T09:19:30.123Z INFO [inventory-service] [node-01] request_id=req-380464 trace_id=trace-8542969 Health check passed
+2026-09-15T09:19:35.123Z INFO [inventory-service] request_id=req-538446 status=200 latency_ms=46 HTTP request completed
+2026-09-15T09:19:40.123Z INFO notification-service node-02 trace=trace-9635649 span=span-71186 latency_ms=68 User authentication successful
+2026-09-15T09:19:45.123Z ERROR inventory-service node-05 trace=trace-5038756 span=span-38199 latency_ms=1214 Kafka consumer failed to poll
+2026-09-15T09:19:50.123Z INFO notification-service node-04 trace=trace-1137194 span=span-24089 latency_ms=60 Database connection established
+2026-09-15T09:19:55.123Z INFO [notification-service] request_id=req-483713 status=200 latency_ms=11 HTTP request completed
+2026-09-15T09:20:00.123Z DEBUG api-gateway node-03 trace=trace-7481857 span=span-76093 latency_ms=62 Message published to queue
+2026-09-15T09:20:05.123Z INFO api-gateway node-05 trace=trace-3158613 span=span-22672 latency_ms=55 Order created successfully
+2026-09-15T09:20:10.123Z INFO [order-service] [node-02] request_id=req-308727 trace_id=trace-9541658 Request processed successfully
+2026-09-15T09:20:15.123Z ERROR [user-service] request_id=req-943019 status=502 latency_ms=3486 Failed to process request
+2026-09-15T09:20:20.123Z INFO [inventory-service] request_id=req-875232 status=200 latency_ms=48 Message published to queue
+2026-09-15T09:20:25.123Z INFO [user-service] request_id=req-414353 status=200 latency_ms=52 Order created successfully
+2026-09-15T09:20:30.123Z WARN [inventory-service] request_id=req-422623 status=200 latency_ms=255 Retrying connection to dependency
+2026-09-15T09:20:35.123Z INFO [api-gateway] request_id=req-912233 status=200 latency_ms=36 Request processed successfully
+2026-09-15T09:20:40.123Z INFO auth-service node-02 trace=trace-8399399 span=span-51116 latency_ms=58 Database connection established
+2026-09-15T09:20:45.123Z INFO [inventory-service] [node-05] request_id=req-912617 trace_id=trace-8912226 Message published to queue
+2026-09-15T09:20:50.123Z INFO [user-service] request_id=req-651002 status=200 latency_ms=27 Inventory updated successfully
+2026-09-15T09:20:55.123Z INFO [order-service] request_id=req-739711 status=200 latency_ms=36 User authentication successful
+2026-09-15T09:21:00.123Z INFO order-service node-03 trace=trace-4477544 span=span-74094 latency_ms=45 Inventory updated successfully
+2026-09-15T09:21:05.123Z INFO notification-service node-03 trace=trace-3044708 span=span-85166 latency_ms=74 Payment request accepted
+2026-09-15T09:21:10.123Z INFO notification-service node-02 trace=trace-1705758 span=span-47700 latency_ms=15 Order created successfully
+2026-09-15T09:21:15.123Z INFO [user-service] request_id=req-324381 status=200 latency_ms=39 Message published to queue
+2026-09-15T09:21:20.123Z INFO [auth-service] request_id=req-876880 status=200 latency_ms=11 Configuration loaded successfully
+2026-09-15T09:21:25.123Z INFO [payment-service] request_id=req-205065 status=200 latency_ms=65 Health check passed
+2026-09-15T09:21:30.123Z INFO [auth-service] request_id=req-265613 status=200 latency_ms=65 Inventory updated successfully
+2026-09-15T09:21:35.123Z DEBUG [order-service] request_id=req-399279 status=200 latency_ms=78 Cache lookup completed
+2026-09-15T09:21:40.123Z INFO notification-service node-01 trace=trace-8010946 span=span-33040 latency_ms=9 Payment request accepted
+2026-09-15T09:21:45.123Z DEBUG [user-service] [node-03] request_id=req-139286 trace_id=trace-1155477 HTTP request completed
+2026-09-15T09:21:50.123Z INFO order-service node-03 trace=trace-9796605 span=span-74738 latency_ms=22 Message published to queue
+2026-09-15T09:21:55.123Z INFO [notification-service] [node-01] request_id=req-446747 trace_id=trace-3726201 Worker started
+2026-09-15T09:22:00.123Z ERROR order-service node-03 trace=trace-4240708 span=span-33002 latency_ms=1510 Redis connection timeout
+2026-09-15T09:22:05.123Z INFO payment-service node-02 trace=trace-6429135 span=span-42512 latency_ms=5 User authentication successful
+2026-09-15T09:22:10.123Z INFO notification-service node-03 trace=trace-6065810 span=span-86344 latency_ms=78 Request processed successfully
+2026-09-15T09:22:15.123Z INFO user-service node-02 trace=trace-2983483 span=span-71000 latency_ms=44 Database connection established
+2026-09-15T09:22:20.123Z INFO [user-service] request_id=req-823821 status=200 latency_ms=42 Order created successfully
+2026-09-15T09:22:25.123Z INFO [payment-service] request_id=req-260626 status=200 latency_ms=52 Payment request accepted
+2026-09-15T09:22:30.123Z INFO inventory-service node-05 trace=trace-4664338 span=span-42435 latency_ms=15 Message published to queue
+2026-09-15T09:22:35.123Z INFO [order-service] [node-01] request_id=req-691573 trace_id=trace-2882551 Message published to queue
+2026-09-15T09:22:40.123Z INFO [payment-service] [node-02] request_id=req-444056 trace_id=trace-9729882 Configuration loaded successfully
+2026-09-15T09:22:45.123Z INFO [inventory-service] request_id=req-635167 status=200 latency_ms=63 Database connection established
+2026-09-15T09:22:50.123Z INFO [api-gateway] [node-01] request_id=req-685941 trace_id=trace-8757420 Worker started
+2026-09-15T09:22:55.123Z INFO notification-service node-01 trace=trace-4655777 span=span-85800 latency_ms=14 Request processed successfully
+2026-09-15T09:23:00.123Z INFO auth-service node-05 trace=trace-2157949 span=span-71875 latency_ms=9 User authentication successful
+2026-09-15T09:23:05.123Z DEBUG [payment-service] [node-04] request_id=req-492650 trace_id=trace-7416943 Payment request accepted
+2026-09-15T09:23:10.123Z INFO user-service node-05 trace=trace-6834610 span=span-25549 latency_ms=27 Message published to queue
+2026-09-15T09:23:15.123Z INFO [user-service] request_id=req-975373 status=200 latency_ms=43 Inventory updated successfully
+2026-09-15T09:23:20.123Z INFO [inventory-service] [node-05] request_id=req-497700 trace_id=trace-4853123 Order created successfully
+2026-09-15T09:23:25.123Z INFO [user-service] [node-01] request_id=req-133782 trace_id=trace-8033690 Cache lookup completed
+2026-09-15T09:23:30.123Z WARN [api-gateway] request_id=req-568127 status=503 latency_ms=629 Cache miss rate increased
+2026-09-15T09:23:35.123Z INFO [notification-service] request_id=req-246942 status=200 latency_ms=34 Worker started
+2026-09-15T09:23:40.123Z INFO api-gateway node-03 trace=trace-6062767 span=span-28777 latency_ms=71 Cache lookup completed
+2026-09-15T09:23:45.123Z INFO auth-service node-05 trace=trace-3938247 span=span-92050 latency_ms=59 Message published to queue
+2026-09-15T09:23:50.123Z WARN order-service node-04 trace=trace-9799030 span=span-51777 latency_ms=764 Cache miss rate increased
+2026-09-15T09:23:55.123Z DEBUG [api-gateway] [node-04] request_id=req-352673 trace_id=trace-4780654 Inventory updated successfully
+2026-09-15T09:24:00.123Z INFO [inventory-service] [node-05] request_id=req-655736 trace_id=trace-3249703 User authentication successful
+2026-09-15T09:24:05.123Z INFO [auth-service] [node-04] request_id=req-988283 trace_id=trace-7225647 Worker started
+2026-09-15T09:24:10.123Z WARN [inventory-service] [node-05] request_id=req-732209 trace_id=trace-1663497 External service response delayed
+2026-09-15T09:24:15.123Z INFO order-service node-03 trace=trace-4553544 span=span-34906 latency_ms=20 Worker started
+2026-09-15T09:24:20.123Z INFO user-service node-05 trace=trace-4431161 span=span-61987 latency_ms=35 Message published to queue
+2026-09-15T09:24:25.123Z INFO [inventory-service] request_id=req-659572 status=200 latency_ms=38 Order created successfully
+2026-09-15T09:24:30.123Z INFO inventory-service node-01 trace=trace-8876742 span=span-51973 latency_ms=31 Order created successfully
+2026-09-15T09:24:35.123Z INFO [api-gateway] request_id=req-877259 status=200 latency_ms=38 Message published to queue
+2026-09-15T09:24:40.123Z INFO [inventory-service] request_id=req-259814 status=200 latency_ms=34 Payment request accepted
+2026-09-15T09:24:45.123Z INFO [inventory-service] request_id=req-786406 status=200 latency_ms=67 Worker started
+2026-09-15T09:24:50.123Z INFO [inventory-service] request_id=req-868367 status=200 latency_ms=22 Worker started
+2026-09-15T09:24:55.123Z INFO api-gateway node-01 trace=trace-1567468 span=span-19742 latency_ms=11 Request processed successfully
+2026-09-15T09:25:00.123Z DEBUG user-service node-02 trace=trace-3533857 span=span-11198 latency_ms=32 Message published to queue
+2026-09-15T09:25:05.123Z INFO [api-gateway] request_id=req-606676 status=200 latency_ms=5 Message published to queue
+2026-09-15T09:25:10.123Z INFO [auth-service] request_id=req-857273 status=200 latency_ms=41 Request processed successfully
+2026-09-15T09:25:15.123Z INFO [user-service] [node-04] request_id=req-945328 trace_id=trace-4007598 Message published to queue
+2026-09-15T09:25:20.123Z INFO api-gateway node-05 trace=trace-6946534 span=span-45038 latency_ms=55 Health check passed
+2026-09-15T09:25:25.123Z INFO [inventory-service] request_id=req-355021 status=200 latency_ms=15 Configuration loaded successfully
+2026-09-15T09:25:30.123Z INFO [auth-service] request_id=req-497687 status=200 latency_ms=65 Request processed successfully
+2026-09-15T09:25:35.123Z ERROR [payment-service] [node-01] request_id=req-624139 trace_id=trace-8279795 Authentication token validation failed
+2026-09-15T09:25:40.123Z INFO notification-service node-05 trace=trace-5548220 span=span-16102 latency_ms=14 Configuration loaded successfully
+2026-09-15T09:25:45.123Z INFO [api-gateway] [node-01] request_id=req-288066 trace_id=trace-6276177 HTTP request completed
+2026-09-15T09:25:50.123Z INFO [user-service] request_id=req-180674 status=200 latency_ms=77 Cache lookup completed
+2026-09-15T09:25:55.123Z INFO [inventory-service] request_id=req-447843 status=200 latency_ms=15 Message published to queue
+2026-09-15T09:26:00.123Z INFO [auth-service] request_id=req-558320 status=200 latency_ms=48 HTTP request completed
+2026-09-15T09:26:05.123Z INFO inventory-service node-03 trace=trace-5585666 span=span-69054 latency_ms=67 Cache lookup completed
+2026-09-15T09:26:10.123Z INFO [inventory-service] request_id=req-294760 status=200 latency_ms=42 Cache lookup completed
+2026-09-15T09:26:15.123Z WARN [order-service] [node-02] request_id=req-498458 trace_id=trace-3588336 Retrying connection to dependency
+2026-09-15T09:26:20.123Z INFO [inventory-service] [node-03] request_id=req-898329 trace_id=trace-5525929 Health check passed
+2026-09-15T09:26:25.123Z INFO api-gateway node-05 trace=trace-7845845 span=span-23538 latency_ms=8 Health check passed
+2026-09-15T09:26:30.123Z INFO api-gateway node-05 trace=trace-6443037 span=span-60493 latency_ms=6 User authentication successful
+2026-09-15T09:26:35.123Z INFO [auth-service] [node-05] request_id=req-354533 trace_id=trace-9742683 Database connection established
+2026-09-15T09:26:40.123Z INFO order-service node-04 trace=trace-2061446 span=span-31916 latency_ms=60 User authentication successful
+2026-09-15T09:26:45.123Z INFO [notification-service] request_id=req-478666 status=200 latency_ms=68 HTTP request completed
+2026-09-15T09:26:50.123Z DEBUG auth-service node-02 trace=trace-1113537 span=span-61864 latency_ms=47 HTTP request completed
+2026-09-15T09:26:55.123Z INFO order-service node-04 trace=trace-8224541 span=span-95332 latency_ms=22 User authentication successful
+2026-09-15T09:27:00.123Z INFO user-service node-02 trace=trace-6271120 span=span-33283 latency_ms=55 Order created successfully
+2026-09-15T09:27:05.123Z INFO user-service node-04 trace=trace-5067204 span=span-52714 latency_ms=53 User authentication successful
+2026-09-15T09:27:10.123Z INFO [api-gateway] request_id=req-720995 status=200 latency_ms=75 Request processed successfully
+2026-09-15T09:27:15.123Z INFO user-service node-02 trace=trace-5887726 span=span-19064 latency_ms=57 Configuration loaded successfully
+2026-09-15T09:27:20.123Z DEBUG order-service node-02 trace=trace-3586094 span=span-65460 latency_ms=53 Health check passed
+2026-09-15T09:27:25.123Z INFO [inventory-service] [node-05] request_id=req-520274 trace_id=trace-9965197 Message published to queue
+2026-09-15T09:27:30.123Z INFO [order-service] request_id=req-722665 status=200 latency_ms=36 Configuration loaded successfully
+2026-09-15T09:27:35.123Z INFO [user-service] [node-05] request_id=req-146448 trace_id=trace-7704473 Health check passed
+2026-09-15T09:27:40.123Z WARN payment-service node-05 trace=trace-9703982 span=span-83137 latency_ms=1062 Slow query detected
+2026-09-15T09:27:45.123Z INFO notification-service node-05 trace=trace-9396422 span=span-29758 latency_ms=49 Request processed successfully
+2026-09-15T09:27:50.123Z WARN [inventory-service] request_id=req-221707 status=503 latency_ms=573 Retrying connection to dependency
+2026-09-15T09:27:55.123Z INFO [inventory-service] [node-01] request_id=req-559450 trace_id=trace-8590804 User authentication successful
+2026-09-15T09:28:00.123Z INFO [auth-service] [node-01] request_id=req-990429 trace_id=trace-6755892 Configuration loaded successfully
+2026-09-15T09:28:05.123Z INFO [user-service] request_id=req-641058 status=200 latency_ms=25 Order created successfully
+2026-09-15T09:28:10.123Z INFO [inventory-service] request_id=req-936507 status=200 latency_ms=28 Database connection established
+2026-09-15T09:28:15.123Z INFO inventory-service node-01 trace=trace-4310554 span=span-68926 latency_ms=80 Payment request accepted
+2026-09-15T09:28:20.123Z ERROR payment-service node-02 trace=trace-2049645 span=span-85674 latency_ms=3796 Out of memory while processing batch
+2026-09-15T09:28:25.123Z DEBUG auth-service node-03 trace=trace-9212178 span=span-79168 latency_ms=45 HTTP request completed
+2026-09-15T09:28:30.123Z INFO [api-gateway] request_id=req-464825 status=200 latency_ms=27 Configuration loaded successfully
+2026-09-15T09:28:35.123Z INFO api-gateway node-05 trace=trace-3247270 span=span-51049 latency_ms=20 Cache lookup completed
+2026-09-15T09:28:40.123Z WARN [order-service] [node-02] request_id=req-635638 trace_id=trace-7517332 Queue depth above normal
+2026-09-15T09:28:45.123Z INFO [api-gateway] [node-02] request_id=req-681868 trace_id=trace-3799538 Database connection established
+2026-09-15T09:28:50.123Z INFO [inventory-service] [node-05] request_id=req-156215 trace_id=trace-7023677 Database connection established
+2026-09-15T09:28:55.123Z INFO [api-gateway] request_id=req-784793 status=200 latency_ms=67 Payment request accepted
+2026-09-15T09:29:00.123Z INFO inventory-service node-02 trace=trace-1517756 span=span-38905 latency_ms=42 Request processed successfully
+2026-09-15T09:29:05.123Z INFO [order-service] request_id=req-918665 status=200 latency_ms=68 Message published to queue
+2026-09-15T09:29:10.123Z WARN auth-service node-03 trace=trace-7154919 span=span-81046 latency_ms=597 External service response delayed
+2026-09-15T09:29:15.123Z WARN [notification-service] [node-02] request_id=req-412170 trace_id=trace-1540736 Retrying connection to dependency
+2026-09-15T09:29:20.123Z INFO [payment-service] request_id=req-950083 status=200 latency_ms=59 Database connection established
+2026-09-15T09:29:25.123Z DEBUG payment-service node-02 trace=trace-1995859 span=span-84720 latency_ms=49 Message published to queue
+2026-09-15T09:29:30.123Z INFO [payment-service] request_id=req-838253 status=200 latency_ms=78 User authentication successful
+2026-09-15T09:29:35.123Z INFO [user-service] [node-01] request_id=req-242175 trace_id=trace-7905438 Configuration loaded successfully
+2026-09-15T09:29:40.123Z INFO [payment-service] [node-02] request_id=req-253347 trace_id=trace-6403886 Inventory updated successfully
+2026-09-15T09:29:45.123Z INFO [order-service] request_id=req-493396 status=200 latency_ms=16 Payment request accepted
+2026-09-15T09:29:50.123Z INFO [user-service] request_id=req-576782 status=200 latency_ms=79 Request processed successfully
+2026-09-15T09:29:55.123Z WARN inventory-service node-03 trace=trace-2062512 span=span-80048 latency_ms=583 Request latency above threshold
+2026-09-15T09:30:00.123Z INFO [notification-service] request_id=req-454161 status=200 latency_ms=67 Order created successfully
+2026-09-15T09:30:05.123Z INFO auth-service node-01 trace=trace-8710502 span=span-12134 latency_ms=20 Database connection established
+2026-09-15T09:30:10.123Z INFO inventory-service node-02 trace=trace-3213134 span=span-95196 latency_ms=43 Database connection established
+2026-09-15T09:30:15.123Z WARN [order-service] request_id=req-186424 status=503 latency_ms=775 Database connection pool nearing capacity
+2026-09-15T09:30:20.123Z INFO payment-service node-04 trace=trace-2530068 span=span-22475 latency_ms=5 Cache lookup completed
+2026-09-15T09:30:25.123Z WARN api-gateway node-02 trace=trace-8466983 span=span-11217 latency_ms=396 Slow query detected
+2026-09-15T09:30:30.123Z INFO inventory-service node-01 trace=trace-7426846 span=span-21708 latency_ms=18 Health check passed
+2026-09-15T09:30:35.123Z INFO [order-service] request_id=req-501312 status=200 latency_ms=23 Health check passed
+2026-09-15T09:30:40.123Z INFO [api-gateway] request_id=req-561477 status=200 latency_ms=24 Payment request accepted
+2026-09-15T09:30:45.123Z INFO [notification-service] request_id=req-190898 status=200 latency_ms=20 HTTP request completed
+2026-09-15T09:30:50.123Z INFO [inventory-service] [node-03] request_id=req-929504 trace_id=trace-3345961 Configuration loaded successfully
+2026-09-15T09:30:55.123Z INFO [api-gateway] request_id=req-856211 status=200 latency_ms=43 Cache lookup completed
+2026-09-15T09:31:00.123Z INFO [payment-service] [node-04] request_id=req-409898 trace_id=trace-1915518 Payment request accepted
+2026-09-15T09:31:05.123Z INFO [user-service] [node-05] request_id=req-174461 trace_id=trace-9863176 Order created successfully
+2026-09-15T09:31:10.123Z INFO [notification-service] [node-05] request_id=req-541307 trace_id=trace-7130603 Inventory updated successfully
+2026-09-15T09:31:15.123Z ERROR auth-service node-01 trace=trace-4619565 span=span-15220 latency_ms=4904 Redis connection timeout
+2026-09-15T09:31:20.123Z INFO [inventory-service] [node-01] request_id=req-771652 trace_id=trace-3561552 User authentication successful
+2026-09-15T09:31:25.123Z INFO [payment-service] request_id=req-662445 status=200 latency_ms=80 Configuration loaded successfully
+2026-09-15T09:31:30.123Z INFO [auth-service] [node-03] request_id=req-832614 trace_id=trace-8339797 Cache lookup completed
+2026-09-15T09:31:35.123Z INFO [auth-service] [node-04] request_id=req-742039 trace_id=trace-1923227 Health check passed
+2026-09-15T09:31:40.123Z INFO [user-service] request_id=req-271790 status=200 latency_ms=71 Message published to queue
+2026-09-15T09:31:45.123Z INFO order-service node-02 trace=trace-5509119 span=span-25473 latency_ms=8 Order created successfully
+2026-09-15T09:31:50.123Z INFO auth-service node-03 trace=trace-2293020 span=span-75031 latency_ms=63 Message published to queue
+2026-09-15T09:31:55.123Z WARN [notification-service] [node-05] request_id=req-274987 trace_id=trace-7168777 External service response delayed
+2026-09-15T09:32:00.123Z INFO auth-service node-01 trace=trace-5102892 span=span-16026 latency_ms=65 Order created successfully
+2026-09-15T09:32:05.123Z INFO payment-service node-01 trace=trace-8035849 span=span-39427 latency_ms=46 Cache lookup completed
+2026-09-15T09:32:10.123Z INFO [order-service] request_id=req-966120 status=200 latency_ms=52 Health check passed
+2026-09-15T09:32:15.123Z INFO auth-service node-02 trace=trace-9653253 span=span-16019 latency_ms=56 Health check passed
+2026-09-15T09:32:20.123Z INFO notification-service node-03 trace=trace-2449308 span=span-82494 latency_ms=63 Request processed successfully
+2026-09-15T09:32:25.123Z INFO api-gateway node-03 trace=trace-5069884 span=span-70807 latency_ms=52 HTTP request completed
+2026-09-15T09:32:30.123Z INFO [notification-service] [node-02] request_id=req-868043 trace_id=trace-5112546 Payment request accepted
+2026-09-15T09:32:35.123Z INFO [order-service] request_id=req-451291 status=200 latency_ms=53 Worker started
+2026-09-15T09:32:40.123Z INFO [payment-service] request_id=req-349736 status=200 latency_ms=12 Database connection established
+2026-09-15T09:32:45.123Z INFO [auth-service] request_id=req-986575 status=200 latency_ms=52 Inventory updated successfully
+2026-09-15T09:32:50.123Z WARN [auth-service] request_id=req-239999 status=200 latency_ms=1040 Queue depth above normal
+2026-09-15T09:32:55.123Z INFO payment-service node-03 trace=trace-6284972 span=span-61505 latency_ms=46 Order created successfully
+2026-09-15T09:33:00.123Z INFO auth-service node-02 trace=trace-2828260 span=span-30369 latency_ms=18 Database connection established
+2026-09-15T09:33:05.123Z INFO inventory-service node-01 trace=trace-7011065 span=span-37215 latency_ms=62 User authentication successful
+2026-09-15T09:33:10.123Z INFO auth-service node-01 trace=trace-6103880 span=span-89076 latency_ms=10 Cache lookup completed
+2026-09-15T09:33:15.123Z DEBUG user-service node-02 trace=trace-7647878 span=span-77300 latency_ms=11 Configuration loaded successfully
+2026-09-15T09:33:20.123Z INFO [payment-service] [node-01] request_id=req-524035 trace_id=trace-8586676 Cache lookup completed
+2026-09-15T09:33:25.123Z INFO [notification-service] [node-02] request_id=req-227352 trace_id=trace-1200603 Database connection established
+2026-09-15T09:33:30.123Z INFO [order-service] [node-01] request_id=req-710610 trace_id=trace-5342289 Health check passed
+2026-09-15T09:33:35.123Z INFO [inventory-service] [node-02] request_id=req-196446 trace_id=trace-6562484 Inventory updated successfully
+2026-09-15T09:33:40.123Z DEBUG [api-gateway] request_id=req-961599 status=200 latency_ms=8 Payment request accepted
+2026-09-15T09:33:45.123Z INFO [order-service] [node-02] request_id=req-296242 trace_id=trace-5613428 Database connection established
+2026-09-15T09:33:50.123Z INFO api-gateway node-02 trace=trace-5951043 span=span-75390 latency_ms=57 Message published to queue
+2026-09-15T09:33:55.123Z WARN [order-service] request_id=req-243902 status=200 latency_ms=933 Request latency above threshold
+2026-09-15T09:34:00.123Z INFO [api-gateway] [node-04] request_id=req-460745 trace_id=trace-9428760 User authentication successful
+2026-09-15T09:34:05.123Z ERROR [api-gateway] [node-02] request_id=req-130726 trace_id=trace-5713268 Out of memory while processing batch
+2026-09-15T09:34:10.123Z WARN [user-service] [node-02] request_id=req-379473 trace_id=trace-9953825 Queue depth above normal
+2026-09-15T09:34:15.123Z DEBUG [api-gateway] request_id=req-945372 status=200 latency_ms=8 Worker started
+2026-09-15T09:34:20.123Z INFO [api-gateway] [node-05] request_id=req-249005 trace_id=trace-4158036 User authentication successful
+2026-09-15T09:34:25.123Z INFO [auth-service] [node-01] request_id=req-343923 trace_id=trace-4671004 Inventory updated successfully
+2026-09-15T09:34:30.123Z INFO [api-gateway] [node-02] request_id=req-945619 trace_id=trace-3189251 Order created successfully
+2026-09-15T09:34:35.123Z ERROR [api-gateway] request_id=req-911982 status=503 latency_ms=4040 Connection refused by payment service
+2026-09-15T09:34:40.123Z WARN [order-service] request_id=req-243079 status=429 latency_ms=506 Slow query detected
+2026-09-15T09:34:45.123Z INFO user-service node-05 trace=trace-6986539 span=span-39260 latency_ms=80 Database connection established
+2026-09-15T09:34:50.123Z INFO [user-service] request_id=req-233534 status=200 latency_ms=78 Payment request accepted
+2026-09-15T09:34:55.123Z ERROR api-gateway node-03 trace=trace-4706007 span=span-93839 latency_ms=1952 Connection refused by payment service
+2026-09-15T09:35:00.123Z WARN [payment-service] [node-03] request_id=req-435039 trace_id=trace-3816683 External service response delayed
+2026-09-15T09:35:05.123Z ERROR [payment-service] request_id=req-467506 status=504 latency_ms=4389 Database connection timeout
+2026-09-15T09:35:10.123Z ERROR [payment-service] request_id=req-617033 status=500 latency_ms=4727 Redis connection timeout
+2026-09-15T09:35:15.123Z WARN user-service node-02 trace=trace-8571346 span=span-19661 latency_ms=802 Retrying connection to dependency
+2026-09-15T09:35:20.123Z INFO [auth-service] [node-03] request_id=req-278368 trace_id=trace-7299138 Message published to queue
+2026-09-15T09:35:25.123Z ERROR [api-gateway] [node-04] request_id=req-838726 trace_id=trace-1519979 Authentication token validation failed
+2026-09-15T09:35:30.123Z ERROR [payment-service] [node-02] request_id=req-529161 trace_id=trace-5450404 HTTP 500 returned by dependency
+2026-09-15T09:35:35.123Z ERROR [api-gateway] request_id=req-261050 status=500 latency_ms=3212 Redis connection timeout
+2026-09-15T09:35:40.123Z WARN inventory-service node-02 trace=trace-1431773 span=span-37125 latency_ms=317 Slow query detected
+2026-09-15T09:35:45.123Z INFO [order-service] request_id=req-593821 status=200 latency_ms=38 Health check passed
+2026-09-15T09:35:50.123Z ERROR payment-service node-03 trace=trace-7197531 span=span-34455 latency_ms=4402 Database connection timeout
+2026-09-15T09:35:55.123Z ERROR [notification-service] request_id=req-691655 status=503 latency_ms=4191 Connection refused by payment service
+2026-09-15T09:36:00.123Z ERROR auth-service node-04 trace=trace-9767475 span=span-64870 latency_ms=4701 Transaction rollback initiated
+2026-09-15T09:36:05.123Z ERROR [notification-service] [node-01] request_id=req-626491 trace_id=trace-9670757 Connection refused by payment service
+2026-09-15T09:36:10.123Z INFO notification-service node-02 trace=trace-1715982 span=span-65492 latency_ms=15 Configuration loaded successfully
+2026-09-15T09:36:15.123Z ERROR [notification-service] request_id=req-974625 status=504 latency_ms=4055 Connection refused by payment service
+2026-09-15T09:36:20.123Z ERROR order-service node-05 trace=trace-1207430 span=span-91665 latency_ms=1721 Out of memory while processing batch
+2026-09-15T09:36:25.123Z ERROR api-gateway node-05 trace=trace-2681144 span=span-23845 latency_ms=3616 Connection refused by payment service
+2026-09-15T09:36:30.123Z ERROR [user-service] request_id=req-699809 status=504 latency_ms=1978 HTTP 500 returned by dependency
+2026-09-15T09:36:35.123Z WARN user-service node-04 trace=trace-7640300 span=span-53449 latency_ms=700 Database connection pool nearing capacity
+2026-09-15T09:36:40.123Z ERROR [notification-service] request_id=req-426053 status=502 latency_ms=3261 Null pointer while processing order
+2026-09-15T09:36:45.123Z ERROR notification-service node-03 trace=trace-7992286 span=span-89295 latency_ms=2531 Null pointer while processing order
+2026-09-15T09:36:50.123Z WARN notification-service node-05 trace=trace-1942977 span=span-77537 latency_ms=1187 Database connection pool nearing capacity
+2026-09-15T09:36:55.123Z ERROR [notification-service] [node-05] request_id=req-696296 trace_id=trace-1485669 Null pointer while processing order
+2026-09-15T09:37:00.123Z ERROR [order-service] [node-02] request_id=req-387286 trace_id=trace-7179919 Redis connection timeout
+2026-09-15T09:37:05.123Z ERROR api-gateway node-04 trace=trace-8962169 span=span-86923 latency_ms=2139 Kafka consumer failed to poll
+2026-09-15T09:37:10.123Z WARN [user-service] request_id=req-398916 status=200 latency_ms=603 Request latency above threshold
+2026-09-15T09:37:15.123Z ERROR [payment-service] request_id=req-783238 status=504 latency_ms=1883 Database connection timeout
+2026-09-15T09:37:20.123Z ERROR notification-service node-01 trace=trace-5234408 span=span-89736 latency_ms=3884 HTTP 500 returned by dependency
+2026-09-15T09:37:25.123Z ERROR [payment-service] request_id=req-416822 status=500 latency_ms=860 Authentication token validation failed
+2026-09-15T09:37:30.123Z INFO [notification-service] [node-03] request_id=req-688730 trace_id=trace-5742531 Inventory updated successfully
+2026-09-15T09:37:35.123Z ERROR [order-service] [node-03] request_id=req-390334 trace_id=trace-5381318 Null pointer while processing order
+2026-09-15T09:37:40.123Z INFO [notification-service] [node-05] request_id=req-523727 trace_id=trace-6361758 Worker started
+2026-09-15T09:37:45.123Z WARN [order-service] request_id=req-538897 status=200 latency_ms=852 Queue depth above normal
+2026-09-15T09:37:50.123Z WARN [user-service] request_id=req-769320 status=429 latency_ms=498 Queue depth above normal
+2026-09-15T09:37:55.123Z INFO [payment-service] request_id=req-202344 status=200 latency_ms=38 Worker started
+2026-09-15T09:38:00.123Z WARN payment-service node-03 trace=trace-2498202 span=span-39131 latency_ms=1011 Request latency above threshold
+2026-09-15T09:38:05.123Z ERROR [api-gateway] [node-03] request_id=req-586288 trace_id=trace-2976045 Authentication token validation failed
+2026-09-15T09:38:10.123Z ERROR notification-service node-04 trace=trace-6005578 span=span-64146 latency_ms=2440 Failed to process request
+2026-09-15T09:38:15.123Z ERROR api-gateway node-04 trace=trace-6308033 span=span-33639 latency_ms=2248 Transaction rollback initiated
+2026-09-15T09:38:20.123Z WARN [auth-service] [node-04] request_id=req-386814 trace_id=trace-4512853 External service response delayed
+2026-09-15T09:38:25.123Z ERROR [inventory-service] request_id=req-522988 status=500 latency_ms=2433 Database connection timeout
+2026-09-15T09:38:30.123Z ERROR [auth-service] request_id=req-893612 status=502 latency_ms=2653 Database connection timeout
+2026-09-15T09:38:35.123Z INFO [order-service] [node-02] request_id=req-207697 trace_id=trace-7434909 User authentication successful
+2026-09-15T09:38:40.123Z ERROR auth-service node-03 trace=trace-8649174 span=span-78195 latency_ms=1896 Kafka consumer failed to poll
+2026-09-15T09:38:45.123Z INFO [inventory-service] [node-03] request_id=req-886553 trace_id=trace-4161264 Request processed successfully
+2026-09-15T09:38:50.123Z INFO [payment-service] [node-02] request_id=req-869735 trace_id=trace-1367643 Database connection established
+2026-09-15T09:38:55.123Z INFO [user-service] [node-01] request_id=req-493417 trace_id=trace-5291430 HTTP request completed
+2026-09-15T09:39:00.123Z INFO [user-service] [node-01] request_id=req-150578 trace_id=trace-2942630 Payment request accepted
+2026-09-15T09:39:05.123Z INFO [inventory-service] [node-02] request_id=req-315477 trace_id=trace-1156104 Configuration loaded successfully
+2026-09-15T09:39:10.123Z INFO [order-service] request_id=req-735053 status=200 latency_ms=18 Message published to queue
+2026-09-15T09:39:15.123Z INFO [order-service] [node-01] request_id=req-922880 trace_id=trace-2782809 HTTP request completed
+2026-09-15T09:39:20.123Z INFO [notification-service] [node-05] request_id=req-311469 trace_id=trace-7004931 Database connection established
+2026-09-15T09:39:25.123Z INFO [payment-service] [node-04] request_id=req-446663 trace_id=trace-4934345 Configuration loaded successfully
+2026-09-15T09:39:30.123Z INFO [notification-service] [node-05] request_id=req-801520 trace_id=trace-9289690 Message published to queue
+2026-09-15T09:39:35.123Z INFO auth-service node-03 trace=trace-4878226 span=span-69867 latency_ms=42 User authentication successful
+2026-09-15T09:39:40.123Z WARN [notification-service] [node-02] request_id=req-141360 trace_id=trace-5874908 Cache miss rate increased
+2026-09-15T09:39:45.123Z ERROR [payment-service] [node-02] request_id=req-444625 trace_id=trace-6998314 Connection refused by payment service
+2026-09-15T09:39:50.123Z WARN [inventory-service] [node-04] request_id=req-385037 trace_id=trace-7471232 Slow query detected
+2026-09-15T09:39:55.123Z INFO [auth-service] request_id=req-208751 status=200 latency_ms=66 HTTP request completed
+2026-09-15T09:40:00.123Z INFO [api-gateway] request_id=req-917012 status=200 latency_ms=8 Configuration loaded successfully
+2026-09-15T09:40:05.123Z INFO [payment-service] [node-04] request_id=req-611833 trace_id=trace-2894776 Request processed successfully
+2026-09-15T09:40:10.123Z INFO [order-service] request_id=req-838793 status=200 latency_ms=77 Cache lookup completed
+2026-09-15T09:40:15.123Z INFO api-gateway node-05 trace=trace-2597897 span=span-66734 latency_ms=36 Inventory updated successfully
+2026-09-15T09:40:20.123Z INFO user-service node-04 trace=trace-1915467 span=span-11526 latency_ms=25 Message published to queue
+2026-09-15T09:40:25.123Z INFO notification-service node-02 trace=trace-9248484 span=span-52026 latency_ms=35 Order created successfully
+2026-09-15T09:40:30.123Z WARN [payment-service] request_id=req-774567 status=503 latency_ms=1059 Database connection pool nearing capacity
+2026-09-15T09:40:35.123Z INFO [notification-service] request_id=req-568784 status=200 latency_ms=68 Worker started
+2026-09-15T09:40:40.123Z ERROR inventory-service node-04 trace=trace-1002847 span=span-21913 latency_ms=4537 Out of memory while processing batch
+2026-09-15T09:40:45.123Z INFO [auth-service] request_id=req-985331 status=200 latency_ms=76 HTTP request completed
+2026-09-15T09:40:50.123Z INFO [user-service] [node-03] request_id=req-850689 trace_id=trace-8592234 Configuration loaded successfully
+2026-09-15T09:40:55.123Z ERROR [order-service] [node-03] request_id=req-674295 trace_id=trace-9757456 Database connection timeout
+2026-09-15T09:41:00.123Z INFO [user-service] [node-04] request_id=req-212157 trace_id=trace-5266266 Cache lookup completed
+2026-09-15T09:41:05.123Z INFO [inventory-service] [node-02] request_id=req-579247 trace_id=trace-4197381 Payment request accepted
+2026-09-15T09:41:10.123Z INFO [notification-service] [node-05] request_id=req-229204 trace_id=trace-8558212 Message published to queue
+2026-09-15T09:41:15.123Z INFO auth-service node-05 trace=trace-1814896 span=span-82512 latency_ms=60 HTTP request completed
+2026-09-15T09:41:20.123Z INFO [notification-service] request_id=req-825423 status=200 latency_ms=18 Payment request accepted
+2026-09-15T09:41:25.123Z INFO order-service node-05 trace=trace-8024028 span=span-89822 latency_ms=36 User authentication successful
+2026-09-15T09:41:30.123Z INFO [order-service] request_id=req-943890 status=200 latency_ms=57 HTTP request completed
+2026-09-15T09:41:35.123Z INFO [api-gateway] [node-03] request_id=req-984027 trace_id=trace-6266549 Cache lookup completed
+2026-09-15T09:41:40.123Z INFO [order-service] request_id=req-805034 status=200 latency_ms=27 Message published to queue
+2026-09-15T09:41:45.123Z INFO [order-service] request_id=req-897730 status=200 latency_ms=66 HTTP request completed
+2026-09-15T09:41:50.123Z INFO [user-service] request_id=req-806995 status=200 latency_ms=59 Request processed successfully
+2026-09-15T09:41:55.123Z WARN [inventory-service] request_id=req-155642 status=200 latency_ms=736 External service response delayed
+2026-09-15T09:42:00.123Z INFO notification-service node-01 trace=trace-5951637 span=span-36738 latency_ms=74 Request processed successfully
+2026-09-15T09:42:05.123Z INFO [auth-service] [node-05] request_id=req-808340 trace_id=trace-4763253 Payment request accepted
+2026-09-15T09:42:10.123Z INFO [notification-service] request_id=req-826596 status=200 latency_ms=54 Payment request accepted
+2026-09-15T09:42:15.123Z INFO [api-gateway] request_id=req-113595 status=200 latency_ms=61 Cache lookup completed
+2026-09-15T09:42:20.123Z INFO [user-service] [node-03] request_id=req-891787 trace_id=trace-4296204 Inventory updated successfully
+2026-09-15T09:42:25.123Z INFO auth-service node-02 trace=trace-9620919 span=span-25643 latency_ms=53 Request processed successfully
+2026-09-15T09:42:30.123Z INFO [order-service] request_id=req-268746 status=200 latency_ms=47 Inventory updated successfully
+2026-09-15T09:42:35.123Z INFO [auth-service] request_id=req-438302 status=200 latency_ms=43 Inventory updated successfully
+2026-09-15T09:42:40.123Z INFO [auth-service] request_id=req-650916 status=200 latency_ms=71 Health check passed
+2026-09-15T09:42:45.123Z DEBUG [api-gateway] request_id=req-523013 status=200 latency_ms=33 Cache lookup completed
+2026-09-15T09:42:50.123Z INFO [order-service] [node-03] request_id=req-329056 trace_id=trace-9900294 Configuration loaded successfully
+2026-09-15T09:42:55.123Z WARN order-service node-04 trace=trace-5090740 span=span-15226 latency_ms=940 Cache miss rate increased
+2026-09-15T09:43:00.123Z INFO order-service node-01 trace=trace-7290752 span=span-77411 latency_ms=70 Inventory updated successfully
+2026-09-15T09:43:05.123Z ERROR [user-service] [node-02] request_id=req-435872 trace_id=trace-9621722 Failed to process request
+2026-09-15T09:43:10.123Z INFO [notification-service] request_id=req-818699 status=200 latency_ms=31 Message published to queue
+2026-09-15T09:43:15.123Z INFO user-service node-04 trace=trace-2209981 span=span-99921 latency_ms=24 Request processed successfully
+2026-09-15T09:43:20.123Z INFO [auth-service] [node-01] request_id=req-176806 trace_id=trace-1910467 Message published to queue
+2026-09-15T09:43:25.123Z INFO payment-service node-03 trace=trace-7510106 span=span-69129 latency_ms=56 Payment request accepted
+2026-09-15T09:43:30.123Z ERROR user-service node-01 trace=trace-1098967 span=span-94072 latency_ms=1394 Authentication token validation failed
+2026-09-15T09:43:35.123Z INFO auth-service node-03 trace=trace-6055825 span=span-89503 latency_ms=16 User authentication successful
+2026-09-15T09:43:40.123Z INFO [notification-service] request_id=req-597012 status=200 latency_ms=33 Database connection established
+2026-09-15T09:43:45.123Z INFO [notification-service] request_id=req-409307 status=200 latency_ms=52 Request processed successfully
+2026-09-15T09:43:50.123Z INFO [payment-service] request_id=req-143802 status=200 latency_ms=55 Message published to queue
+2026-09-15T09:43:55.123Z INFO [order-service] request_id=req-884645 status=200 latency_ms=57 Configuration loaded successfully
+2026-09-15T09:44:00.123Z DEBUG [payment-service] request_id=req-746850 status=200 latency_ms=19 Database connection established
+2026-09-15T09:44:05.123Z INFO notification-service node-01 trace=trace-8738745 span=span-94498 latency_ms=75 Health check passed
+2026-09-15T09:44:10.123Z INFO [order-service] request_id=req-307007 status=200 latency_ms=50 Database connection established
+2026-09-15T09:44:15.123Z INFO auth-service node-03 trace=trace-2171198 span=span-35362 latency_ms=45 Inventory updated successfully
+2026-09-15T09:44:20.123Z INFO user-service node-03 trace=trace-3556763 span=span-84128 latency_ms=77 Order created successfully
+2026-09-15T09:44:25.123Z INFO payment-service node-01 trace=trace-5130133 span=span-39035 latency_ms=60 User authentication successful
+2026-09-15T09:44:30.123Z DEBUG user-service node-03 trace=trace-8765307 span=span-68373 latency_ms=50 User authentication successful
+2026-09-15T09:44:35.123Z INFO payment-service node-05 trace=trace-5707954 span=span-28350 latency_ms=73 Cache lookup completed
+2026-09-15T09:44:40.123Z INFO [user-service] [node-01] request_id=req-862760 trace_id=trace-2265001 Configuration loaded successfully
+2026-09-15T09:44:45.123Z INFO [api-gateway] request_id=req-906564 status=200 latency_ms=75 User authentication successful
+2026-09-15T09:44:50.123Z INFO [api-gateway] request_id=req-785672 status=200 latency_ms=55 Cache lookup completed
+2026-09-15T09:44:55.123Z INFO order-service node-02 trace=trace-9407451 span=span-76900 latency_ms=16 Payment request accepted
+2026-09-15T09:45:00.123Z INFO [user-service] [node-02] request_id=req-989173 trace_id=trace-3782393 Inventory updated successfully
+2026-09-15T09:45:05.123Z DEBUG api-gateway node-02 trace=trace-9111841 span=span-57028 latency_ms=10 Cache lookup completed
+2026-09-15T09:45:10.123Z INFO order-service node-03 trace=trace-1718206 span=span-97632 latency_ms=31 Message published to queue
+2026-09-15T09:45:15.123Z INFO inventory-service node-01 trace=trace-6437011 span=span-23529 latency_ms=71 Configuration loaded successfully
+2026-09-15T09:45:20.123Z INFO [order-service] request_id=req-670792 status=200 latency_ms=53 Order created successfully
+2026-09-15T09:45:25.123Z INFO notification-service node-01 trace=trace-5220919 span=span-59326 latency_ms=33 Message published to queue
+2026-09-15T09:45:30.123Z INFO [notification-service] [node-03] request_id=req-610511 trace_id=trace-9088465 Message published to queue
+2026-09-15T09:45:35.123Z INFO [payment-service] [node-01] request_id=req-639535 trace_id=trace-5711201 Database connection established
+2026-09-15T09:45:40.123Z INFO [user-service] [node-01] request_id=req-793223 trace_id=trace-4864570 Worker started
+2026-09-15T09:45:45.123Z INFO [inventory-service] [node-04] request_id=req-320939 trace_id=trace-3705263 Request processed successfully
+2026-09-15T09:45:50.123Z ERROR [api-gateway] [node-05] request_id=req-268956 trace_id=trace-3260294 Database connection timeout
+2026-09-15T09:45:55.123Z INFO [payment-service] [node-05] request_id=req-525151 trace_id=trace-1312392 Health check passed
+2026-09-15T09:46:00.123Z INFO [inventory-service] [node-04] request_id=req-278852 trace_id=trace-4680314 HTTP request completed
+2026-09-15T09:46:05.123Z INFO [api-gateway] [node-03] request_id=req-275868 trace_id=trace-6749069 Health check passed
+2026-09-15T09:46:10.123Z INFO payment-service node-01 trace=trace-4394845 span=span-78512 latency_ms=69 Configuration loaded successfully
+2026-09-15T09:46:15.123Z INFO [api-gateway] request_id=req-286040 status=200 latency_ms=9 Message published to queue
+2026-09-15T09:46:20.123Z INFO [auth-service] request_id=req-791423 status=200 latency_ms=74 Request processed successfully
+2026-09-15T09:46:25.123Z INFO api-gateway node-04 trace=trace-1728773 span=span-79444 latency_ms=59 Cache lookup completed
+2026-09-15T09:46:30.123Z INFO inventory-service node-03 trace=trace-2639417 span=span-65769 latency_ms=22 User authentication successful
+2026-09-15T09:46:35.123Z INFO [notification-service] request_id=req-397026 status=200 latency_ms=29 Request processed successfully
+2026-09-15T09:46:40.123Z INFO [auth-service] request_id=req-647923 status=200 latency_ms=5 Payment request accepted
+2026-09-15T09:46:45.123Z INFO [notification-service] request_id=req-528705 status=200 latency_ms=24 Payment request accepted
+2026-09-15T09:46:50.123Z INFO order-service node-05 trace=trace-7134489 span=span-90200 latency_ms=40 Configuration loaded successfully
+2026-09-15T09:46:55.123Z INFO [inventory-service] request_id=req-921861 status=200 latency_ms=52 Message published to queue
+2026-09-15T09:47:00.123Z INFO [order-service] [node-05] request_id=req-461083 trace_id=trace-7679508 Worker started
+2026-09-15T09:47:05.123Z INFO [user-service] request_id=req-205149 status=200 latency_ms=56 Order created successfully
+2026-09-15T09:47:10.123Z INFO [user-service] [node-01] request_id=req-268546 trace_id=trace-7528076 Health check passed
+2026-09-15T09:47:15.123Z INFO [api-gateway] [node-04] request_id=req-192422 trace_id=trace-2075091 Order created successfully
+2026-09-15T09:47:20.123Z INFO [user-service] request_id=req-520106 status=200 latency_ms=12 Database connection established
+2026-09-15T09:47:25.123Z INFO [auth-service] request_id=req-991884 status=200 latency_ms=29 Request processed successfully
+2026-09-15T09:47:30.123Z INFO [user-service] [node-02] request_id=req-745073 trace_id=trace-3843451 Order created successfully
+2026-09-15T09:47:35.123Z INFO [payment-service] request_id=req-389340 status=200 latency_ms=55 Payment request accepted
+2026-09-15T09:47:40.123Z INFO auth-service node-01 trace=trace-5773013 span=span-83284 latency_ms=79 Order created successfully
+2026-09-15T09:47:45.123Z INFO [order-service] [node-02] request_id=req-735818 trace_id=trace-4263591 HTTP request completed
+2026-09-15T09:47:50.123Z INFO [inventory-service] [node-05] request_id=req-211636 trace_id=trace-2214435 Order created successfully
+2026-09-15T09:47:55.123Z INFO order-service node-05 trace=trace-5196677 span=span-68034 latency_ms=53 HTTP request completed
+2026-09-15T09:48:00.123Z INFO [notification-service] [node-03] request_id=req-913274 trace_id=trace-8698199 HTTP request completed
+2026-09-15T09:48:05.123Z INFO order-service node-01 trace=trace-4697401 span=span-98724 latency_ms=34 Order created successfully
+2026-09-15T09:48:10.123Z INFO api-gateway node-05 trace=trace-5418274 span=span-42539 latency_ms=41 Health check passed
+2026-09-15T09:48:15.123Z INFO [notification-service] [node-03] request_id=req-179721 trace_id=trace-3994493 Order created successfully
+2026-09-15T09:48:20.123Z INFO [order-service] request_id=req-882401 status=200 latency_ms=30 Cache lookup completed
+2026-09-15T09:48:25.123Z INFO [order-service] [node-02] request_id=req-340341 trace_id=trace-4401858 Database connection established
+2026-09-15T09:48:30.123Z WARN [auth-service] request_id=req-743644 status=503 latency_ms=910 External service response delayed
+2026-09-15T09:48:35.123Z INFO [api-gateway] [node-03] request_id=req-614646 trace_id=trace-4068080 Payment request accepted
+2026-09-15T09:48:40.123Z INFO [payment-service] request_id=req-651273 status=200 latency_ms=74 Request processed successfully
+2026-09-15T09:48:45.123Z INFO [notification-service] request_id=req-579404 status=200 latency_ms=63 Order created successfully
+2026-09-15T09:48:50.123Z ERROR [user-service] request_id=req-497859 status=503 latency_ms=2333 Authentication token validation failed
+2026-09-15T09:48:55.123Z INFO order-service node-04 trace=trace-6756203 span=span-57962 latency_ms=28 Inventory updated successfully
+2026-09-15T09:49:00.123Z INFO [user-service] request_id=req-482812 status=200 latency_ms=62 Database connection established
+2026-09-15T09:49:05.123Z DEBUG api-gateway node-02 trace=trace-2675536 span=span-45382 latency_ms=35 Message published to queue
+2026-09-15T09:49:10.123Z INFO payment-service node-02 trace=trace-3509000 span=span-71995 latency_ms=6 Database connection established
+2026-09-15T09:49:15.123Z INFO [notification-service] request_id=req-659921 status=200 latency_ms=43 User authentication successful
+2026-09-15T09:49:20.123Z INFO auth-service node-04 trace=trace-3740422 span=span-17869 latency_ms=32 User authentication successful
+2026-09-15T09:49:25.123Z INFO [auth-service] request_id=req-880762 status=200 latency_ms=51 Order created successfully
+2026-09-15T09:49:30.123Z INFO [notification-service] request_id=req-460857 status=200 latency_ms=20 Order created successfully
+2026-09-15T09:49:35.123Z INFO [payment-service] request_id=req-703869 status=200 latency_ms=50 Order created successfully
+2026-09-15T09:49:40.123Z INFO [notification-service] request_id=req-182216 status=200 latency_ms=41 Inventory updated successfully
+2026-09-15T09:49:45.123Z INFO [notification-service] [node-02] request_id=req-771697 trace_id=trace-6660436 Payment request accepted
+2026-09-15T09:49:50.123Z WARN order-service node-02 trace=trace-6316334 span=span-95591 latency_ms=959 Slow query detected
+2026-09-15T09:49:55.123Z INFO [notification-service] [node-03] request_id=req-884225 trace_id=trace-9739850 Database connection established
+2026-09-15T09:50:00.123Z INFO payment-service node-02 trace=trace-5221936 span=span-20494 latency_ms=31 Database connection established
+2026-09-15T09:50:05.123Z WARN auth-service node-04 trace=trace-1903041 span=span-13455 latency_ms=362 Queue depth above normal
+2026-09-15T09:50:10.123Z INFO [auth-service] request_id=req-424398 status=200 latency_ms=41 Inventory updated successfully
+2026-09-15T09:50:15.123Z DEBUG api-gateway node-02 trace=trace-1589802 span=span-96972 latency_ms=50 Order created successfully
+2026-09-15T09:50:20.123Z INFO [notification-service] request_id=req-385647 status=200 latency_ms=74 Database connection established
+2026-09-15T09:50:25.123Z INFO user-service node-05 trace=trace-9782198 span=span-93858 latency_ms=73 User authentication successful
+2026-09-15T09:50:30.123Z INFO [payment-service] [node-01] request_id=req-563324 trace_id=trace-6165171 User authentication successful
+2026-09-15T09:50:35.123Z INFO [auth-service] request_id=req-954987 status=200 latency_ms=41 Inventory updated successfully
+2026-09-15T09:50:40.123Z ERROR [inventory-service] request_id=req-414164 status=502 latency_ms=859 Authentication token validation failed
+2026-09-15T09:50:45.123Z INFO [inventory-service] request_id=req-558339 status=200 latency_ms=25 Worker started
+2026-09-15T09:50:50.123Z INFO [notification-service] [node-04] request_id=req-331307 trace_id=trace-5412076 Configuration loaded successfully
+2026-09-15T09:50:55.123Z INFO notification-service node-05 trace=trace-5561139 span=span-47313 latency_ms=73 User authentication successful
+2026-09-15T09:51:00.123Z DEBUG auth-service node-02 trace=trace-5858602 span=span-24464 latency_ms=63 HTTP request completed
+2026-09-15T09:51:05.123Z INFO [api-gateway] request_id=req-296911 status=200 latency_ms=24 Request processed successfully
+2026-09-15T09:51:10.123Z ERROR [auth-service] [node-03] request_id=req-382271 trace_id=trace-3097809 Null pointer while processing order
+2026-09-15T09:51:15.123Z INFO [order-service] [node-04] request_id=req-426711 trace_id=trace-9361693 Worker started
+2026-09-15T09:51:20.123Z INFO notification-service node-02 trace=trace-5471188 span=span-61435 latency_ms=14 Message published to queue
+2026-09-15T09:51:25.123Z DEBUG [notification-service] [node-03] request_id=req-956949 trace_id=trace-7401806 Worker started
+2026-09-15T09:51:30.123Z INFO [inventory-service] [node-02] request_id=req-873449 trace_id=trace-1562209 Worker started
+2026-09-15T09:51:35.123Z INFO [payment-service] request_id=req-508024 status=200 latency_ms=25 Configuration loaded successfully
+2026-09-15T09:51:40.123Z ERROR [api-gateway] request_id=req-228074 status=503 latency_ms=1226 Null pointer while processing order
+2026-09-15T09:51:45.123Z INFO auth-service node-02 trace=trace-8284023 span=span-52534 latency_ms=6 Database connection established
+2026-09-15T09:51:50.123Z INFO [inventory-service] request_id=req-109363 status=200 latency_ms=65 Worker started
+2026-09-15T09:51:55.123Z DEBUG [notification-service] request_id=req-360804 status=200 latency_ms=16 Configuration loaded successfully
+2026-09-15T09:52:00.123Z INFO [notification-service] request_id=req-162678 status=200 latency_ms=24 Worker started
+2026-09-15T09:52:05.123Z INFO [payment-service] request_id=req-343977 status=200 latency_ms=49 Inventory updated successfully
+2026-09-15T09:52:10.123Z DEBUG [user-service] request_id=req-475565 status=200 latency_ms=10 Inventory updated successfully
+2026-09-15T09:52:15.123Z INFO [order-service] request_id=req-830897 status=200 latency_ms=77 Database connection established
+2026-09-15T09:52:20.123Z INFO user-service node-04 trace=trace-3690116 span=span-19027 latency_ms=72 Database connection established
+2026-09-15T09:52:25.123Z INFO [order-service] request_id=req-484945 status=200 latency_ms=69 Payment request accepted
+2026-09-15T09:52:30.123Z DEBUG [auth-service] request_id=req-998450 status=200 latency_ms=35 Order created successfully
+2026-09-15T09:52:35.123Z WARN api-gateway node-04 trace=trace-9792431 span=span-99551 latency_ms=729 External service response delayed
+2026-09-15T09:52:40.123Z INFO [order-service] [node-01] request_id=req-200932 trace_id=trace-9777848 Request processed successfully
+2026-09-15T09:52:45.123Z DEBUG [auth-service] request_id=req-212255 status=200 latency_ms=17 Request processed successfully
+2026-09-15T09:52:50.123Z INFO [inventory-service] request_id=req-651363 status=200 latency_ms=51 Cache lookup completed
+2026-09-15T09:52:55.123Z INFO [auth-service] [node-02] request_id=req-787603 trace_id=trace-9244416 Configuration loaded successfully
+2026-09-15T09:53:00.123Z INFO [user-service] [node-04] request_id=req-961957 trace_id=trace-7191944 Message published to queue
+2026-09-15T09:53:05.123Z INFO [notification-service] request_id=req-181721 status=200 latency_ms=17 Health check passed
+2026-09-15T09:53:10.123Z INFO [inventory-service] request_id=req-302500 status=200 latency_ms=36 HTTP request completed
+2026-09-15T09:53:15.123Z INFO [api-gateway] request_id=req-535352 status=200 latency_ms=78 Order created successfully
+2026-09-15T09:53:20.123Z INFO [user-service] request_id=req-209159 status=200 latency_ms=75 Payment request accepted
+2026-09-15T09:53:25.123Z INFO payment-service node-05 trace=trace-8432510 span=span-56179 latency_ms=45 Message published to queue
+2026-09-15T09:53:30.123Z INFO [inventory-service] request_id=req-966286 status=200 latency_ms=35 HTTP request completed
+2026-09-15T09:53:35.123Z INFO notification-service node-05 trace=trace-5262908 span=span-57187 latency_ms=62 Inventory updated successfully
+2026-09-15T09:53:40.123Z ERROR [auth-service] [node-03] request_id=req-724702 trace_id=trace-1273509 HTTP 500 returned by dependency
+2026-09-15T09:53:45.123Z INFO [order-service] request_id=req-909000 status=200 latency_ms=70 Message published to queue
+2026-09-15T09:53:50.123Z INFO payment-service node-01 trace=trace-8723723 span=span-56616 latency_ms=24 Database connection established
+2026-09-15T09:53:55.123Z INFO api-gateway node-02 trace=trace-5299058 span=span-49361 latency_ms=16 HTTP request completed
+2026-09-15T09:54:00.123Z INFO [payment-service] request_id=req-858729 status=200 latency_ms=27 Inventory updated successfully
+2026-09-15T09:54:05.123Z INFO [notification-service] [node-01] request_id=req-724145 trace_id=trace-6039762 Payment request accepted
+2026-09-15T09:54:10.123Z INFO [notification-service] request_id=req-464831 status=200 latency_ms=20 Cache lookup completed
+2026-09-15T09:54:15.123Z INFO [api-gateway] [node-01] request_id=req-764678 trace_id=trace-7417066 Message published to queue
+2026-09-15T09:54:20.123Z INFO [api-gateway] request_id=req-442707 status=200 latency_ms=24 Request processed successfully
+2026-09-15T09:54:25.123Z INFO inventory-service node-04 trace=trace-9467953 span=span-21807 latency_ms=33 Payment request accepted
+2026-09-15T09:54:30.123Z INFO [payment-service] [node-02] request_id=req-452497 trace_id=trace-2384877 Worker started
+2026-09-15T09:54:35.123Z INFO order-service node-01 trace=trace-9419194 span=span-66949 latency_ms=21 Database connection established
+2026-09-15T09:54:40.123Z INFO [inventory-service] [node-04] request_id=req-783932 trace_id=trace-4290000 Cache lookup completed
+2026-09-15T09:54:45.123Z WARN [notification-service] [node-04] request_id=req-439121 trace_id=trace-2503148 Cache miss rate increased
+2026-09-15T09:54:50.123Z INFO api-gateway node-01 trace=trace-6114011 span=span-32184 latency_ms=49 HTTP request completed
+2026-09-15T09:54:55.123Z INFO [inventory-service] request_id=req-957915 status=200 latency_ms=52 Database connection established
+2026-09-15T09:55:00.123Z INFO [auth-service] request_id=req-354854 status=200 latency_ms=6 Order created successfully
+2026-09-15T09:55:05.123Z INFO [order-service] request_id=req-594078 status=200 latency_ms=31 Worker started
+2026-09-15T09:55:10.123Z INFO [api-gateway] request_id=req-886804 status=200 latency_ms=66 HTTP request completed
+2026-09-15T09:55:15.123Z INFO [user-service] [node-01] request_id=req-494900 trace_id=trace-9838222 Database connection established
+2026-09-15T09:55:20.123Z INFO notification-service node-05 trace=trace-1890622 span=span-70943 latency_ms=6 Health check passed
+2026-09-15T09:55:25.123Z INFO user-service node-03 trace=trace-1320081 span=span-48337 latency_ms=54 Cache lookup completed
+2026-09-15T09:55:30.123Z INFO [user-service] [node-01] request_id=req-430779 trace_id=trace-9131281 Health check passed
+2026-09-15T09:55:35.123Z DEBUG inventory-service node-05 trace=trace-1360516 span=span-15210 latency_ms=36 Message published to queue
+2026-09-15T09:55:40.123Z INFO [inventory-service] request_id=req-119264 status=200 latency_ms=50 Order created successfully
+2026-09-15T09:55:45.123Z INFO [api-gateway] [node-03] request_id=req-951331 trace_id=trace-2040350 Payment request accepted
+2026-09-15T09:55:50.123Z INFO [order-service] request_id=req-259077 status=200 latency_ms=22 Health check passed
+2026-09-15T09:55:55.123Z INFO [user-service] [node-05] request_id=req-755910 trace_id=trace-4815608 HTTP request completed
+2026-09-15T09:56:00.123Z INFO [order-service] request_id=req-445280 status=200 latency_ms=21 Cache lookup completed
+2026-09-15T09:56:05.123Z DEBUG [api-gateway] [node-02] request_id=req-244818 trace_id=trace-6184132 Payment request accepted
+2026-09-15T09:56:10.123Z INFO [api-gateway] [node-02] request_id=req-432918 trace_id=trace-2137730 Worker started
+2026-09-15T09:56:15.123Z DEBUG notification-service node-02 trace=trace-1494648 span=span-51771 latency_ms=57 Payment request accepted
+2026-09-15T09:56:20.123Z INFO [notification-service] [node-03] request_id=req-259338 trace_id=trace-4153002 Database connection established
+2026-09-15T09:56:25.123Z INFO [api-gateway] request_id=req-379825 status=200 latency_ms=34 Cache lookup completed
+2026-09-15T09:56:30.123Z ERROR auth-service node-04 trace=trace-9427608 span=span-89260 latency_ms=3974 Kafka consumer failed to poll
+2026-09-15T09:56:35.123Z INFO payment-service node-02 trace=trace-1540722 span=span-63554 latency_ms=6 User authentication successful
+2026-09-15T09:56:40.123Z INFO [user-service] request_id=req-894586 status=200 latency_ms=27 Inventory updated successfully
+2026-09-15T09:56:45.123Z INFO [order-service] request_id=req-358771 status=200 latency_ms=10 HTTP request completed
+2026-09-15T09:56:50.123Z INFO [user-service] [node-03] request_id=req-513296 trace_id=trace-9995261 Message published to queue
+2026-09-15T09:56:55.123Z INFO [notification-service] [node-01] request_id=req-357657 trace_id=trace-9702386 Worker started
+2026-09-15T09:57:00.123Z INFO api-gateway node-01 trace=trace-5885179 span=span-67613 latency_ms=55 User authentication successful
+2026-09-15T09:57:05.123Z INFO [inventory-service] request_id=req-742917 status=200 latency_ms=23 Inventory updated successfully
+2026-09-15T09:57:10.123Z INFO user-service node-05 trace=trace-4016063 span=span-86735 latency_ms=74 Database connection established
+2026-09-15T09:57:15.123Z INFO [inventory-service] [node-01] request_id=req-287567 trace_id=trace-8611499 Inventory updated successfully
+2026-09-15T09:57:20.123Z INFO user-service node-02 trace=trace-3072728 span=span-21952 latency_ms=19 Worker started
+2026-09-15T09:57:25.123Z INFO [auth-service] request_id=req-841635 status=200 latency_ms=25 Payment request accepted
+2026-09-15T09:57:30.123Z INFO [notification-service] request_id=req-451475 status=200 latency_ms=23 Database connection established
+2026-09-15T09:57:35.123Z WARN [order-service] [node-03] request_id=req-865630 trace_id=trace-8486970 Database connection pool nearing capacity
+2026-09-15T09:57:40.123Z INFO [order-service] request_id=req-580921 status=200 latency_ms=74 Request processed successfully
+2026-09-15T09:57:45.123Z INFO [payment-service] [node-02] request_id=req-717466 trace_id=trace-8981122 Inventory updated successfully
+2026-09-15T09:57:50.123Z INFO [auth-service] [node-02] request_id=req-673929 trace_id=trace-5665960 Cache lookup completed
+2026-09-15T09:57:55.123Z DEBUG auth-service node-03 trace=trace-3438977 span=span-14250 latency_ms=78 HTTP request completed
+2026-09-15T09:58:00.123Z INFO auth-service node-01 trace=trace-7995376 span=span-33363 latency_ms=25 Configuration loaded successfully
+2026-09-15T09:58:05.123Z INFO [user-service] [node-05] request_id=req-700081 trace_id=trace-3976601 Order created successfully
+2026-09-15T09:58:10.123Z WARN order-service node-03 trace=trace-7357547 span=span-18869 latency_ms=749 External service response delayed
+2026-09-15T09:58:15.123Z DEBUG [user-service] request_id=req-445200 status=200 latency_ms=72 Cache lookup completed
+2026-09-15T09:58:20.123Z INFO [auth-service] request_id=req-699121 status=200 latency_ms=66 Worker started
+2026-09-15T09:58:25.123Z INFO [notification-service] request_id=req-547798 status=200 latency_ms=72 HTTP request completed
+2026-09-15T09:58:30.123Z INFO [payment-service] [node-05] request_id=req-689964 trace_id=trace-9328158 Inventory updated successfully
+2026-09-15T09:58:35.123Z INFO [payment-service] request_id=req-302957 status=200 latency_ms=8 Inventory updated successfully
+2026-09-15T09:58:40.123Z INFO user-service node-02 trace=trace-7956372 span=span-64269 latency_ms=10 Order created successfully
+2026-09-15T09:58:45.123Z INFO user-service node-02 trace=trace-4375360 span=span-46913 latency_ms=37 Health check passed
+2026-09-15T09:58:50.123Z INFO api-gateway node-03 trace=trace-1102865 span=span-24920 latency_ms=47 Order created successfully
+2026-09-15T09:58:55.123Z INFO [api-gateway] request_id=req-972460 status=200 latency_ms=47 Order created successfully
+2026-09-15T09:59:00.123Z INFO inventory-service node-01 trace=trace-3277572 span=span-73110 latency_ms=24 Configuration loaded successfully
+2026-09-15T09:59:05.123Z INFO [api-gateway] request_id=req-584935 status=200 latency_ms=71 User authentication successful
+2026-09-15T09:59:10.123Z INFO order-service node-05 trace=trace-1314043 span=span-37297 latency_ms=78 Configuration loaded successfully
+2026-09-15T09:59:15.123Z INFO notification-service node-03 trace=trace-3504920 span=span-46760 latency_ms=8 Order created successfully
+2026-09-15T09:59:20.123Z INFO [notification-service] request_id=req-698717 status=200 latency_ms=19 User authentication successful
+2026-09-15T09:59:25.123Z INFO user-service node-01 trace=trace-7943579 span=span-21376 latency_ms=68 Cache lookup completed
+2026-09-15T09:59:30.123Z INFO [order-service] [node-02] request_id=req-650607 trace_id=trace-6072059 Order created successfully
+2026-09-15T09:59:35.123Z INFO [auth-service] [node-04] request_id=req-630573 trace_id=trace-1418336 Database connection established
+2026-09-15T09:59:40.123Z INFO [inventory-service] request_id=req-425434 status=200 latency_ms=17 Message published to queue
+2026-09-15T09:59:45.123Z INFO payment-service node-01 trace=trace-7502651 span=span-78464 latency_ms=19 Request processed successfully
+2026-09-15T09:59:50.123Z INFO [user-service] request_id=req-191305 status=200 latency_ms=10 Health check passed
+2026-09-15T09:59:55.123Z INFO [user-service] [node-03] request_id=req-123572 trace_id=trace-6236888 Order created successfully
+2026-09-15T10:00:00.123Z DEBUG [order-service] [node-05] request_id=req-434652 trace_id=trace-8400692 User authentication successful
+2026-09-15T10:00:05.123Z DEBUG auth-service node-01 trace=trace-9624506 span=span-23418 latency_ms=31 Message published to queue
+2026-09-15T10:00:10.123Z INFO [order-service] [node-02] request_id=req-838568 trace_id=trace-5752443 Database connection established
+2026-09-15T10:00:15.123Z INFO [order-service] request_id=req-565198 status=200 latency_ms=8 Inventory updated successfully
+2026-09-15T10:00:20.123Z WARN inventory-service node-01 trace=trace-8154907 span=span-61369 latency_ms=878 Slow query detected
+2026-09-15T10:00:25.123Z INFO [payment-service] request_id=req-182361 status=200 latency_ms=21 Health check passed
+2026-09-15T10:00:30.123Z INFO [inventory-service] [node-03] request_id=req-817727 trace_id=trace-8808058 Cache lookup completed
+2026-09-15T10:00:35.123Z INFO api-gateway node-03 trace=trace-7577959 span=span-34032 latency_ms=47 Order created successfully
+2026-09-15T10:00:40.123Z INFO auth-service node-04 trace=trace-6896198 span=span-72737 latency_ms=64 Database connection established
+2026-09-15T10:00:45.123Z INFO [api-gateway] [node-05] request_id=req-233582 trace_id=trace-9521981 Worker started
+2026-09-15T10:00:50.123Z INFO [user-service] request_id=req-930924 status=200 latency_ms=64 Payment request accepted
+2026-09-15T10:00:55.123Z INFO api-gateway node-02 trace=trace-3667917 span=span-73225 latency_ms=54 Health check passed
+2026-09-15T10:01:00.123Z INFO [user-service] request_id=req-552091 status=200 latency_ms=48 Message published to queue
+2026-09-15T10:01:05.123Z INFO user-service node-01 trace=trace-9164301 span=span-24984 latency_ms=80 HTTP request completed
+2026-09-15T10:01:10.123Z INFO [auth-service] [node-04] request_id=req-284731 trace_id=trace-6167981 HTTP request completed
+2026-09-15T10:01:15.123Z INFO [api-gateway] [node-04] request_id=req-443312 trace_id=trace-9292896 Health check passed
+2026-09-15T10:01:20.123Z INFO [api-gateway] request_id=req-893853 status=200 latency_ms=24 Inventory updated successfully
+2026-09-15T10:01:25.123Z INFO [api-gateway] request_id=req-568881 status=200 latency_ms=45 User authentication successful
+2026-09-15T10:01:30.123Z INFO [user-service] request_id=req-555844 status=200 latency_ms=79 Request processed successfully
+2026-09-15T10:01:35.123Z INFO [inventory-service] [node-02] request_id=req-993916 trace_id=trace-5935599 Message published to queue
+2026-09-15T10:01:40.123Z ERROR [api-gateway] request_id=req-215027 status=504 latency_ms=3406 Redis connection timeout
+2026-09-15T10:01:45.123Z INFO [inventory-service] [node-04] request_id=req-671598 trace_id=trace-4543617 Inventory updated successfully
+2026-09-15T10:01:50.123Z DEBUG [inventory-service] [node-03] request_id=req-980764 trace_id=trace-8000050 Configuration loaded successfully
+2026-09-15T10:01:55.123Z DEBUG [auth-service] [node-01] request_id=req-250990 trace_id=trace-9165493 Database connection established
+2026-09-15T10:02:00.123Z DEBUG [notification-service] request_id=req-578180 status=200 latency_ms=28 Inventory updated successfully
+2026-09-15T10:02:05.123Z INFO [notification-service] request_id=req-503402 status=200 latency_ms=28 Payment request accepted
+2026-09-15T10:02:10.123Z ERROR [inventory-service] [node-02] request_id=req-846722 trace_id=trace-9417612 Out of memory while processing batch
+2026-09-15T10:02:15.123Z INFO [user-service] request_id=req-218661 status=200 latency_ms=23 Worker started
+2026-09-15T10:02:20.123Z INFO [notification-service] [node-03] request_id=req-587521 trace_id=trace-9672974 HTTP request completed
+2026-09-15T10:02:25.123Z INFO [user-service] request_id=req-817303 status=200 latency_ms=11 Order created successfully
+2026-09-15T10:02:30.123Z INFO inventory-service node-04 trace=trace-8872413 span=span-85230 latency_ms=47 Payment request accepted
+2026-09-15T10:02:35.123Z INFO [notification-service] request_id=req-403257 status=200 latency_ms=43 Worker started
+2026-09-15T10:02:40.123Z INFO user-service node-04 trace=trace-3836678 span=span-85085 latency_ms=11 Configuration loaded successfully
+2026-09-15T10:02:45.123Z INFO [api-gateway] [node-01] request_id=req-400748 trace_id=trace-9132926 Message published to queue
+2026-09-15T10:02:50.123Z INFO [order-service] request_id=req-238976 status=200 latency_ms=37 Request processed successfully
+2026-09-15T10:02:55.123Z WARN [payment-service] request_id=req-874863 status=200 latency_ms=685 Retrying connection to dependency
+2026-09-15T10:03:00.123Z INFO [payment-service] [node-05] request_id=req-134697 trace_id=trace-6752034 HTTP request completed
+2026-09-15T10:03:05.123Z INFO [notification-service] request_id=req-907789 status=200 latency_ms=61 Worker started
+2026-09-15T10:03:10.123Z DEBUG api-gateway node-03 trace=trace-5435820 span=span-25203 latency_ms=11 Database connection established
+2026-09-15T10:03:15.123Z INFO [order-service] request_id=req-882395 status=200 latency_ms=53 Configuration loaded successfully
+2026-09-15T10:03:20.123Z INFO order-service node-02 trace=trace-8293631 span=span-11554 latency_ms=41 Inventory updated successfully
+2026-09-15T10:03:25.123Z INFO [api-gateway] request_id=req-202093 status=200 latency_ms=50 Payment request accepted
+2026-09-15T10:03:30.123Z INFO [notification-service] request_id=req-451238 status=200 latency_ms=17 User authentication successful
+2026-09-15T10:03:35.123Z INFO [inventory-service] request_id=req-869983 status=200 latency_ms=48 Configuration loaded successfully
+2026-09-15T10:03:40.123Z INFO [order-service] [node-05] request_id=req-111091 trace_id=trace-1142206 Payment request accepted
+2026-09-15T10:03:45.123Z INFO [user-service] [node-04] request_id=req-468591 trace_id=trace-4681195 Cache lookup completed
+2026-09-15T10:03:50.123Z ERROR auth-service node-01 trace=trace-4637715 span=span-88562 latency_ms=1864 Connection refused by payment service
+2026-09-15T10:03:55.123Z INFO user-service node-05 trace=trace-4099902 span=span-24528 latency_ms=28 User authentication successful
+2026-09-15T10:04:00.123Z INFO [auth-service] [node-04] request_id=req-389809 trace_id=trace-8163592 User authentication successful
+2026-09-15T10:04:05.123Z INFO order-service node-01 trace=trace-7519465 span=span-53601 latency_ms=12 User authentication successful
+2026-09-15T10:04:10.123Z DEBUG [auth-service] [node-04] request_id=req-310416 trace_id=trace-7587312 Health check passed
+2026-09-15T10:04:15.123Z INFO [inventory-service] [node-02] request_id=req-743790 trace_id=trace-2782574 Health check passed
+2026-09-15T10:04:20.123Z WARN [api-gateway] request_id=req-914992 status=200 latency_ms=227 Request latency above threshold
+2026-09-15T10:04:25.123Z INFO payment-service node-03 trace=trace-1062138 span=span-77552 latency_ms=67 Inventory updated successfully
+2026-09-15T10:04:30.123Z INFO user-service node-01 trace=trace-4789081 span=span-10433 latency_ms=54 Worker started
+2026-09-15T10:04:35.123Z DEBUG [api-gateway] request_id=req-449636 status=200 latency_ms=12 Configuration loaded successfully
+2026-09-15T10:04:40.123Z WARN [api-gateway] request_id=req-184365 status=200 latency_ms=936 Request latency above threshold
+2026-09-15T10:04:45.123Z DEBUG user-service node-04 trace=trace-7027401 span=span-73766 latency_ms=15 Configuration loaded successfully
+2026-09-15T10:04:50.123Z INFO payment-service node-01 trace=trace-1425547 span=span-87718 latency_ms=35 Inventory updated successfully
+2026-09-15T10:04:55.123Z WARN api-gateway node-03 trace=trace-9958027 span=span-68891 latency_ms=264 Database connection pool nearing capacity
+2026-09-15T10:05:00.123Z INFO [auth-service] request_id=req-223928 status=200 latency_ms=71 Inventory updated successfully
+2026-09-15T10:05:05.123Z INFO [api-gateway] [node-02] request_id=req-877048 trace_id=trace-4908850 Worker started
+2026-09-15T10:05:10.123Z INFO [auth-service] [node-04] request_id=req-748410 trace_id=trace-1768424 Request processed successfully
+2026-09-15T10:05:15.123Z INFO [order-service] [node-01] request_id=req-578344 trace_id=trace-3863692 Health check passed
+2026-09-15T10:05:20.123Z INFO [notification-service] request_id=req-331287 status=200 latency_ms=59 Order created successfully
+2026-09-15T10:05:25.123Z INFO [order-service] request_id=req-817318 status=200 latency_ms=32 Request processed successfully
+2026-09-15T10:05:30.123Z DEBUG auth-service node-01 trace=trace-3369560 span=span-64415 latency_ms=26 Worker started
+2026-09-15T10:05:35.123Z INFO [inventory-service] request_id=req-710256 status=200 latency_ms=17 Configuration loaded successfully
+2026-09-15T10:05:40.123Z INFO [payment-service] [node-01] request_id=req-610622 trace_id=trace-2354300 Database connection established
+2026-09-15T10:05:45.123Z INFO [api-gateway] request_id=req-536440 status=200 latency_ms=31 Database connection established
+2026-09-15T10:05:50.123Z INFO [inventory-service] [node-04] request_id=req-350875 trace_id=trace-3928445 HTTP request completed
+2026-09-15T10:05:55.123Z INFO [api-gateway] request_id=req-757658 status=200 latency_ms=58 Request processed successfully
+2026-09-15T10:06:00.123Z INFO auth-service node-05 trace=trace-7071696 span=span-80742 latency_ms=69 Cache lookup completed
+2026-09-15T10:06:05.123Z INFO [user-service] request_id=req-389854 status=200 latency_ms=19 Database connection established
+2026-09-15T10:06:10.123Z INFO [inventory-service] request_id=req-284888 status=200 latency_ms=10 Request processed successfully
+2026-09-15T10:06:15.123Z INFO [payment-service] [node-04] request_id=req-363592 trace_id=trace-6608533 Request processed successfully
+2026-09-15T10:06:20.123Z INFO [api-gateway] [node-02] request_id=req-265722 trace_id=trace-1487633 Health check passed
+2026-09-15T10:06:25.123Z INFO [user-service] request_id=req-721497 status=200 latency_ms=30 Worker started
+2026-09-15T10:06:30.123Z INFO payment-service node-01 trace=trace-4821548 span=span-22853 latency_ms=35 Worker started
+2026-09-15T10:06:35.123Z INFO inventory-service node-02 trace=trace-8901905 span=span-86689 latency_ms=67 Request processed successfully
+2026-09-15T10:06:40.123Z DEBUG [api-gateway] request_id=req-286710 status=200 latency_ms=22 Inventory updated successfully
+2026-09-15T10:06:45.123Z DEBUG [order-service] request_id=req-312033 status=200 latency_ms=9 Worker started
+2026-09-15T10:06:50.123Z WARN payment-service node-01 trace=trace-8810369 span=span-70106 latency_ms=600 Request latency above threshold
+2026-09-15T10:06:55.123Z INFO notification-service node-05 trace=trace-4853765 span=span-21334 latency_ms=57 Message published to queue
+2026-09-15T10:07:00.123Z INFO payment-service node-05 trace=trace-8763873 span=span-46591 latency_ms=6 Worker started
+2026-09-15T10:07:05.123Z INFO [payment-service] [node-02] request_id=req-443194 trace_id=trace-8285484 HTTP request completed
+2026-09-15T10:07:10.123Z INFO auth-service node-04 trace=trace-1672073 span=span-71689 latency_ms=69 Request processed successfully
+2026-09-15T10:07:15.123Z INFO [inventory-service] [node-01] request_id=req-574419 trace_id=trace-9309504 Message published to queue
+2026-09-15T10:07:20.123Z INFO [inventory-service] [node-02] request_id=req-239158 trace_id=trace-7013049 Configuration loaded successfully
+2026-09-15T10:07:25.123Z ERROR [user-service] [node-03] request_id=req-269662 trace_id=trace-8705487 Database connection timeout
+2026-09-15T10:07:30.123Z INFO [inventory-service] request_id=req-928226 status=200 latency_ms=64 Worker started
+2026-09-15T10:07:35.123Z ERROR [user-service] request_id=req-503575 status=504 latency_ms=3010 HTTP 500 returned by dependency
+2026-09-15T10:07:40.123Z INFO api-gateway node-05 trace=trace-4475340 span=span-99740 latency_ms=15 HTTP request completed
+2026-09-15T10:07:45.123Z INFO auth-service node-05 trace=trace-7106747 span=span-16758 latency_ms=19 Payment request accepted
+2026-09-15T10:07:50.123Z INFO [auth-service] [node-03] request_id=req-484232 trace_id=trace-3940499 Worker started
+2026-09-15T10:07:55.123Z INFO [notification-service] request_id=req-245129 status=200 latency_ms=74 Health check passed
+2026-09-15T10:08:00.123Z INFO notification-service node-05 trace=trace-4519758 span=span-39548 latency_ms=46 Order created successfully
+2026-09-15T10:08:05.123Z INFO inventory-service node-03 trace=trace-2063158 span=span-58865 latency_ms=49 Inventory updated successfully
+2026-09-15T10:08:10.123Z INFO notification-service node-01 trace=trace-9923876 span=span-98907 latency_ms=73 User authentication successful
+2026-09-15T10:08:15.123Z INFO [notification-service] [node-01] request_id=req-297503 trace_id=trace-8681853 Payment request accepted
+2026-09-15T10:08:20.123Z INFO [auth-service] [node-01] request_id=req-272769 trace_id=trace-5629550 Inventory updated successfully
+2026-09-15T10:08:25.123Z INFO api-gateway node-01 trace=trace-7988325 span=span-99443 latency_ms=74 Database connection established
+2026-09-15T10:08:30.123Z INFO [inventory-service] request_id=req-405677 status=200 latency_ms=7 Cache lookup completed
+2026-09-15T10:08:35.123Z INFO [inventory-service] request_id=req-459443 status=200 latency_ms=80 Configuration loaded successfully
+2026-09-15T10:08:40.123Z INFO [api-gateway] [node-04] request_id=req-580255 trace_id=trace-6101655 User authentication successful
+2026-09-15T10:08:45.123Z INFO payment-service node-04 trace=trace-5834292 span=span-16202 latency_ms=23 Order created successfully
+2026-09-15T10:08:50.123Z INFO [payment-service] request_id=req-268600 status=200 latency_ms=28 Database connection established
+2026-09-15T10:08:55.123Z INFO [user-service] request_id=req-269087 status=200 latency_ms=10 Order created successfully
+2026-09-15T10:09:00.123Z DEBUG order-service node-03 trace=trace-4441935 span=span-83726 latency_ms=9 Configuration loaded successfully
+2026-09-15T10:09:05.123Z INFO [payment-service] [node-03] request_id=req-570211 trace_id=trace-3727935 Health check passed
+2026-09-15T10:09:10.123Z INFO [inventory-service] request_id=req-580290 status=200 latency_ms=5 Worker started
+2026-09-15T10:09:15.123Z INFO [order-service] request_id=req-596931 status=200 latency_ms=23 HTTP request completed
+2026-09-15T10:09:20.123Z INFO [inventory-service] request_id=req-822622 status=200 latency_ms=10 Database connection established
+2026-09-15T10:09:25.123Z INFO order-service node-01 trace=trace-4697107 span=span-68454 latency_ms=50 Health check passed
+2026-09-15T10:09:30.123Z WARN [user-service] request_id=req-711772 status=200 latency_ms=321 Request latency above threshold
+2026-09-15T10:09:35.123Z INFO [user-service] request_id=req-636648 status=200 latency_ms=67 Order created successfully
+2026-09-15T10:09:40.123Z INFO auth-service node-03 trace=trace-3482120 span=span-66051 latency_ms=52 Payment request accepted
+2026-09-15T10:09:45.123Z ERROR order-service node-03 trace=trace-8475525 span=span-83535 latency_ms=4204 Null pointer while processing order
+2026-09-15T10:09:50.123Z INFO [notification-service] [node-04] request_id=req-863998 trace_id=trace-7949018 HTTP request completed
+2026-09-15T10:09:55.123Z DEBUG [order-service] [node-04] request_id=req-650818 trace_id=trace-6627359 Payment request accepted
+2026-09-15T10:10:00.123Z ERROR [user-service] [node-03] request_id=req-534649 trace_id=trace-3934217 Authentication token validation failed
+2026-09-15T10:10:05.123Z INFO order-service node-05 trace=trace-1708550 span=span-49582 latency_ms=79 User authentication successful
+2026-09-15T10:10:10.123Z INFO [inventory-service] request_id=req-128143 status=200 latency_ms=38 User authentication successful
+2026-09-15T10:10:15.123Z INFO [inventory-service] request_id=req-785572 status=200 latency_ms=27 Inventory updated successfully
+2026-09-15T10:10:20.123Z INFO [auth-service] request_id=req-901865 status=200 latency_ms=13 HTTP request completed
+2026-09-15T10:10:25.123Z INFO [inventory-service] [node-05] request_id=req-557250 trace_id=trace-5327037 Worker started
+2026-09-15T10:10:30.123Z INFO [user-service] [node-05] request_id=req-118397 trace_id=trace-5354311 Request processed successfully
+2026-09-15T10:10:35.123Z INFO user-service node-02 trace=trace-3739867 span=span-16932 latency_ms=39 Order created successfully
+2026-09-15T10:10:40.123Z INFO [order-service] [node-01] request_id=req-403936 trace_id=trace-5893311 Message published to queue
+2026-09-15T10:10:45.123Z INFO [payment-service] request_id=req-727847 status=200 latency_ms=46 Order created successfully
+2026-09-15T10:10:50.123Z INFO [order-service] [node-03] request_id=req-200488 trace_id=trace-9966085 Database connection established
+2026-09-15T10:10:55.123Z DEBUG [order-service] [node-03] request_id=req-916639 trace_id=trace-9135255 Database connection established
+2026-09-15T10:11:00.123Z INFO [api-gateway] request_id=req-971968 status=200 latency_ms=72 Message published to queue
+2026-09-15T10:11:05.123Z INFO [notification-service] [node-01] request_id=req-537619 trace_id=trace-8725762 Database connection established
+2026-09-15T10:11:10.123Z INFO [order-service] [node-03] request_id=req-245766 trace_id=trace-8414487 Order created successfully
+2026-09-15T10:11:15.123Z INFO [auth-service] [node-01] request_id=req-333159 trace_id=trace-3159470 User authentication successful
+2026-09-15T10:11:20.123Z INFO auth-service node-04 trace=trace-2874387 span=span-20188 latency_ms=7 Inventory updated successfully
+2026-09-15T10:11:25.123Z ERROR [auth-service] [node-01] request_id=req-931578 trace_id=trace-9614751 Transaction rollback initiated
+2026-09-15T10:11:30.123Z WARN [user-service] request_id=req-891203 status=200 latency_ms=528 Queue depth above normal
+2026-09-15T10:11:35.123Z INFO [auth-service] [node-02] request_id=req-986950 trace_id=trace-5653591 Order created successfully
+2026-09-15T10:11:40.123Z INFO [notification-service] request_id=req-353569 status=200 latency_ms=13 Health check passed
+2026-09-15T10:11:45.123Z INFO [api-gateway] [node-02] request_id=req-850582 trace_id=trace-4213634 Message published to queue
+2026-09-15T10:11:50.123Z INFO auth-service node-02 trace=trace-8964404 span=span-58033 latency_ms=80 Database connection established
+2026-09-15T10:11:55.123Z INFO [auth-service] request_id=req-975290 status=200 latency_ms=59 Cache lookup completed
+2026-09-15T10:12:00.123Z INFO auth-service node-03 trace=trace-8816533 span=span-24459 latency_ms=71 Database connection established
+2026-09-15T10:12:05.123Z INFO [user-service] [node-03] request_id=req-684195 trace_id=trace-1681298 Inventory updated successfully
+2026-09-15T10:12:10.123Z INFO inventory-service node-05 trace=trace-6234607 span=span-68190 latency_ms=33 Message published to queue
+2026-09-15T10:12:15.123Z INFO [notification-service] [node-04] request_id=req-297955 trace_id=trace-2167847 Database connection established
+2026-09-15T10:12:20.123Z INFO [inventory-service] [node-01] request_id=req-515623 trace_id=trace-8349399 Health check passed
+2026-09-15T10:12:25.123Z INFO user-service node-05 trace=trace-3830705 span=span-18481 latency_ms=51 Cache lookup completed
+2026-09-15T10:12:30.123Z INFO [notification-service] request_id=req-228725 status=200 latency_ms=68 User authentication successful
+2026-09-15T10:12:35.123Z INFO [api-gateway] request_id=req-893041 status=200 latency_ms=65 Configuration loaded successfully
+2026-09-15T10:12:40.123Z INFO inventory-service node-05 trace=trace-3472527 span=span-69589 latency_ms=18 Health check passed
+2026-09-15T10:12:45.123Z INFO [payment-service] request_id=req-131167 status=200 latency_ms=13 Inventory updated successfully
+2026-09-15T10:12:50.123Z ERROR [payment-service] request_id=req-733952 status=500 latency_ms=1426 Authentication token validation failed
+2026-09-15T10:12:55.123Z INFO notification-service node-04 trace=trace-8818548 span=span-36467 latency_ms=42 Configuration loaded successfully
+2026-09-15T10:13:00.123Z INFO order-service node-05 trace=trace-1296459 span=span-14141 latency_ms=60 Health check passed
+2026-09-15T10:13:05.123Z INFO [notification-service] request_id=req-564053 status=200 latency_ms=9 Database connection established
+2026-09-15T10:13:10.123Z INFO notification-service node-03 trace=trace-3753883 span=span-74419 latency_ms=60 Database connection established
+2026-09-15T10:13:15.123Z INFO [inventory-service] request_id=req-696487 status=200 latency_ms=75 Configuration loaded successfully
+2026-09-15T10:13:20.123Z INFO inventory-service node-05 trace=trace-3622462 span=span-76412 latency_ms=12 Payment request accepted
+2026-09-15T10:13:25.123Z INFO [inventory-service] [node-05] request_id=req-809348 trace_id=trace-6918393 Request processed successfully
+2026-09-15T10:13:30.123Z INFO [payment-service] [node-03] request_id=req-465823 trace_id=trace-1451304 Payment request accepted
+2026-09-15T10:13:35.123Z INFO [order-service] [node-04] request_id=req-468332 trace_id=trace-1947061 Cache lookup completed
+2026-09-15T10:13:40.123Z INFO [api-gateway] [node-01] request_id=req-821411 trace_id=trace-2098911 Order created successfully
+2026-09-15T10:13:45.123Z ERROR [order-service] request_id=req-583298 status=503 latency_ms=967 Redis connection timeout
+2026-09-15T10:13:50.123Z INFO auth-service node-03 trace=trace-7548160 span=span-52260 latency_ms=78 Health check passed
+2026-09-15T10:13:55.123Z WARN user-service node-02 trace=trace-9333769 span=span-75898 latency_ms=894 Request latency above threshold
+2026-09-15T10:14:00.123Z INFO [user-service] [node-01] request_id=req-981202 trace_id=trace-9989803 User authentication successful
+2026-09-15T10:14:05.123Z INFO [api-gateway] request_id=req-943687 status=200 latency_ms=16 Worker started
+2026-09-15T10:14:10.123Z WARN [order-service] request_id=req-170537 status=429 latency_ms=307 Request latency above threshold
+2026-09-15T10:14:15.123Z INFO api-gateway node-03 trace=trace-6257190 span=span-36224 latency_ms=58 Payment request accepted
+2026-09-15T10:14:20.123Z INFO [inventory-service] request_id=req-289373 status=200 latency_ms=71 Database connection established
+2026-09-15T10:14:25.123Z INFO [user-service] request_id=req-380951 status=200 latency_ms=60 HTTP request completed
+2026-09-15T10:14:30.123Z INFO [api-gateway] request_id=req-481969 status=200 latency_ms=35 Database connection established
+2026-09-15T10:14:35.123Z INFO order-service node-04 trace=trace-6346113 span=span-18444 latency_ms=31 Payment request accepted
+2026-09-15T10:14:40.123Z INFO [user-service] [node-02] request_id=req-368903 trace_id=trace-4961601 Health check passed
+2026-09-15T10:14:45.123Z DEBUG [payment-service] request_id=req-586706 status=200 latency_ms=60 Payment request accepted
+2026-09-15T10:14:50.123Z INFO [payment-service] request_id=req-385959 status=200 latency_ms=38 User authentication successful
+2026-09-15T10:14:55.123Z INFO user-service node-01 trace=trace-9151075 span=span-12609 latency_ms=12 Health check passed
+2026-09-15T10:15:00.123Z INFO [notification-service] request_id=req-526777 status=200 latency_ms=16 Payment request accepted
+2026-09-15T10:15:05.123Z INFO [payment-service] request_id=req-698708 status=200 latency_ms=71 Configuration loaded successfully
+2026-09-15T10:15:10.123Z INFO api-gateway node-03 trace=trace-2514123 span=span-41205 latency_ms=20 Order created successfully
+2026-09-15T10:15:15.123Z INFO [user-service] [node-04] request_id=req-944986 trace_id=trace-4958384 Database connection established
+2026-09-15T10:15:20.123Z DEBUG [order-service] request_id=req-528212 status=200 latency_ms=12 Inventory updated successfully
+2026-09-15T10:15:25.123Z INFO [auth-service] [node-03] request_id=req-672255 trace_id=trace-8109870 User authentication successful
+2026-09-15T10:15:30.123Z INFO [user-service] request_id=req-961264 status=200 latency_ms=9 Worker started
+2026-09-15T10:15:35.123Z INFO [auth-service] [node-02] request_id=req-365271 trace_id=trace-7454030 Configuration loaded successfully
+2026-09-15T10:15:40.123Z INFO [payment-service] [node-04] request_id=req-507341 trace_id=trace-1131971 User authentication successful
+2026-09-15T10:15:45.123Z INFO notification-service node-02 trace=trace-4529699 span=span-31001 latency_ms=61 Configuration loaded successfully
+2026-09-15T10:15:50.123Z INFO notification-service node-04 trace=trace-1568440 span=span-45918 latency_ms=15 Inventory updated successfully
+2026-09-15T10:15:55.123Z INFO notification-service node-03 trace=trace-8086125 span=span-23159 latency_ms=25 Worker started
+2026-09-15T10:16:00.123Z INFO [order-service] request_id=req-731364 status=200 latency_ms=8 Request processed successfully
+2026-09-15T10:16:05.123Z INFO [user-service] request_id=req-929443 status=200 latency_ms=56 Cache lookup completed
+2026-09-15T10:16:10.123Z INFO [api-gateway] request_id=req-216211 status=200 latency_ms=71 Worker started
+2026-09-15T10:16:15.123Z INFO [notification-service] request_id=req-819064 status=200 latency_ms=62 Inventory updated successfully
+2026-09-15T10:16:20.123Z DEBUG payment-service node-05 trace=trace-6495887 span=span-46935 latency_ms=30 Health check passed
+2026-09-15T10:16:25.123Z INFO [inventory-service] request_id=req-975224 status=200 latency_ms=7 Message published to queue
+2026-09-15T10:16:30.123Z INFO payment-service node-01 trace=trace-4326354 span=span-44312 latency_ms=26 Request processed successfully
+2026-09-15T10:16:35.123Z INFO [api-gateway] [node-03] request_id=req-256501 trace_id=trace-2494200 HTTP request completed
+2026-09-15T10:16:40.123Z ERROR [api-gateway] [node-04] request_id=req-910926 trace_id=trace-8611954 Connection refused by payment service
+2026-09-15T10:16:45.123Z INFO [notification-service] [node-03] request_id=req-401950 trace_id=trace-9290765 Payment request accepted
+2026-09-15T10:16:50.123Z INFO [notification-service] [node-03] request_id=req-862008 trace_id=trace-4176986 Payment request accepted
+2026-09-15T10:16:55.123Z ERROR [order-service] [node-02] request_id=req-747684 trace_id=trace-8566133 Authentication token validation failed
+2026-09-15T10:17:00.123Z INFO notification-service node-03 trace=trace-7669861 span=span-37815 latency_ms=54 Worker started
+2026-09-15T10:17:05.123Z INFO order-service node-01 trace=trace-1985700 span=span-16830 latency_ms=47 Cache lookup completed
+2026-09-15T10:17:10.123Z INFO [api-gateway] request_id=req-844033 status=200 latency_ms=37 Message published to queue
+2026-09-15T10:17:15.123Z INFO [inventory-service] [node-03] request_id=req-238661 trace_id=trace-1689962 User authentication successful
+2026-09-15T10:17:20.123Z INFO [order-service] [node-04] request_id=req-238327 trace_id=trace-2504043 Payment request accepted
+2026-09-15T10:17:25.123Z INFO order-service node-01 trace=trace-9375364 span=span-46831 latency_ms=51 Payment request accepted
+2026-09-15T10:17:30.123Z INFO [order-service] [node-05] request_id=req-969887 trace_id=trace-5425123 Payment request accepted
+2026-09-15T10:17:35.123Z INFO [inventory-service] [node-02] request_id=req-682667 trace_id=trace-8381800 Database connection established
+2026-09-15T10:17:40.123Z INFO auth-service node-04 trace=trace-3743996 span=span-71228 latency_ms=60 Health check passed
+2026-09-15T10:17:45.123Z ERROR [order-service] [node-05] request_id=req-608768 trace_id=trace-8679933 Failed to process request
+2026-09-15T10:17:50.123Z INFO [order-service] request_id=req-975512 status=200 latency_ms=39 HTTP request completed
+2026-09-15T10:17:55.123Z INFO api-gateway node-01 trace=trace-4029442 span=span-64580 latency_ms=14 Cache lookup completed
+2026-09-15T10:18:00.123Z INFO [order-service] [node-01] request_id=req-398090 trace_id=trace-3046668 HTTP request completed
+2026-09-15T10:18:05.123Z INFO [payment-service] request_id=req-185000 status=200 latency_ms=66 Inventory updated successfully
+2026-09-15T10:18:10.123Z INFO [api-gateway] request_id=req-445429 status=200 latency_ms=62 Order created successfully
+2026-09-15T10:18:15.123Z INFO [notification-service] [node-05] request_id=req-235602 trace_id=trace-4546147 Order created successfully
+2026-09-15T10:18:20.123Z INFO [api-gateway] [node-05] request_id=req-499917 trace_id=trace-2552748 Database connection established
+2026-09-15T10:18:25.123Z INFO notification-service node-04 trace=trace-1344134 span=span-37292 latency_ms=25 Payment request accepted
+2026-09-15T10:18:30.123Z INFO notification-service node-02 trace=trace-6008781 span=span-74336 latency_ms=60 Worker started
+2026-09-15T10:18:35.123Z INFO api-gateway node-02 trace=trace-2612483 span=span-58163 latency_ms=70 Cache lookup completed
+2026-09-15T10:18:40.123Z INFO [inventory-service] request_id=req-381521 status=200 latency_ms=59 Order created successfully
+2026-09-15T10:18:45.123Z DEBUG [user-service] request_id=req-197462 status=200 latency_ms=48 Inventory updated successfully
+2026-09-15T10:18:50.123Z INFO user-service node-02 trace=trace-9846268 span=span-92517 latency_ms=72 Health check passed
+2026-09-15T10:18:55.123Z INFO [auth-service] request_id=req-414985 status=200 latency_ms=43 Cache lookup completed
+2026-09-15T10:19:00.123Z INFO [api-gateway] request_id=req-677759 status=200 latency_ms=70 Health check passed
+2026-09-15T10:19:05.123Z INFO [auth-service] [node-04] request_id=req-792956 trace_id=trace-5251016 HTTP request completed
+2026-09-15T10:19:10.123Z INFO [auth-service] [node-01] request_id=req-876487 trace_id=trace-8765820 Payment request accepted
+2026-09-15T10:19:15.123Z WARN [user-service] [node-03] request_id=req-429196 trace_id=trace-8633602 Queue depth above normal
+2026-09-15T10:19:20.123Z INFO [auth-service] [node-05] request_id=req-371914 trace_id=trace-2783932 Request processed successfully
+2026-09-15T10:19:25.123Z INFO [auth-service] request_id=req-787657 status=200 latency_ms=56 Configuration loaded successfully
+2026-09-15T10:19:30.123Z INFO [inventory-service] [node-03] request_id=req-748543 trace_id=trace-7052024 User authentication successful
+2026-09-15T10:19:35.123Z DEBUG auth-service node-02 trace=trace-1266510 span=span-34670 latency_ms=8 Cache lookup completed
+2026-09-15T10:19:40.123Z INFO [user-service] [node-02] request_id=req-556957 trace_id=trace-4203013 Inventory updated successfully
+2026-09-15T10:19:45.123Z INFO [auth-service] [node-01] request_id=req-274174 trace_id=trace-3557220 Inventory updated successfully
+2026-09-15T10:19:50.123Z INFO api-gateway node-02 trace=trace-5946450 span=span-84636 latency_ms=55 Request processed successfully
+2026-09-15T10:19:55.123Z ERROR user-service node-04 trace=trace-9316519 span=span-85846 latency_ms=4793 HTTP 500 returned by dependency
+2026-09-15T10:20:00.123Z INFO [api-gateway] [node-05] request_id=req-811634 trace_id=trace-9185628 Message published to queue
+2026-09-15T10:20:05.123Z INFO [order-service] [node-05] request_id=req-166595 trace_id=trace-5493758 Inventory updated successfully
+2026-09-15T10:20:10.123Z INFO [user-service] request_id=req-570103 status=200 latency_ms=25 User authentication successful
+2026-09-15T10:20:15.123Z DEBUG order-service node-04 trace=trace-9516717 span=span-38796 latency_ms=80 Configuration loaded successfully
+2026-09-15T10:20:20.123Z INFO [notification-service] request_id=req-237529 status=200 latency_ms=58 Configuration loaded successfully
+2026-09-15T10:20:25.123Z INFO [notification-service] request_id=req-938603 status=200 latency_ms=31 User authentication successful
+2026-09-15T10:20:30.123Z INFO user-service node-04 trace=trace-3907342 span=span-36146 latency_ms=25 HTTP request completed
+2026-09-15T10:20:35.123Z WARN inventory-service node-04 trace=trace-4937929 span=span-37450 latency_ms=884 Database connection pool nearing capacity
+2026-09-15T10:20:40.123Z INFO payment-service node-02 trace=trace-9446974 span=span-14190 latency_ms=13 Order created successfully
+2026-09-15T10:20:45.123Z WARN [payment-service] request_id=req-689280 status=429 latency_ms=245 Retrying connection to dependency
+2026-09-15T10:20:50.123Z INFO [payment-service] [node-05] request_id=req-733643 trace_id=trace-2747213 Inventory updated successfully
+2026-09-15T10:20:55.123Z INFO [notification-service] [node-05] request_id=req-739270 trace_id=trace-2709062 Message published to queue
+2026-09-15T10:21:00.123Z DEBUG auth-service node-02 trace=trace-3634568 span=span-48289 latency_ms=61 Message published to queue
+2026-09-15T10:21:05.123Z INFO [auth-service] [node-02] request_id=req-778526 trace_id=trace-7102492 Health check passed
+2026-09-15T10:21:10.123Z INFO [inventory-service] [node-01] request_id=req-357232 trace_id=trace-8946752 Message published to queue
+2026-09-15T10:21:15.123Z WARN order-service node-04 trace=trace-5117989 span=span-29871 latency_ms=432 Cache miss rate increased
+2026-09-15T10:21:20.123Z INFO inventory-service node-04 trace=trace-9659648 span=span-99417 latency_ms=51 Request processed successfully
+2026-09-15T10:21:25.123Z DEBUG [auth-service] [node-05] request_id=req-172961 trace_id=trace-2422342 Payment request accepted
+2026-09-15T10:21:30.123Z INFO [inventory-service] request_id=req-792244 status=200 latency_ms=12 Configuration loaded successfully
+2026-09-15T10:21:35.123Z INFO [api-gateway] request_id=req-539673 status=200 latency_ms=75 User authentication successful
+2026-09-15T10:21:40.123Z WARN [order-service] request_id=req-967176 status=503 latency_ms=1063 Slow query detected
+2026-09-15T10:21:45.123Z ERROR [api-gateway] [node-05] request_id=req-926636 trace_id=trace-8417942 Null pointer while processing order
+2026-09-15T10:21:50.123Z ERROR [inventory-service] request_id=req-645752 status=503 latency_ms=3591 Out of memory while processing batch
+2026-09-15T10:21:55.123Z ERROR auth-service node-05 trace=trace-5340101 span=span-41632 latency_ms=1291 Redis connection timeout
+2026-09-15T10:22:00.123Z ERROR api-gateway node-03 trace=trace-1800824 span=span-95322 latency_ms=842 Transaction rollback initiated
+2026-09-15T10:22:05.123Z ERROR [payment-service] request_id=req-693071 status=503 latency_ms=3130 Kafka consumer failed to poll
+2026-09-15T10:22:10.123Z INFO [user-service] [node-05] request_id=req-805097 trace_id=trace-3348331 Worker started
+2026-09-15T10:22:15.123Z ERROR [api-gateway] [node-05] request_id=req-301908 trace_id=trace-7061063 Failed to process request
+2026-09-15T10:22:20.123Z ERROR inventory-service node-02 trace=trace-4603484 span=span-68479 latency_ms=4034 Kafka consumer failed to poll
+2026-09-15T10:22:25.123Z WARN [user-service] request_id=req-561457 status=200 latency_ms=1142 Request latency above threshold
+2026-09-15T10:22:30.123Z ERROR [user-service] request_id=req-654844 status=500 latency_ms=2084 Transaction rollback initiated
+2026-09-15T10:22:35.123Z ERROR [auth-service] request_id=req-993719 status=503 latency_ms=1129 Kafka consumer failed to poll
+2026-09-15T10:22:40.123Z ERROR [order-service] request_id=req-492649 status=502 latency_ms=1964 Database connection timeout
+2026-09-15T10:22:45.123Z ERROR [order-service] [node-03] request_id=req-326053 trace_id=trace-4071524 Connection refused by payment service
+2026-09-15T10:22:50.123Z ERROR [api-gateway] request_id=req-693246 status=502 latency_ms=1934 Transaction rollback initiated
+2026-09-15T10:22:55.123Z WARN [notification-service] [node-04] request_id=req-799631 trace_id=trace-8534223 Database connection pool nearing capacity
+2026-09-15T10:23:00.123Z INFO [order-service] request_id=req-148045 status=200 latency_ms=16 Database connection established
+2026-09-15T10:23:05.123Z ERROR [user-service] request_id=req-688297 status=502 latency_ms=1233 Connection refused by payment service
+2026-09-15T10:23:10.123Z ERROR [notification-service] [node-04] request_id=req-627054 trace_id=trace-1313131 Failed to process request
+2026-09-15T10:23:15.123Z ERROR [user-service] [node-05] request_id=req-565808 trace_id=trace-2420156 Redis connection timeout
+2026-09-15T10:23:20.123Z ERROR [payment-service] [node-04] request_id=req-125225 trace_id=trace-9856721 HTTP 500 returned by dependency
+2026-09-15T10:23:25.123Z ERROR [order-service] [node-02] request_id=req-291542 trace_id=trace-5287493 HTTP 500 returned by dependency
+2026-09-15T10:23:30.123Z WARN order-service node-02 trace=trace-1981497 span=span-49062 latency_ms=441 Database connection pool nearing capacity
+2026-09-15T10:23:35.123Z INFO [order-service] request_id=req-967949 status=200 latency_ms=30 Cache lookup completed
+2026-09-15T10:23:40.123Z WARN inventory-service node-05 trace=trace-9462784 span=span-60469 latency_ms=801 Retrying connection to dependency
+2026-09-15T10:23:45.123Z ERROR [auth-service] [node-04] request_id=req-130310 trace_id=trace-7836611 Database connection timeout
+2026-09-15T10:23:50.123Z WARN user-service node-02 trace=trace-7824064 span=span-68455 latency_ms=441 External service response delayed
+2026-09-15T10:23:55.123Z ERROR [payment-service] request_id=req-663646 status=500 latency_ms=4606 Database connection timeout
+2026-09-15T10:24:00.123Z ERROR [payment-service] request_id=req-163098 status=503 latency_ms=2542 Redis connection timeout
+2026-09-15T10:24:05.123Z INFO [order-service] [node-01] request_id=req-269257 trace_id=trace-9960531 User authentication successful
+2026-09-15T10:24:10.123Z ERROR [auth-service] request_id=req-860294 status=503 latency_ms=3606 Authentication token validation failed
+2026-09-15T10:24:15.123Z ERROR [notification-service] request_id=req-386275 status=502 latency_ms=4566 Kafka consumer failed to poll
+2026-09-15T10:24:20.123Z ERROR user-service node-02 trace=trace-1034351 span=span-89794 latency_ms=2221 Database connection timeout
+2026-09-15T10:24:25.123Z ERROR [user-service] request_id=req-899502 status=500 latency_ms=4446 Connection refused by payment service
+2026-09-15T10:24:30.123Z ERROR notification-service node-04 trace=trace-7005668 span=span-60692 latency_ms=4590 Database connection timeout
+2026-09-15T10:24:35.123Z INFO [inventory-service] [node-01] request_id=req-332281 trace_id=trace-1331881 Cache lookup completed
+2026-09-15T10:24:40.123Z INFO [user-service] [node-03] request_id=req-947684 trace_id=trace-4710242 Order created successfully
+2026-09-15T10:24:45.123Z INFO user-service node-05 trace=trace-1119712 span=span-35701 latency_ms=55 Health check passed
+2026-09-15T10:24:50.123Z INFO [inventory-service] request_id=req-678588 status=200 latency_ms=77 Configuration loaded successfully
+2026-09-15T10:24:55.123Z INFO [payment-service] request_id=req-716735 status=200 latency_ms=21 User authentication successful
+2026-09-15T10:25:00.123Z INFO api-gateway node-03 trace=trace-1387847 span=span-98832 latency_ms=73 HTTP request completed
+2026-09-15T10:25:05.123Z INFO inventory-service node-01 trace=trace-1870113 span=span-52336 latency_ms=60 Payment request accepted
+2026-09-15T10:25:10.123Z DEBUG [api-gateway] [node-04] request_id=req-619647 trace_id=trace-7064491 Worker started
+2026-09-15T10:25:15.123Z WARN [inventory-service] request_id=req-570665 status=429 latency_ms=317 Request latency above threshold
+2026-09-15T10:25:20.123Z INFO [user-service] [node-02] request_id=req-823044 trace_id=trace-8110523 Cache lookup completed
+2026-09-15T10:25:25.123Z INFO [auth-service] request_id=req-129226 status=200 latency_ms=8 HTTP request completed
+2026-09-15T10:25:30.123Z INFO [notification-service] [node-03] request_id=req-359159 trace_id=trace-2809265 Order created successfully
+2026-09-15T10:25:35.123Z INFO [api-gateway] [node-02] request_id=req-176452 trace_id=trace-8357303 HTTP request completed
+2026-09-15T10:25:40.123Z WARN auth-service node-01 trace=trace-6255956 span=span-18523 latency_ms=262 Database connection pool nearing capacity
+2026-09-15T10:25:45.123Z INFO inventory-service node-01 trace=trace-1936000 span=span-83303 latency_ms=11 User authentication successful
+2026-09-15T10:25:50.123Z INFO api-gateway node-04 trace=trace-1177948 span=span-69429 latency_ms=54 Inventory updated successfully
+2026-09-15T10:25:55.123Z INFO [api-gateway] request_id=req-456113 status=200 latency_ms=71 Order created successfully
+2026-09-15T10:26:00.123Z DEBUG [auth-service] [node-01] request_id=req-724086 trace_id=trace-2133208 HTTP request completed
+2026-09-15T10:26:05.123Z INFO [order-service] [node-03] request_id=req-541457 trace_id=trace-9076540 Database connection established
+2026-09-15T10:26:10.123Z DEBUG [auth-service] request_id=req-233882 status=200 latency_ms=60 Message published to queue
+2026-09-15T10:26:15.123Z INFO [order-service] request_id=req-667430 status=200 latency_ms=65 User authentication successful
+2026-09-15T10:26:20.123Z INFO [order-service] request_id=req-642827 status=200 latency_ms=35 Message published to queue
+2026-09-15T10:26:25.123Z INFO inventory-service node-03 trace=trace-4361682 span=span-93958 latency_ms=30 Health check passed
+2026-09-15T10:26:30.123Z DEBUG [inventory-service] request_id=req-728896 status=200 latency_ms=77 Order created successfully
+2026-09-15T10:26:35.123Z INFO [order-service] [node-02] request_id=req-209940 trace_id=trace-8621924 Cache lookup completed
+2026-09-15T10:26:40.123Z INFO user-service node-02 trace=trace-4575870 span=span-41328 latency_ms=66 Worker started
+2026-09-15T10:26:45.123Z INFO [inventory-service] [node-02] request_id=req-519758 trace_id=trace-4091109 Request processed successfully
+2026-09-15T10:26:50.123Z INFO [api-gateway] request_id=req-249319 status=200 latency_ms=29 Configuration loaded successfully
+2026-09-15T10:26:55.123Z INFO [order-service] [node-01] request_id=req-131127 trace_id=trace-4340727 Database connection established
+2026-09-15T10:27:00.123Z INFO [user-service] [node-02] request_id=req-456324 trace_id=trace-5126595 Request processed successfully
+2026-09-15T10:27:05.123Z INFO [auth-service] [node-01] request_id=req-971834 trace_id=trace-3302564 Order created successfully
+2026-09-15T10:27:10.123Z INFO [payment-service] request_id=req-948809 status=200 latency_ms=26 Message published to queue
+2026-09-15T10:27:15.123Z INFO [user-service] request_id=req-224249 status=200 latency_ms=29 Cache lookup completed
+2026-09-15T10:27:20.123Z INFO [order-service] request_id=req-728672 status=200 latency_ms=36 Request processed successfully
+2026-09-15T10:27:25.123Z INFO [notification-service] request_id=req-408472 status=200 latency_ms=36 Request processed successfully
+2026-09-15T10:27:30.123Z INFO [notification-service] request_id=req-992865 status=200 latency_ms=67 Cache lookup completed
+2026-09-15T10:27:35.123Z WARN [inventory-service] request_id=req-168024 status=429 latency_ms=1171 External service response delayed
+2026-09-15T10:27:40.123Z INFO [order-service] request_id=req-651001 status=200 latency_ms=65 User authentication successful
+2026-09-15T10:27:45.123Z INFO notification-service node-05 trace=trace-1614121 span=span-37158 latency_ms=33 Cache lookup completed
+2026-09-15T10:27:50.123Z INFO inventory-service node-02 trace=trace-8130700 span=span-59425 latency_ms=78 Database connection established
+2026-09-15T10:27:55.123Z INFO auth-service node-02 trace=trace-2409758 span=span-48672 latency_ms=61 Message published to queue
+2026-09-15T10:28:00.123Z INFO auth-service node-04 trace=trace-6643418 span=span-65850 latency_ms=62 Inventory updated successfully
+2026-09-15T10:28:05.123Z INFO notification-service node-04 trace=trace-5580506 span=span-60118 latency_ms=8 Database connection established
+2026-09-15T10:28:10.123Z INFO [user-service] request_id=req-476536 status=200 latency_ms=69 Message published to queue
+2026-09-15T10:28:15.123Z INFO [notification-service] [node-03] request_id=req-338804 trace_id=trace-2651030 Order created successfully
+2026-09-15T10:28:20.123Z INFO [order-service] request_id=req-807901 status=200 latency_ms=43 Worker started
+2026-09-15T10:28:25.123Z INFO payment-service node-05 trace=trace-5381125 span=span-11118 latency_ms=43 User authentication successful
+2026-09-15T10:28:30.123Z INFO inventory-service node-04 trace=trace-1199493 span=span-71866 latency_ms=70 Database connection established
+2026-09-15T10:28:35.123Z INFO user-service node-02 trace=trace-4921224 span=span-77610 latency_ms=80 Message published to queue
+2026-09-15T10:28:40.123Z INFO [inventory-service] request_id=req-930382 status=200 latency_ms=29 Payment request accepted
+2026-09-15T10:28:45.123Z INFO [inventory-service] [node-04] request_id=req-994376 trace_id=trace-1505062 HTTP request completed
+2026-09-15T10:28:50.123Z INFO user-service node-01 trace=trace-6950248 span=span-54541 latency_ms=33 Payment request accepted
+2026-09-15T10:28:55.123Z INFO [inventory-service] [node-05] request_id=req-414192 trace_id=trace-6470706 HTTP request completed
+2026-09-15T10:29:00.123Z INFO [payment-service] [node-03] request_id=req-695791 trace_id=trace-7557976 Payment request accepted
+2026-09-15T10:29:05.123Z INFO payment-service node-04 trace=trace-6517042 span=span-84647 latency_ms=62 Configuration loaded successfully
+2026-09-15T10:29:10.123Z WARN [auth-service] [node-05] request_id=req-286264 trace_id=trace-1537863 Database connection pool nearing capacity
+2026-09-15T10:29:15.123Z INFO inventory-service node-03 trace=trace-4909752 span=span-48155 latency_ms=72 Health check passed
+2026-09-15T10:29:20.123Z WARN [api-gateway] request_id=req-280172 status=200 latency_ms=414 Request latency above threshold
+2026-09-15T10:29:25.123Z INFO user-service node-01 trace=trace-4464154 span=span-27030 latency_ms=31 User authentication successful
+2026-09-15T10:29:30.123Z INFO [user-service] request_id=req-266494 status=200 latency_ms=30 Message published to queue
+2026-09-15T10:29:35.123Z INFO [order-service] request_id=req-107804 status=200 latency_ms=13 Payment request accepted
+2026-09-15T10:29:40.123Z INFO [api-gateway] [node-03] request_id=req-696879 trace_id=trace-9236918 HTTP request completed
+2026-09-15T10:29:45.123Z INFO [order-service] [node-04] request_id=req-463627 trace_id=trace-5990361 Payment request accepted
+2026-09-15T10:29:50.123Z DEBUG [api-gateway] request_id=req-580067 status=200 latency_ms=28 Worker started
+2026-09-15T10:29:55.123Z WARN user-service node-01 trace=trace-3649663 span=span-45884 latency_ms=594 Retrying connection to dependency
+2026-09-15T10:30:00.123Z INFO notification-service node-05 trace=trace-7186297 span=span-20031 latency_ms=18 Message published to queue
+2026-09-15T10:30:05.123Z INFO [payment-service] [node-03] request_id=req-317445 trace_id=trace-9490354 Request processed successfully
+2026-09-15T10:30:10.123Z INFO [user-service] [node-04] request_id=req-499670 trace_id=trace-6765619 Payment request accepted
+2026-09-15T10:30:15.123Z ERROR [auth-service] request_id=req-443000 status=500 latency_ms=2784 Connection refused by payment service
+2026-09-15T10:30:20.123Z INFO [payment-service] request_id=req-960279 status=200 latency_ms=26 Request processed successfully
+2026-09-15T10:30:25.123Z WARN [order-service] [node-01] request_id=req-660625 trace_id=trace-7557366 Slow query detected
+2026-09-15T10:30:30.123Z INFO payment-service node-02 trace=trace-1577888 span=span-98479 latency_ms=73 Cache lookup completed
+2026-09-15T10:30:35.123Z INFO [notification-service] [node-05] request_id=req-772149 trace_id=trace-2724585 Inventory updated successfully
+2026-09-15T10:30:40.123Z INFO [auth-service] [node-04] request_id=req-904377 trace_id=trace-4384602 Cache lookup completed
+2026-09-15T10:30:45.123Z WARN [inventory-service] request_id=req-115267 status=200 latency_ms=493 Request latency above threshold
+2026-09-15T10:30:50.123Z DEBUG [inventory-service] [node-05] request_id=req-212914 trace_id=trace-6488523 Configuration loaded successfully
+2026-09-15T10:30:55.123Z INFO api-gateway node-04 trace=trace-3026754 span=span-40462 latency_ms=32 Health check passed
+2026-09-15T10:31:00.123Z INFO auth-service node-04 trace=trace-6305630 span=span-11570 latency_ms=54 Cache lookup completed
+2026-09-15T10:31:05.123Z INFO user-service node-03 trace=trace-7190456 span=span-15759 latency_ms=13 Cache lookup completed
+2026-09-15T10:31:10.123Z INFO [api-gateway] [node-04] request_id=req-206759 trace_id=trace-9995633 User authentication successful
+2026-09-15T10:31:15.123Z INFO [user-service] request_id=req-810830 status=200 latency_ms=27 Configuration loaded successfully
+2026-09-15T10:31:20.123Z INFO notification-service node-04 trace=trace-6622132 span=span-12313 latency_ms=79 Inventory updated successfully
+2026-09-15T10:31:25.123Z INFO [user-service] [node-02] request_id=req-627874 trace_id=trace-1222997 HTTP request completed
+2026-09-15T10:31:30.123Z INFO [user-service] [node-04] request_id=req-894029 trace_id=trace-5086019 Request processed successfully
+2026-09-15T10:31:35.123Z INFO [order-service] request_id=req-259038 status=200 latency_ms=9 Cache lookup completed
+2026-09-15T10:31:40.123Z INFO inventory-service node-03 trace=trace-5666187 span=span-51620 latency_ms=10 Message published to queue
+2026-09-15T10:31:45.123Z INFO [order-service] request_id=req-340134 status=200 latency_ms=36 Cache lookup completed
+2026-09-15T10:31:50.123Z WARN user-service node-02 trace=trace-4731991 span=span-89700 latency_ms=525 Queue depth above normal
+2026-09-15T10:31:55.123Z INFO [auth-service] [node-04] request_id=req-173384 trace_id=trace-4229034 Cache lookup completed
+2026-09-15T10:32:00.123Z WARN api-gateway node-05 trace=trace-4428815 span=span-40973 latency_ms=1106 Database connection pool nearing capacity
+2026-09-15T10:32:05.123Z DEBUG payment-service node-02 trace=trace-3960096 span=span-89410 latency_ms=36 User authentication successful
+2026-09-15T10:32:10.123Z INFO user-service node-02 trace=trace-9072704 span=span-20487 latency_ms=51 Payment request accepted
+2026-09-15T10:32:15.123Z DEBUG inventory-service node-04 trace=trace-8271756 span=span-30431 latency_ms=66 Request processed successfully
+2026-09-15T10:32:20.123Z INFO auth-service node-03 trace=trace-3563536 span=span-82463 latency_ms=27 User authentication successful
+2026-09-15T10:32:25.123Z INFO [inventory-service] request_id=req-493370 status=200 latency_ms=47 Database connection established
+2026-09-15T10:32:30.123Z INFO payment-service node-02 trace=trace-1215323 span=span-75627 latency_ms=52 Inventory updated successfully
+2026-09-15T10:32:35.123Z INFO inventory-service node-03 trace=trace-9213304 span=span-50345 latency_ms=80 Health check passed
+2026-09-15T10:32:40.123Z INFO [auth-service] request_id=req-693083 status=200 latency_ms=60 User authentication successful
+2026-09-15T10:32:45.123Z INFO [user-service] request_id=req-765824 status=200 latency_ms=54 Payment request accepted
+2026-09-15T10:32:50.123Z INFO [inventory-service] request_id=req-952624 status=200 latency_ms=8 Worker started
+2026-09-15T10:32:55.123Z INFO [order-service] request_id=req-577595 status=200 latency_ms=36 HTTP request completed
+2026-09-15T10:33:00.123Z INFO [notification-service] request_id=req-112936 status=200 latency_ms=54 Payment request accepted
+2026-09-15T10:33:05.123Z INFO [auth-service] request_id=req-297995 status=200 latency_ms=59 User authentication successful
+2026-09-15T10:33:10.123Z INFO [api-gateway] request_id=req-714549 status=200 latency_ms=16 Health check passed
+2026-09-15T10:33:15.123Z INFO notification-service node-03 trace=trace-3394334 span=span-45261 latency_ms=31 Worker started
+2026-09-15T10:33:20.123Z INFO [auth-service] request_id=req-956046 status=200 latency_ms=17 Health check passed
+2026-09-15T10:33:25.123Z INFO [inventory-service] [node-03] request_id=req-868650 trace_id=trace-8230134 Order created successfully
+2026-09-15T10:33:30.123Z INFO [payment-service] [node-04] request_id=req-290824 trace_id=trace-9432459 HTTP request completed
+2026-09-15T10:33:35.123Z DEBUG [auth-service] request_id=req-948485 status=200 latency_ms=57 Inventory updated successfully
+2026-09-15T10:33:40.123Z INFO auth-service node-02 trace=trace-5917831 span=span-21233 latency_ms=53 Health check passed
+2026-09-15T10:33:45.123Z WARN [auth-service] [node-05] request_id=req-346184 trace_id=trace-9017783 Database connection pool nearing capacity
+2026-09-15T10:33:50.123Z INFO [notification-service] request_id=req-201546 status=200 latency_ms=5 Payment request accepted
+2026-09-15T10:33:55.123Z INFO notification-service node-03 trace=trace-8939511 span=span-54175 latency_ms=59 Order created successfully
+2026-09-15T10:34:00.123Z INFO [order-service] request_id=req-956526 status=200 latency_ms=56 Payment request accepted
+2026-09-15T10:34:05.123Z WARN [order-service] [node-03] request_id=req-945435 trace_id=trace-2680697 External service response delayed
+2026-09-15T10:34:10.123Z INFO [notification-service] request_id=req-393042 status=200 latency_ms=62 HTTP request completed
+2026-09-15T10:34:15.123Z INFO [inventory-service] request_id=req-533194 status=200 latency_ms=46 Request processed successfully
+2026-09-15T10:34:20.123Z INFO [auth-service] request_id=req-810860 status=200 latency_ms=67 Payment request accepted
+2026-09-15T10:34:25.123Z INFO auth-service node-03 trace=trace-8988000 span=span-96289 latency_ms=17 Worker started
+2026-09-15T10:34:30.123Z INFO [payment-service] [node-02] request_id=req-645316 trace_id=trace-9466397 Inventory updated successfully
+2026-09-15T10:34:35.123Z INFO [user-service] request_id=req-589478 status=200 latency_ms=19 Inventory updated successfully
+2026-09-15T10:34:40.123Z INFO [payment-service] [node-02] request_id=req-278711 trace_id=trace-2500416 Worker started
+2026-09-15T10:34:45.123Z DEBUG order-service node-04 trace=trace-5703624 span=span-38885 latency_ms=37 Configuration loaded successfully
+2026-09-15T10:34:50.123Z INFO [user-service] request_id=req-797802 status=200 latency_ms=67 Health check passed
+2026-09-15T10:34:55.123Z INFO [payment-service] request_id=req-903562 status=200 latency_ms=48 Payment request accepted
+2026-09-15T10:35:00.123Z INFO [user-service] [node-04] request_id=req-785684 trace_id=trace-8331010 User authentication successful
+2026-09-15T10:35:05.123Z INFO [auth-service] [node-01] request_id=req-456765 trace_id=trace-4156740 Order created successfully
+2026-09-15T10:35:10.123Z INFO [inventory-service] request_id=req-872714 status=200 latency_ms=12 HTTP request completed
+2026-09-15T10:35:15.123Z DEBUG [inventory-service] request_id=req-435169 status=200 latency_ms=21 Message published to queue
+2026-09-15T10:35:20.123Z INFO [payment-service] [node-01] request_id=req-514515 trace_id=trace-1154157 Order created successfully
+2026-09-15T10:35:25.123Z INFO [order-service] request_id=req-624112 status=200 latency_ms=41 Database connection established
+2026-09-15T10:35:30.123Z INFO [notification-service] [node-01] request_id=req-727971 trace_id=trace-6371047 Worker started
+2026-09-15T10:35:35.123Z INFO notification-service node-05 trace=trace-4618930 span=span-74883 latency_ms=42 Worker started
+2026-09-15T10:35:40.123Z WARN [notification-service] request_id=req-260119 status=200 latency_ms=1148 External service response delayed
+2026-09-15T10:35:45.123Z INFO notification-service node-02 trace=trace-7581459 span=span-54225 latency_ms=59 Configuration loaded successfully
+2026-09-15T10:35:50.123Z INFO [notification-service] request_id=req-510059 status=200 latency_ms=41 User authentication successful
+2026-09-15T10:35:55.123Z INFO [user-service] [node-05] request_id=req-512900 trace_id=trace-2632751 HTTP request completed
+2026-09-15T10:36:00.123Z INFO [user-service] request_id=req-579757 status=200 latency_ms=22 Inventory updated successfully
+2026-09-15T10:36:05.123Z INFO [payment-service] request_id=req-328732 status=200 latency_ms=6 Order created successfully
+2026-09-15T10:36:10.123Z INFO [auth-service] [node-02] request_id=req-494847 trace_id=trace-8165734 Request processed successfully
+2026-09-15T10:36:15.123Z INFO inventory-service node-02 trace=trace-2968753 span=span-77559 latency_ms=48 HTTP request completed
+2026-09-15T10:36:20.123Z INFO user-service node-04 trace=trace-1570305 span=span-25571 latency_ms=35 Payment request accepted
+2026-09-15T10:36:25.123Z INFO [api-gateway] request_id=req-784507 status=200 latency_ms=16 Inventory updated successfully
+2026-09-15T10:36:30.123Z INFO [user-service] [node-04] request_id=req-485166 trace_id=trace-1194656 Health check passed
+2026-09-15T10:36:35.123Z INFO user-service node-05 trace=trace-1386324 span=span-86919 latency_ms=78 HTTP request completed
+2026-09-15T10:36:40.123Z INFO [user-service] request_id=req-932929 status=200 latency_ms=66 Configuration loaded successfully
+2026-09-15T10:36:45.123Z INFO api-gateway node-02 trace=trace-6456436 span=span-18322 latency_ms=73 Database connection established
+2026-09-15T10:36:50.123Z INFO [auth-service] request_id=req-683071 status=200 latency_ms=67 Health check passed
+2026-09-15T10:36:55.123Z INFO [api-gateway] request_id=req-890110 status=200 latency_ms=20 Database connection established
+2026-09-15T10:37:00.123Z INFO [auth-service] request_id=req-568957 status=200 latency_ms=10 Database connection established
+2026-09-15T10:37:05.123Z INFO [payment-service] request_id=req-689820 status=200 latency_ms=15 Health check passed
+2026-09-15T10:37:10.123Z INFO [api-gateway] request_id=req-543601 status=200 latency_ms=43 Request processed successfully
+2026-09-15T10:37:15.123Z INFO order-service node-05 trace=trace-3346378 span=span-85637 latency_ms=67 Worker started
+2026-09-15T10:37:20.123Z INFO [order-service] [node-05] request_id=req-664353 trace_id=trace-9566284 Configuration loaded successfully
+2026-09-15T10:37:25.123Z INFO [payment-service] request_id=req-414267 status=200 latency_ms=75 Cache lookup completed
+2026-09-15T10:37:30.123Z INFO payment-service node-05 trace=trace-2247548 span=span-82069 latency_ms=37 User authentication successful
+2026-09-15T10:37:35.123Z INFO [payment-service] [node-04] request_id=req-578221 trace_id=trace-2396771 Worker started
+2026-09-15T10:37:40.123Z INFO [auth-service] request_id=req-763874 status=200 latency_ms=77 Configuration loaded successfully
+2026-09-15T10:37:45.123Z INFO [api-gateway] [node-02] request_id=req-540073 trace_id=trace-3575158 Payment request accepted
+2026-09-15T10:37:50.123Z INFO [payment-service] request_id=req-383246 status=200 latency_ms=19 Configuration loaded successfully
+2026-09-15T10:37:55.123Z INFO order-service node-01 trace=trace-6595492 span=span-45815 latency_ms=23 Cache lookup completed
+2026-09-15T10:38:00.123Z ERROR [inventory-service] [node-02] request_id=req-497024 trace_id=trace-2761653 Out of memory while processing batch
+2026-09-15T10:38:05.123Z INFO [user-service] [node-05] request_id=req-395694 trace_id=trace-5547530 Request processed successfully
+2026-09-15T10:38:10.123Z INFO [notification-service] request_id=req-289448 status=200 latency_ms=73 Message published to queue
+2026-09-15T10:38:15.123Z INFO [inventory-service] request_id=req-721082 status=200 latency_ms=6 Configuration loaded successfully
+2026-09-15T10:38:20.123Z INFO [user-service] request_id=req-249600 status=200 latency_ms=39 Request processed successfully
+2026-09-15T10:38:25.123Z INFO order-service node-02 trace=trace-8016965 span=span-70003 latency_ms=28 Inventory updated successfully
+2026-09-15T10:38:30.123Z INFO [api-gateway] request_id=req-389221 status=200 latency_ms=34 User authentication successful
+2026-09-15T10:38:35.123Z INFO [order-service] request_id=req-908010 status=200 latency_ms=15 Health check passed
+2026-09-15T10:38:40.123Z INFO auth-service node-02 trace=trace-1963205 span=span-21086 latency_ms=41 Message published to queue
+2026-09-15T10:38:45.123Z INFO [auth-service] request_id=req-809920 status=200 latency_ms=66 Inventory updated successfully
+2026-09-15T10:38:50.123Z INFO [user-service] [node-05] request_id=req-831782 trace_id=trace-3091977 HTTP request completed
+2026-09-15T10:38:55.123Z INFO [user-service] request_id=req-848851 status=200 latency_ms=49 Cache lookup completed
+2026-09-15T10:39:00.123Z INFO [notification-service] request_id=req-817307 status=200 latency_ms=62 Database connection established
+2026-09-15T10:39:05.123Z INFO [notification-service] request_id=req-336001 status=200 latency_ms=51 Database connection established
+2026-09-15T10:39:10.123Z INFO auth-service node-04 trace=trace-7360154 span=span-32345 latency_ms=52 Health check passed
+2026-09-15T10:39:15.123Z INFO payment-service node-05 trace=trace-2977453 span=span-48019 latency_ms=43 Inventory updated successfully
+2026-09-15T10:39:20.123Z INFO auth-service node-05 trace=trace-4648426 span=span-49953 latency_ms=70 Request processed successfully
+2026-09-15T10:39:25.123Z INFO notification-service node-04 trace=trace-6968395 span=span-10772 latency_ms=63 Order created successfully
+2026-09-15T10:39:30.123Z INFO [auth-service] [node-03] request_id=req-857526 trace_id=trace-4123208 Request processed successfully
+2026-09-15T10:39:35.123Z INFO payment-service node-01 trace=trace-9628834 span=span-30147 latency_ms=57 Health check passed
+2026-09-15T10:39:40.123Z ERROR [notification-service] [node-03] request_id=req-337078 trace_id=trace-8897013 HTTP 500 returned by dependency
+2026-09-15T10:39:45.123Z INFO [order-service] request_id=req-559876 status=200 latency_ms=22 Order created successfully
+2026-09-15T10:39:50.123Z INFO order-service node-02 trace=trace-4180407 span=span-47342 latency_ms=10 Database connection established
+2026-09-15T10:39:55.123Z INFO order-service node-01 trace=trace-4338530 span=span-72822 latency_ms=39 Health check passed
+2026-09-15T10:40:00.123Z INFO [inventory-service] [node-02] request_id=req-440669 trace_id=trace-7708806 Database connection established
+2026-09-15T10:40:05.123Z INFO [notification-service] request_id=req-232250 status=200 latency_ms=69 Request processed successfully
+2026-09-15T10:40:10.123Z INFO user-service node-03 trace=trace-1134702 span=span-66928 latency_ms=66 User authentication successful
+2026-09-15T10:40:15.123Z INFO notification-service node-04 trace=trace-3558453 span=span-77009 latency_ms=28 Cache lookup completed
+2026-09-15T10:40:20.123Z INFO notification-service node-03 trace=trace-5149917 span=span-97337 latency_ms=59 Cache lookup completed
+2026-09-15T10:40:25.123Z INFO [notification-service] request_id=req-835203 status=200 latency_ms=28 Cache lookup completed
+2026-09-15T10:40:30.123Z INFO [payment-service] [node-02] request_id=req-226312 trace_id=trace-3219555 User authentication successful
+2026-09-15T10:40:35.123Z INFO inventory-service node-01 trace=trace-4349462 span=span-21919 latency_ms=11 Payment request accepted
+2026-09-15T10:40:40.123Z INFO [user-service] request_id=req-332548 status=200 latency_ms=66 Request processed successfully
+2026-09-15T10:40:45.123Z INFO [auth-service] request_id=req-215400 status=200 latency_ms=40 Order created successfully
+2026-09-15T10:40:50.123Z INFO [order-service] request_id=req-290580 status=200 latency_ms=11 Configuration loaded successfully
+2026-09-15T10:40:55.123Z INFO order-service node-04 trace=trace-2690500 span=span-66479 latency_ms=28 User authentication successful
+2026-09-15T10:41:00.123Z INFO order-service node-01 trace=trace-1229203 span=span-99517 latency_ms=75 Database connection established
+2026-09-15T10:41:05.123Z INFO [notification-service] request_id=req-879020 status=200 latency_ms=52 Cache lookup completed
+2026-09-15T10:41:10.123Z INFO [api-gateway] request_id=req-191468 status=200 latency_ms=20 Request processed successfully
+2026-09-15T10:41:15.123Z INFO [user-service] request_id=req-302299 status=200 latency_ms=14 Message published to queue
+2026-09-15T10:41:20.123Z INFO [user-service] [node-04] request_id=req-897953 trace_id=trace-4388982 Request processed successfully
+2026-09-15T10:41:25.123Z DEBUG [api-gateway] request_id=req-896241 status=200 latency_ms=62 Configuration loaded successfully
+2026-09-15T10:41:30.123Z WARN [inventory-service] request_id=req-606274 status=200 latency_ms=491 External service response delayed
+2026-09-15T10:41:35.123Z INFO [payment-service] request_id=req-147652 status=200 latency_ms=55 Inventory updated successfully
+2026-09-15T10:41:40.123Z INFO api-gateway node-01 trace=trace-8344141 span=span-76752 latency_ms=54 Message published to queue
+2026-09-15T10:41:45.123Z INFO [order-service] request_id=req-293007 status=200 latency_ms=78 Cache lookup completed
+2026-09-15T10:41:50.123Z INFO [notification-service] [node-05] request_id=req-577564 trace_id=trace-9452659 User authentication successful
+2026-09-15T10:41:55.123Z INFO [order-service] [node-05] request_id=req-224888 trace_id=trace-3870734 Message published to queue
+2026-09-15T10:42:00.123Z INFO [user-service] [node-02] request_id=req-391248 trace_id=trace-3230889 Configuration loaded successfully
+2026-09-15T10:42:05.123Z INFO [payment-service] request_id=req-221828 status=200 latency_ms=49 Configuration loaded successfully
+2026-09-15T10:42:10.123Z INFO order-service node-01 trace=trace-5429825 span=span-27512 latency_ms=57 HTTP request completed
+2026-09-15T10:42:15.123Z INFO auth-service node-01 trace=trace-6964017 span=span-38741 latency_ms=40 Database connection established
+2026-09-15T10:42:20.123Z INFO [api-gateway] request_id=req-211613 status=200 latency_ms=37 Configuration loaded successfully
+2026-09-15T10:42:25.123Z INFO [payment-service] request_id=req-331356 status=200 latency_ms=31 HTTP request completed
+2026-09-15T10:42:30.123Z INFO [notification-service] [node-04] request_id=req-263201 trace_id=trace-8483576 Order created successfully
+2026-09-15T10:42:35.123Z INFO [auth-service] request_id=req-290330 status=200 latency_ms=27 Cache lookup completed
+2026-09-15T10:42:40.123Z INFO [user-service] [node-02] request_id=req-779020 trace_id=trace-5731917 Database connection established
+2026-09-15T10:42:45.123Z INFO [user-service] [node-05] request_id=req-296972 trace_id=trace-2165246 Payment request accepted
+2026-09-15T10:42:50.123Z INFO [user-service] [node-04] request_id=req-205102 trace_id=trace-9837877 HTTP request completed
+2026-09-15T10:42:55.123Z INFO [auth-service] [node-01] request_id=req-966713 trace_id=trace-1227365 Database connection established
+2026-09-15T10:43:00.123Z INFO [order-service] request_id=req-757860 status=200 latency_ms=18 Message published to queue
+2026-09-15T10:43:05.123Z INFO [notification-service] [node-01] request_id=req-312149 trace_id=trace-3335893 Inventory updated successfully
+2026-09-15T10:43:10.123Z INFO [inventory-service] request_id=req-355652 status=200 latency_ms=39 Configuration loaded successfully
+2026-09-15T10:43:15.123Z DEBUG [notification-service] [node-01] request_id=req-207809 trace_id=trace-5978445 Payment request accepted
+2026-09-15T10:43:20.123Z ERROR [payment-service] request_id=req-337686 status=503 latency_ms=2650 Kafka consumer failed to poll
+2026-09-15T10:43:25.123Z INFO user-service node-01 trace=trace-3844728 span=span-24435 latency_ms=33 Health check passed
+2026-09-15T10:43:30.123Z INFO [api-gateway] [node-03] request_id=req-224099 trace_id=trace-7048077 HTTP request completed
+2026-09-15T10:43:35.123Z DEBUG [api-gateway] request_id=req-728738 status=200 latency_ms=59 Database connection established
+2026-09-15T10:43:40.123Z INFO api-gateway node-03 trace=trace-2743531 span=span-45532 latency_ms=68 Configuration loaded successfully
+2026-09-15T10:43:45.123Z INFO [notification-service] [node-01] request_id=req-927175 trace_id=trace-1036553 Order created successfully
+2026-09-15T10:43:50.123Z INFO [user-service] request_id=req-954222 status=200 latency_ms=78 Payment request accepted
+2026-09-15T10:43:55.123Z INFO auth-service node-03 trace=trace-4051311 span=span-60465 latency_ms=50 Order created successfully
+2026-09-15T10:44:00.123Z INFO user-service node-04 trace=trace-6594616 span=span-28116 latency_ms=36 Payment request accepted
+2026-09-15T10:44:05.123Z INFO [api-gateway] [node-05] request_id=req-616530 trace_id=trace-9933438 Payment request accepted
+2026-09-15T10:44:10.123Z INFO [inventory-service] [node-05] request_id=req-705947 trace_id=trace-4679813 Order created successfully
+2026-09-15T10:44:15.123Z INFO notification-service node-01 trace=trace-8951164 span=span-27510 latency_ms=19 Request processed successfully
+2026-09-15T10:44:20.123Z INFO [notification-service] [node-02] request_id=req-409012 trace_id=trace-8724035 Payment request accepted
+2026-09-15T10:44:25.123Z INFO [payment-service] request_id=req-883281 status=200 latency_ms=23 Payment request accepted
+2026-09-15T10:44:30.123Z ERROR [inventory-service] [node-03] request_id=req-156710 trace_id=trace-2778549 Connection refused by payment service
+2026-09-15T10:44:35.123Z DEBUG [payment-service] [node-01] request_id=req-356949 trace_id=trace-2292941 Payment request accepted
+2026-09-15T10:44:40.123Z INFO [inventory-service] request_id=req-884447 status=200 latency_ms=65 Payment request accepted
+2026-09-15T10:44:45.123Z INFO [notification-service] [node-01] request_id=req-400699 trace_id=trace-2866744 Configuration loaded successfully
+2026-09-15T10:44:50.123Z INFO payment-service node-05 trace=trace-1182327 span=span-61955 latency_ms=59 Configuration loaded successfully
+2026-09-15T10:44:55.123Z INFO [notification-service] [node-03] request_id=req-699853 trace_id=trace-9420022 Payment request accepted
+2026-09-15T10:45:00.123Z INFO [auth-service] [node-05] request_id=req-495900 trace_id=trace-3099389 HTTP request completed
+2026-09-15T10:45:05.123Z INFO [payment-service] request_id=req-734475 status=200 latency_ms=66 Order created successfully
+2026-09-15T10:45:10.123Z INFO notification-service node-04 trace=trace-1917238 span=span-58690 latency_ms=59 Cache lookup completed
+2026-09-15T10:45:15.123Z WARN [auth-service] [node-03] request_id=req-732490 trace_id=trace-6628280 Retrying connection to dependency
+2026-09-15T10:45:20.123Z INFO auth-service node-03 trace=trace-4384399 span=span-93674 latency_ms=9 Cache lookup completed
+2026-09-15T10:45:25.123Z WARN [api-gateway] [node-05] request_id=req-147054 trace_id=trace-9116934 Retrying connection to dependency
+2026-09-15T10:45:30.123Z INFO [notification-service] request_id=req-517476 status=200 latency_ms=45 Payment request accepted
+2026-09-15T10:45:35.123Z INFO [payment-service] [node-01] request_id=req-447412 trace_id=trace-7833134 Message published to queue
+2026-09-15T10:45:40.123Z ERROR [notification-service] request_id=req-600121 status=504 latency_ms=1445 Failed to process request
+2026-09-15T10:45:45.123Z WARN [user-service] [node-02] request_id=req-326122 trace_id=trace-3363282 Queue depth above normal
+2026-09-15T10:45:50.123Z INFO [order-service] [node-05] request_id=req-997531 trace_id=trace-8229326 Cache lookup completed
+2026-09-15T10:45:55.123Z INFO api-gateway node-01 trace=trace-9347047 span=span-22767 latency_ms=6 Database connection established
+2026-09-15T10:46:00.123Z INFO notification-service node-01 trace=trace-2578970 span=span-69612 latency_ms=45 Database connection established
+2026-09-15T10:46:05.123Z DEBUG [order-service] request_id=req-480977 status=200 latency_ms=14 Database connection established
+2026-09-15T10:46:10.123Z INFO [order-service] request_id=req-368463 status=200 latency_ms=22 Health check passed
+2026-09-15T10:46:15.123Z INFO order-service node-03 trace=trace-7862438 span=span-91223 latency_ms=21 Inventory updated successfully
+2026-09-15T10:46:20.123Z INFO api-gateway node-03 trace=trace-2400738 span=span-99417 latency_ms=57 Message published to queue
+2026-09-15T10:46:25.123Z INFO [user-service] [node-01] request_id=req-750760 trace_id=trace-1957285 Request processed successfully
+2026-09-15T10:46:30.123Z INFO order-service node-04 trace=trace-7698813 span=span-19565 latency_ms=33 Payment request accepted
+2026-09-15T10:46:35.123Z INFO [order-service] [node-04] request_id=req-591246 trace_id=trace-9977752 Health check passed
+2026-09-15T10:46:40.123Z INFO inventory-service node-04 trace=trace-7736395 span=span-53086 latency_ms=13 Order created successfully
+2026-09-15T10:46:45.123Z INFO [inventory-service] [node-02] request_id=req-836405 trace_id=trace-8989636 Inventory updated successfully
+2026-09-15T10:46:50.123Z INFO [inventory-service] request_id=req-771315 status=200 latency_ms=77 Request processed successfully
+2026-09-15T10:46:55.123Z INFO [auth-service] [node-03] request_id=req-927912 trace_id=trace-8216043 Request processed successfully
+2026-09-15T10:47:00.123Z INFO [notification-service] [node-04] request_id=req-382956 trace_id=trace-5229054 Health check passed
+2026-09-15T10:47:05.123Z WARN [inventory-service] [node-01] request_id=req-412828 trace_id=trace-8573586 Request latency above threshold
+2026-09-15T10:47:10.123Z WARN inventory-service node-03 trace=trace-5981239 span=span-31565 latency_ms=1136 Retrying connection to dependency
+2026-09-15T10:47:15.123Z INFO [notification-service] [node-02] request_id=req-830532 trace_id=trace-8328019 Payment request accepted
+2026-09-15T10:47:20.123Z INFO [api-gateway] [node-02] request_id=req-181588 trace_id=trace-3426274 Request processed successfully
+2026-09-15T10:47:25.123Z INFO [payment-service] request_id=req-431777 status=200 latency_ms=57 User authentication successful
+2026-09-15T10:47:30.123Z INFO [inventory-service] [node-02] request_id=req-765104 trace_id=trace-8538483 Health check passed
+2026-09-15T10:47:35.123Z INFO payment-service node-04 trace=trace-3786712 span=span-88766 latency_ms=53 Cache lookup completed
+2026-09-15T10:47:40.123Z INFO payment-service node-05 trace=trace-7211871 span=span-57683 latency_ms=7 User authentication successful
+2026-09-15T10:47:45.123Z INFO notification-service node-01 trace=trace-9374022 span=span-95054 latency_ms=63 Payment request accepted
+2026-09-15T10:47:50.123Z INFO notification-service node-05 trace=trace-9777333 span=span-54017 latency_ms=19 Database connection established
+2026-09-15T10:47:55.123Z INFO payment-service node-05 trace=trace-3728933 span=span-81141 latency_ms=60 Payment request accepted
+2026-09-15T10:48:00.123Z INFO [user-service] [node-04] request_id=req-764909 trace_id=trace-5752118 Health check passed
+2026-09-15T10:48:05.123Z WARN [auth-service] request_id=req-531257 status=503 latency_ms=1180 Database connection pool nearing capacity
+2026-09-15T10:48:10.123Z INFO [user-service] request_id=req-993077 status=200 latency_ms=33 Inventory updated successfully
+2026-09-15T10:48:15.123Z INFO [payment-service] request_id=req-230485 status=200 latency_ms=57 Configuration loaded successfully
+2026-09-15T10:48:20.123Z INFO [inventory-service] request_id=req-492842 status=200 latency_ms=41 User authentication successful
+2026-09-15T10:48:25.123Z INFO [notification-service] [node-04] request_id=req-806007 trace_id=trace-5052611 Request processed successfully
+2026-09-15T10:48:30.123Z ERROR [notification-service] [node-03] request_id=req-981610 trace_id=trace-9706758 Kafka consumer failed to poll
+2026-09-15T10:48:35.123Z INFO [inventory-service] [node-02] request_id=req-746203 trace_id=trace-7598776 Payment request accepted
+2026-09-15T10:48:40.123Z INFO [inventory-service] [node-02] request_id=req-522700 trace_id=trace-6337250 Payment request accepted
+2026-09-15T10:48:45.123Z WARN [notification-service] request_id=req-628751 status=503 latency_ms=682 External service response delayed
+2026-09-15T10:48:50.123Z DEBUG [order-service] request_id=req-197784 status=200 latency_ms=60 Request processed successfully
+2026-09-15T10:48:55.123Z INFO [payment-service] request_id=req-748124 status=200 latency_ms=53 Request processed successfully
+2026-09-15T10:49:00.123Z INFO [inventory-service] [node-03] request_id=req-295617 trace_id=trace-5021865 User authentication successful
+2026-09-15T10:49:05.123Z INFO [payment-service] [node-04] request_id=req-907814 trace_id=trace-5370124 User authentication successful
+2026-09-15T10:49:10.123Z INFO [user-service] [node-01] request_id=req-769396 trace_id=trace-2735086 HTTP request completed
+2026-09-15T10:49:15.123Z WARN order-service node-03 trace=trace-2556542 span=span-20142 latency_ms=575 External service response delayed
+2026-09-15T10:49:20.123Z WARN notification-service node-01 trace=trace-2234399 span=span-73768 latency_ms=918 Request latency above threshold
+2026-09-15T10:49:25.123Z INFO [inventory-service] request_id=req-288540 status=200 latency_ms=27 Configuration loaded successfully
+2026-09-15T10:49:30.123Z INFO [notification-service] request_id=req-222900 status=200 latency_ms=66 HTTP request completed
+2026-09-15T10:49:35.123Z INFO [payment-service] [node-05] request_id=req-877725 trace_id=trace-5269818 HTTP request completed
+2026-09-15T10:49:40.123Z INFO [api-gateway] [node-05] request_id=req-897925 trace_id=trace-3555942 Health check passed
+2026-09-15T10:49:45.123Z ERROR payment-service node-02 trace=trace-3123664 span=span-45073 latency_ms=1553 Transaction rollback initiated
+2026-09-15T10:49:50.123Z INFO [user-service] [node-03] request_id=req-589730 trace_id=trace-9318172 Payment request accepted
+2026-09-15T10:49:55.123Z INFO [payment-service] [node-03] request_id=req-511907 trace_id=trace-2726284 User authentication successful
+2026-09-15T10:50:00.123Z INFO [user-service] request_id=req-554527 status=200 latency_ms=39 Order created successfully
+2026-09-15T10:50:05.123Z WARN [inventory-service] request_id=req-309422 status=200 latency_ms=219 Cache miss rate increased
+2026-09-15T10:50:10.123Z INFO [inventory-service] [node-03] request_id=req-733216 trace_id=trace-9900282 Request processed successfully
+2026-09-15T10:50:15.123Z DEBUG [order-service] [node-04] request_id=req-929314 trace_id=trace-4119134 Health check passed
+2026-09-15T10:50:20.123Z INFO [order-service] request_id=req-917380 status=200 latency_ms=6 Order created successfully
+2026-09-15T10:50:25.123Z ERROR [order-service] request_id=req-587982 status=504 latency_ms=3123 Connection refused by payment service
+2026-09-15T10:50:30.123Z INFO [payment-service] request_id=req-688207 status=200 latency_ms=14 HTTP request completed
+2026-09-15T10:50:35.123Z INFO notification-service node-04 trace=trace-6370746 span=span-35971 latency_ms=30 Request processed successfully
+2026-09-15T10:50:40.123Z INFO order-service node-04 trace=trace-3081929 span=span-69347 latency_ms=26 HTTP request completed
+2026-09-15T10:50:45.123Z INFO payment-service node-05 trace=trace-5782125 span=span-12337 latency_ms=78 Request processed successfully
+2026-09-15T10:50:50.123Z INFO [notification-service] request_id=req-138805 status=200 latency_ms=10 Order created successfully
+2026-09-15T10:50:55.123Z ERROR [inventory-service] [node-01] request_id=req-970161 trace_id=trace-7963867 Kafka consumer failed to poll
+2026-09-15T10:51:00.123Z INFO order-service node-04 trace=trace-1789750 span=span-61554 latency_ms=43 Worker started
+2026-09-15T10:51:05.123Z INFO [user-service] [node-01] request_id=req-984028 trace_id=trace-7273103 Request processed successfully
+2026-09-15T10:51:10.123Z WARN [auth-service] request_id=req-210242 status=200 latency_ms=541 Request latency above threshold
+2026-09-15T10:51:15.123Z INFO [order-service] [node-05] request_id=req-105181 trace_id=trace-1880652 Health check passed
+2026-09-15T10:51:20.123Z INFO [auth-service] request_id=req-445326 status=200 latency_ms=26 Database connection established
+2026-09-15T10:51:25.123Z INFO [payment-service] [node-03] request_id=req-255190 trace_id=trace-7933921 Configuration loaded successfully
+2026-09-15T10:51:30.123Z INFO payment-service node-05 trace=trace-9222577 span=span-46771 latency_ms=46 Worker started
+2026-09-15T10:51:35.123Z INFO [order-service] request_id=req-845937 status=200 latency_ms=76 Cache lookup completed
+2026-09-15T10:51:40.123Z INFO [notification-service] [node-02] request_id=req-828723 trace_id=trace-2308903 Request processed successfully
+2026-09-15T10:51:45.123Z ERROR [payment-service] request_id=req-958271 status=503 latency_ms=2509 Connection refused by payment service
+2026-09-15T10:51:50.123Z INFO [api-gateway] [node-03] request_id=req-897429 trace_id=trace-6231562 Message published to queue
+2026-09-15T10:51:55.123Z INFO payment-service node-03 trace=trace-8590547 span=span-91327 latency_ms=70 Cache lookup completed
+2026-09-15T10:52:00.123Z DEBUG order-service node-04 trace=trace-6153067 span=span-85660 latency_ms=18 Database connection established
+2026-09-15T10:52:05.123Z INFO [user-service] [node-01] request_id=req-352248 trace_id=trace-1278299 User authentication successful
+2026-09-15T10:52:10.123Z INFO api-gateway node-04 trace=trace-5455671 span=span-25509 latency_ms=75 Health check passed
+2026-09-15T10:52:15.123Z INFO payment-service node-04 trace=trace-8228437 span=span-76574 latency_ms=47 Request processed successfully
+2026-09-15T10:52:20.123Z INFO [auth-service] [node-01] request_id=req-780129 trace_id=trace-7417663 User authentication successful
+2026-09-15T10:52:25.123Z INFO [api-gateway] request_id=req-655286 status=200 latency_ms=60 Health check passed
+2026-09-15T10:52:30.123Z WARN [payment-service] [node-01] request_id=req-330246 trace_id=trace-2932532 Queue depth above normal
+2026-09-15T10:52:35.123Z INFO [order-service] [node-02] request_id=req-750348 trace_id=trace-7787380 Health check passed
+2026-09-15T10:52:40.123Z INFO [user-service] request_id=req-619225 status=200 latency_ms=31 Order created successfully
+2026-09-15T10:52:45.123Z INFO [api-gateway] request_id=req-869531 status=200 latency_ms=28 Message published to queue
+2026-09-15T10:52:50.123Z INFO [user-service] [node-03] request_id=req-993978 trace_id=trace-5003370 Configuration loaded successfully
+2026-09-15T10:52:55.123Z DEBUG order-service node-04 trace=trace-1213654 span=span-97298 latency_ms=65 Payment request accepted
+2026-09-15T10:53:00.123Z ERROR [order-service] [node-01] request_id=req-279018 trace_id=trace-1163307 Transaction rollback initiated
+2026-09-15T10:53:05.123Z INFO [auth-service] [node-01] request_id=req-694822 trace_id=trace-5876441 Message published to queue
+2026-09-15T10:53:10.123Z INFO [notification-service] request_id=req-204849 status=200 latency_ms=62 Inventory updated successfully
+2026-09-15T10:53:15.123Z INFO [api-gateway] [node-03] request_id=req-795634 trace_id=trace-9162003 Inventory updated successfully
+2026-09-15T10:53:20.123Z INFO [order-service] request_id=req-642985 status=200 latency_ms=39 Configuration loaded successfully
+2026-09-15T10:53:25.123Z INFO auth-service node-02 trace=trace-4695275 span=span-96424 latency_ms=23 Order created successfully
+2026-09-15T10:53:30.123Z ERROR [api-gateway] request_id=req-476879 status=500 latency_ms=3043 Redis connection timeout
+2026-09-15T10:53:35.123Z INFO inventory-service node-05 trace=trace-5451151 span=span-99006 latency_ms=49 Order created successfully
+2026-09-15T10:53:40.123Z INFO order-service node-03 trace=trace-1689543 span=span-85958 latency_ms=71 Worker started
+2026-09-15T10:53:45.123Z INFO [auth-service] [node-04] request_id=req-933966 trace_id=trace-8634097 User authentication successful
+2026-09-15T10:53:50.123Z INFO [inventory-service] request_id=req-588969 status=200 latency_ms=42 HTTP request completed
+2026-09-15T10:53:55.123Z INFO [order-service] [node-04] request_id=req-402262 trace_id=trace-2084084 Inventory updated successfully
+2026-09-15T10:54:00.123Z INFO notification-service node-05 trace=trace-1892435 span=span-74011 latency_ms=44 Request processed successfully
+2026-09-15T10:54:05.123Z INFO [notification-service] request_id=req-152326 status=200 latency_ms=49 User authentication successful
+2026-09-15T10:54:10.123Z INFO [notification-service] [node-05] request_id=req-262568 trace_id=trace-2442898 Worker started
+2026-09-15T10:54:15.123Z INFO [auth-service] request_id=req-329489 status=200 latency_ms=50 Cache lookup completed
+2026-09-15T10:54:20.123Z INFO [inventory-service] request_id=req-202905 status=200 latency_ms=44 Database connection established
+2026-09-15T10:54:25.123Z INFO [order-service] request_id=req-245936 status=200 latency_ms=22 Payment request accepted
+2026-09-15T10:54:30.123Z DEBUG order-service node-01 trace=trace-8736886 span=span-81543 latency_ms=28 Payment request accepted
+2026-09-15T10:54:35.123Z WARN api-gateway node-04 trace=trace-6255638 span=span-76036 latency_ms=1025 Cache miss rate increased
+2026-09-15T10:54:40.123Z INFO [inventory-service] request_id=req-129017 status=200 latency_ms=16 Database connection established
+2026-09-15T10:54:45.123Z INFO [notification-service] request_id=req-708512 status=200 latency_ms=21 HTTP request completed
+2026-09-15T10:54:50.123Z INFO [order-service] [node-01] request_id=req-892026 trace_id=trace-7587730 Configuration loaded successfully
+2026-09-15T10:54:55.123Z INFO [notification-service] request_id=req-582576 status=200 latency_ms=12 User authentication successful
+2026-09-15T10:55:00.123Z WARN [api-gateway] [node-01] request_id=req-961866 trace_id=trace-5875071 Slow query detected
+2026-09-15T10:55:05.123Z INFO [user-service] request_id=req-875278 status=200 latency_ms=71 Database connection established
+2026-09-15T10:55:10.123Z INFO [inventory-service] [node-02] request_id=req-334402 trace_id=trace-3596701 Worker started
+2026-09-15T10:55:15.123Z INFO [api-gateway] [node-02] request_id=req-220280 trace_id=trace-2126456 HTTP request completed
+2026-09-15T10:55:20.123Z INFO payment-service node-02 trace=trace-8948078 span=span-13231 latency_ms=69 Inventory updated successfully
+2026-09-15T10:55:25.123Z WARN [auth-service] request_id=req-524209 status=429 latency_ms=1049 External service response delayed
+2026-09-15T10:55:30.123Z INFO [inventory-service] request_id=req-767101 status=200 latency_ms=23 Worker started
+2026-09-15T10:55:35.123Z INFO [api-gateway] request_id=req-310083 status=200 latency_ms=42 User authentication successful
+2026-09-15T10:55:40.123Z WARN api-gateway node-04 trace=trace-5616776 span=span-61273 latency_ms=1100 Slow query detected
+2026-09-15T10:55:45.123Z INFO [payment-service] [node-01] request_id=req-397189 trace_id=trace-8668568 Payment request accepted
+2026-09-15T10:55:50.123Z INFO [auth-service] request_id=req-566070 status=200 latency_ms=22 Inventory updated successfully
+2026-09-15T10:55:55.123Z INFO [auth-service] request_id=req-475125 status=200 latency_ms=31 Order created successfully
+2026-09-15T10:56:00.123Z INFO api-gateway node-01 trace=trace-3540116 span=span-56119 latency_ms=77 Order created successfully
+2026-09-15T10:56:05.123Z INFO notification-service node-02 trace=trace-6082320 span=span-61633 latency_ms=13 Configuration loaded successfully
+2026-09-15T10:56:10.123Z INFO [inventory-service] request_id=req-790982 status=200 latency_ms=69 Configuration loaded successfully
+2026-09-15T10:56:15.123Z INFO [user-service] [node-03] request_id=req-717456 trace_id=trace-6840068 Health check passed
+2026-09-15T10:56:20.123Z ERROR [user-service] [node-02] request_id=req-342959 trace_id=trace-2619679 Transaction rollback initiated
+2026-09-15T10:56:25.123Z INFO [notification-service] [node-02] request_id=req-210553 trace_id=trace-3919201 Health check passed
+2026-09-15T10:56:30.123Z INFO [auth-service] request_id=req-987936 status=200 latency_ms=52 HTTP request completed
+2026-09-15T10:56:35.123Z INFO [payment-service] request_id=req-212890 status=200 latency_ms=22 Configuration loaded successfully
+2026-09-15T10:56:40.123Z INFO [payment-service] [node-03] request_id=req-614958 trace_id=trace-8340281 Cache lookup completed
+2026-09-15T10:56:45.123Z INFO [inventory-service] request_id=req-947954 status=200 latency_ms=79 Request processed successfully
+2026-09-15T10:56:50.123Z INFO [auth-service] request_id=req-134853 status=200 latency_ms=51 Payment request accepted
+2026-09-15T10:56:55.123Z INFO [auth-service] request_id=req-294305 status=200 latency_ms=29 Cache lookup completed
+2026-09-15T10:57:00.123Z INFO [api-gateway] request_id=req-473801 status=200 latency_ms=61 Payment request accepted
+2026-09-15T10:57:05.123Z INFO [auth-service] [node-05] request_id=req-181939 trace_id=trace-3133934 Health check passed
+2026-09-15T10:57:10.123Z INFO auth-service node-05 trace=trace-6551912 span=span-12954 latency_ms=33 User authentication successful
+2026-09-15T10:57:15.123Z INFO [order-service] [node-01] request_id=req-265531 trace_id=trace-5832995 HTTP request completed
+2026-09-15T10:57:20.123Z INFO [api-gateway] request_id=req-427406 status=200 latency_ms=12 Message published to queue
+2026-09-15T10:57:25.123Z INFO api-gateway node-04 trace=trace-1502947 span=span-14230 latency_ms=48 Payment request accepted
+2026-09-15T10:57:30.123Z INFO [notification-service] [node-01] request_id=req-246054 trace_id=trace-4426466 Configuration loaded successfully
+2026-09-15T10:57:35.123Z INFO [auth-service] request_id=req-739633 status=200 latency_ms=14 Payment request accepted
+2026-09-15T10:57:40.123Z INFO [auth-service] [node-05] request_id=req-602028 trace_id=trace-3172055 Health check passed
+2026-09-15T10:57:45.123Z INFO [payment-service] [node-03] request_id=req-552476 trace_id=trace-9012674 Request processed successfully
+2026-09-15T10:57:50.123Z ERROR notification-service node-02 trace=trace-7365080 span=span-99383 latency_ms=1227 Out of memory while processing batch
+2026-09-15T10:57:55.123Z INFO user-service node-02 trace=trace-8161079 span=span-82029 latency_ms=22 Health check passed
+2026-09-15T10:58:00.123Z WARN [api-gateway] [node-03] request_id=req-468877 trace_id=trace-4248834 Database connection pool nearing capacity
+2026-09-15T10:58:05.123Z INFO [payment-service] request_id=req-883785 status=200 latency_ms=10 Request processed successfully
+2026-09-15T10:58:10.123Z INFO [auth-service] [node-01] request_id=req-159406 trace_id=trace-3125939 User authentication successful
+2026-09-15T10:58:15.123Z INFO [api-gateway] request_id=req-406616 status=200 latency_ms=55 Inventory updated successfully
+2026-09-15T10:58:20.123Z DEBUG auth-service node-01 trace=trace-4453773 span=span-74871 latency_ms=50 Cache lookup completed
+2026-09-15T10:58:25.123Z INFO [order-service] request_id=req-406900 status=200 latency_ms=39 Order created successfully
+2026-09-15T10:58:30.123Z INFO [auth-service] [node-01] request_id=req-463473 trace_id=trace-7892648 User authentication successful
+2026-09-15T10:58:35.123Z INFO payment-service node-05 trace=trace-6116030 span=span-82478 latency_ms=31 Health check passed
+2026-09-15T10:58:40.123Z INFO [notification-service] [node-02] request_id=req-137609 trace_id=trace-4944411 Health check passed
+2026-09-15T10:58:45.123Z INFO auth-service node-03 trace=trace-7445414 span=span-49375 latency_ms=15 Request processed successfully
+2026-09-15T10:58:50.123Z INFO [inventory-service] [node-04] request_id=req-119764 trace_id=trace-7418764 Request processed successfully
+2026-09-15T10:58:55.123Z INFO [payment-service] request_id=req-658358 status=200 latency_ms=44 Request processed successfully
+2026-09-15T10:59:00.123Z INFO [auth-service] [node-05] request_id=req-891127 trace_id=trace-6640806 Cache lookup completed
+2026-09-15T10:59:05.123Z INFO notification-service node-05 trace=trace-8173085 span=span-17486 latency_ms=18 Message published to queue
+2026-09-15T10:59:10.123Z INFO [user-service] request_id=req-660737 status=200 latency_ms=78 Worker started
+2026-09-15T10:59:15.123Z INFO order-service node-02 trace=trace-8840537 span=span-41224 latency_ms=21 Request processed successfully
+2026-09-15T10:59:20.123Z INFO [order-service] [node-01] request_id=req-362073 trace_id=trace-5963118 Payment request accepted
+2026-09-15T10:59:25.123Z INFO order-service node-03 trace=trace-5202915 span=span-95594 latency_ms=6 Health check passed
+2026-09-15T10:59:30.123Z INFO order-service node-03 trace=trace-3999504 span=span-68170 latency_ms=64 Request processed successfully
+2026-09-15T10:59:35.123Z ERROR [auth-service] request_id=req-603534 status=500 latency_ms=3064 Authentication token validation failed
+2026-09-15T10:59:40.123Z INFO [auth-service] [node-04] request_id=req-288538 trace_id=trace-5328638 Inventory updated successfully
+2026-09-15T10:59:45.123Z INFO [payment-service] [node-02] request_id=req-747966 trace_id=trace-1831808 Configuration loaded successfully
+2026-09-15T10:59:50.123Z DEBUG [api-gateway] [node-04] request_id=req-708059 trace_id=trace-6323988 Worker started
+2026-09-15T10:59:55.123Z WARN user-service node-03 trace=trace-1270418 span=span-98917 latency_ms=630 Queue depth above normal
+2026-09-15T11:00:00.123Z WARN [api-gateway] request_id=req-218680 status=429 latency_ms=910 Request latency above threshold
+2026-09-15T11:00:05.123Z INFO user-service node-04 trace=trace-3400475 span=span-13236 latency_ms=46 HTTP request completed
+2026-09-15T11:00:10.123Z INFO inventory-service node-03 trace=trace-5933559 span=span-91515 latency_ms=8 Database connection established
+2026-09-15T11:00:15.123Z ERROR payment-service node-05 trace=trace-2782278 span=span-89827 latency_ms=2560 Kafka consumer failed to poll
+2026-09-15T11:00:20.123Z INFO [auth-service] request_id=req-499601 status=200 latency_ms=33 HTTP request completed
+2026-09-15T11:00:25.123Z INFO [user-service] [node-05] request_id=req-869603 trace_id=trace-8014220 Message published to queue
+2026-09-15T11:00:30.123Z INFO [user-service] request_id=req-645611 status=200 latency_ms=39 Cache lookup completed
+2026-09-15T11:00:35.123Z INFO [payment-service] request_id=req-354880 status=200 latency_ms=63 Order created successfully
+2026-09-15T11:00:40.123Z INFO [user-service] request_id=req-566624 status=200 latency_ms=15 Order created successfully
+2026-09-15T11:00:45.123Z INFO [order-service] request_id=req-734617 status=200 latency_ms=58 Cache lookup completed
+2026-09-15T11:00:50.123Z INFO [payment-service] [node-05] request_id=req-356842 trace_id=trace-7838685 Configuration loaded successfully
+2026-09-15T11:00:55.123Z INFO notification-service node-03 trace=trace-6265434 span=span-25461 latency_ms=15 Payment request accepted
+2026-09-15T11:01:00.123Z INFO [payment-service] [node-05] request_id=req-618206 trace_id=trace-4323637 Request processed successfully
+2026-09-15T11:01:05.123Z DEBUG order-service node-05 trace=trace-8882947 span=span-23237 latency_ms=21 Request processed successfully
+2026-09-15T11:01:10.123Z ERROR payment-service node-01 trace=trace-9638539 span=span-79377 latency_ms=1844 Redis connection timeout
+2026-09-15T11:01:15.123Z INFO [payment-service] request_id=req-224811 status=200 latency_ms=80 HTTP request completed
+2026-09-15T11:01:20.123Z WARN user-service node-01 trace=trace-6955200 span=span-68837 latency_ms=1042 Slow query detected
+2026-09-15T11:01:25.123Z INFO [user-service] [node-02] request_id=req-869070 trace_id=trace-4077793 Health check passed
+2026-09-15T11:01:30.123Z INFO [api-gateway] [node-05] request_id=req-487840 trace_id=trace-8608923 Inventory updated successfully
+2026-09-15T11:01:35.123Z INFO api-gateway node-03 trace=trace-2625688 span=span-40443 latency_ms=43 Inventory updated successfully
+2026-09-15T11:01:40.123Z WARN [api-gateway] [node-05] request_id=req-707993 trace_id=trace-9526649 Retrying connection to dependency
+2026-09-15T11:01:45.123Z INFO auth-service node-02 trace=trace-9709639 span=span-46471 latency_ms=78 HTTP request completed
+2026-09-15T11:01:50.123Z WARN order-service node-02 trace=trace-5829206 span=span-45893 latency_ms=496 Cache miss rate increased
+2026-09-15T11:01:55.123Z INFO [order-service] [node-05] request_id=req-890069 trace_id=trace-2780388 Database connection established
+2026-09-15T11:02:00.123Z INFO [notification-service] request_id=req-891533 status=200 latency_ms=10 Message published to queue
+2026-09-15T11:02:05.123Z INFO [auth-service] request_id=req-972944 status=200 latency_ms=31 User authentication successful
+2026-09-15T11:02:10.123Z INFO [inventory-service] request_id=req-232307 status=200 latency_ms=19 Worker started
+2026-09-15T11:02:15.123Z INFO auth-service node-04 trace=trace-9275454 span=span-44479 latency_ms=16 Database connection established
+2026-09-15T11:02:20.123Z INFO [auth-service] [node-03] request_id=req-942678 trace_id=trace-2326525 Order created successfully
+2026-09-15T11:02:25.123Z INFO [order-service] request_id=req-761257 status=200 latency_ms=14 Worker started
+2026-09-15T11:02:30.123Z INFO [auth-service] request_id=req-205317 status=200 latency_ms=29 Message published to queue
+2026-09-15T11:02:35.123Z INFO user-service node-01 trace=trace-1133724 span=span-42232 latency_ms=22 HTTP request completed
+2026-09-15T11:02:40.123Z INFO [payment-service] request_id=req-378172 status=200 latency_ms=67 Database connection established
+2026-09-15T11:02:45.123Z INFO payment-service node-02 trace=trace-2488335 span=span-77673 latency_ms=32 Request processed successfully
+2026-09-15T11:02:50.123Z WARN [api-gateway] request_id=req-318677 status=429 latency_ms=928 Slow query detected
+2026-09-15T11:02:55.123Z INFO [user-service] [node-03] request_id=req-607755 trace_id=trace-9899661 User authentication successful
+2026-09-15T11:03:00.123Z INFO user-service node-04 trace=trace-7580192 span=span-88360 latency_ms=50 Message published to queue
+2026-09-15T11:03:05.123Z INFO [payment-service] [node-01] request_id=req-891634 trace_id=trace-5819613 Order created successfully
+2026-09-15T11:03:10.123Z INFO [auth-service] request_id=req-587310 status=200 latency_ms=19 Order created successfully
+2026-09-15T11:03:15.123Z INFO [payment-service] [node-04] request_id=req-980930 trace_id=trace-9206984 Configuration loaded successfully
+2026-09-15T11:03:20.123Z ERROR order-service node-05 trace=trace-7861979 span=span-17969 latency_ms=3401 Kafka consumer failed to poll
+2026-09-15T11:03:25.123Z INFO [inventory-service] request_id=req-518045 status=200 latency_ms=39 Inventory updated successfully
+2026-09-15T11:03:30.123Z INFO [user-service] [node-01] request_id=req-423496 trace_id=trace-8510091 HTTP request completed
+2026-09-15T11:03:35.123Z INFO [notification-service] request_id=req-743095 status=200 latency_ms=74 Request processed successfully
+2026-09-15T11:03:40.123Z ERROR inventory-service node-01 trace=trace-6591646 span=span-56229 latency_ms=2524 Connection refused by payment service
+2026-09-15T11:03:45.123Z INFO payment-service node-05 trace=trace-4847593 span=span-48035 latency_ms=25 Order created successfully
+2026-09-15T11:03:50.123Z INFO [api-gateway] request_id=req-114303 status=200 latency_ms=72 Health check passed
+2026-09-15T11:03:55.123Z INFO [inventory-service] request_id=req-264569 status=200 latency_ms=8 Cache lookup completed
+2026-09-15T11:04:00.123Z INFO [payment-service] request_id=req-385693 status=200 latency_ms=56 Database connection established
+2026-09-15T11:04:05.123Z INFO [notification-service] [node-01] request_id=req-180244 trace_id=trace-2239672 Request processed successfully
+2026-09-15T11:04:10.123Z INFO [api-gateway] request_id=req-259223 status=200 latency_ms=55 Cache lookup completed
+2026-09-15T11:04:15.123Z INFO notification-service node-03 trace=trace-9595901 span=span-13071 latency_ms=43 User authentication successful
+2026-09-15T11:04:20.123Z INFO [order-service] [node-05] request_id=req-594299 trace_id=trace-7317976 Health check passed
+2026-09-15T11:04:25.123Z INFO api-gateway node-03 trace=trace-5771825 span=span-79888 latency_ms=69 Cache lookup completed
+2026-09-15T11:04:30.123Z ERROR [inventory-service] [node-04] request_id=req-490843 trace_id=trace-2817044 Authentication token validation failed
+2026-09-15T11:04:35.123Z INFO [inventory-service] [node-05] request_id=req-214240 trace_id=trace-6211168 Configuration loaded successfully
+2026-09-15T11:04:40.123Z WARN [payment-service] [node-02] request_id=req-613604 trace_id=trace-5193784 Cache miss rate increased
+2026-09-15T11:04:45.123Z INFO [order-service] request_id=req-426584 status=200 latency_ms=9 Order created successfully
+2026-09-15T11:04:50.123Z INFO inventory-service node-01 trace=trace-4510199 span=span-83716 latency_ms=67 Message published to queue
+2026-09-15T11:04:55.123Z INFO [user-service] request_id=req-437471 status=200 latency_ms=70 Message published to queue

@@ -1,0 +1,64 @@
+{
+  "dataset_name": "TRACE Review-1 Authentic CI/CD Failure Corpus",
+  "provenance": "100% extracted from genuine user-supplied logs",
+  "synthetic_augmentation_used": false,
+  "split_method": "Stratified Incident-Level Split",
+  "random_seed": 42,
+  "total_incidents": 374,
+  "train_count": 261,
+  "val_count": 56,
+  "test_count": 57,
+  "category_distribution": {
+    "ENVIRONMENT_AND_PIPELINE_ERROR": 137,
+    "STORAGE_AND_IO_ERROR": 76,
+    "NETWORK_DEPENDENCY_FAILURE": 45,
+    "DATABASE_AND_CACHE_TIMEOUT": 25,
+    "INTERNAL_APPLICATION_LOGIC_ERROR": 22,
+    "AUTHENTICATION_SECURITY_ERROR": 22,
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR": 18,
+    "TEST_ASSERTION_FAILURE": 13,
+    "MESSAGE_BROKER_FAILURE": 9,
+    "RESOURCE_EXHAUSTION_CRASH": 7
+  },
+  "train_categories": {
+    "ENVIRONMENT_AND_PIPELINE_ERROR": 96,
+    "STORAGE_AND_IO_ERROR": 53,
+    "NETWORK_DEPENDENCY_FAILURE": 31,
+    "DATABASE_AND_CACHE_TIMEOUT": 18,
+    "AUTHENTICATION_SECURITY_ERROR": 15,
+    "INTERNAL_APPLICATION_LOGIC_ERROR": 15,
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR": 13,
+    "TEST_ASSERTION_FAILURE": 9,
+    "MESSAGE_BROKER_FAILURE": 6,
+    "RESOURCE_EXHAUSTION_CRASH": 5
+  },
+  "test_categories": {
+    "ENVIRONMENT_AND_PIPELINE_ERROR": 21,
+    "STORAGE_AND_IO_ERROR": 12,
+    "NETWORK_DEPENDENCY_FAILURE": 7,
+    "INTERNAL_APPLICATION_LOGIC_ERROR": 4,
+    "DATABASE_AND_CACHE_TIMEOUT": 4,
+    "AUTHENTICATION_SECURITY_ERROR": 3,
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR": 2,
+    "TEST_ASSERTION_FAILURE": 2,
+    "RESOURCE_EXHAUSTION_CRASH": 1,
+    "MESSAGE_BROKER_FAILURE": 1
+  },
+  "source_files": [
+    {
+      "name": "1130.txt",
+      "sha256": "24da5e813025949333acc4127f0c3104df73916fd9161987a2b93b54661bf9b7",
+      "lines": 1500
+    },
+    {
+      "name": "Jenkins_Log_Under_1MB.txt",
+      "sha256": "8bec1c296ae4cd19311e7b73cf3cf66dbc35f981ee4acaf3ae9d39c1ef2c3ed5",
+      "lines": 1576
+    },
+    {
+      "name": "jenkins_gist_crash.log",
+      "sha256": "c2e1c09e75998a642847d5fa83c331c352ddb45d362dbc3909570368f1224e24",
+      "lines": 2450
+    }
+  ]
+}
