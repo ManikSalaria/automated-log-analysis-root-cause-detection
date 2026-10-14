@@ -19,11 +19,13 @@ def get_recent_incidents(
     cursor = conn.cursor()
 
     query = """
-        SELECT i.id, i.incident_code, f.filename as source_file, i.start_line, i.end_line,
-               i.primary_severity, i.failure_category, i.confidence, i.root_cause_candidate,
-               i.detected_signature, i.created_at
+        SELECT i.id, i.incident_code, f.filename as source_file, f.id as file_id,
+               i.start_line, i.end_line, i.primary_severity, i.failure_category,
+               i.confidence, i.root_cause_candidate, i.detected_signature, i.evidence_text,
+               i.created_at, b.job_name, b.build_number, b.build_id, b.build_url
         FROM incidents i
         JOIN source_files f ON i.file_id = f.id
+        LEFT JOIN jenkins_builds b ON b.file_id = f.id
         WHERE 1=1
     """
     params = []
@@ -48,6 +50,7 @@ def get_recent_incidents(
             id=row["id"],
             incident_code=row["incident_code"],
             source_file=row["source_file"],
+            file_id=row["file_id"],
             start_line=row["start_line"],
             end_line=row["end_line"],
             primary_severity=row["primary_severity"],
@@ -55,7 +58,12 @@ def get_recent_incidents(
             confidence=row["confidence"],
             root_cause_candidate=row["root_cause_candidate"],
             detected_signature=row["detected_signature"],
-            created_at=row["created_at"]
+            evidence_text=row["evidence_text"],
+            created_at=row["created_at"],
+            job_name=row["job_name"],
+            build_number=row["build_number"],
+            build_id=row["build_id"],
+            build_url=row["build_url"]
         )
         for row in rows
     ]

@@ -59,12 +59,13 @@ def ingest_all_raw_files():
         file_id = cursor.lastrowid
         print(f"Registered file '{filename}' (ID={file_id}, lines={len(lines)}, size={filepath.stat().st_size} bytes)")
 
-        # 2. Parse and insert events
+        # 2. Parse and insert events (strictly sanitized before SQLite persistence)
         events_to_insert = []
         for line_no, raw_line in enumerate(lines, 1):
             if not raw_line.strip():
                 continue
             entry = LogParserEngine.parse_line(raw_line)
+            sanitized_raw_line = SecretMasker.sanitize(raw_line, mask_ips=True)
             events_to_insert.append((
                 file_id,
                 line_no,
@@ -79,7 +80,7 @@ def ingest_all_raw_files():
                 entry.status_code,
                 entry.latency_ms,
                 entry.sanitized_message,
-                raw_line
+                sanitized_raw_line
             ))
 
         cursor.executemany("""

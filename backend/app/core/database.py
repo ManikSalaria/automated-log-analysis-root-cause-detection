@@ -101,6 +101,49 @@ def init_database():
     );
     """)
 
+    # 5. Jenkins Integration Access Tokens
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS jenkins_tokens (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        token_hash TEXT UNIQUE NOT NULL,
+        name TEXT NOT NULL,
+        token_preview TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        last_used_at TEXT,
+        is_active INTEGER NOT NULL DEFAULT 1,
+        revoked_at TEXT
+    );
+    """)
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_jenkins_tokens_hash ON jenkins_tokens(token_hash);")
+
+    # 6. Jenkins Automated Build Ingestion Registry
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS jenkins_builds (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        job_name TEXT NOT NULL,
+        build_number TEXT NOT NULL,
+        build_id TEXT UNIQUE NOT NULL,
+        token_id INTEGER,
+        file_id INTEGER NOT NULL,
+        build_url TEXT,
+        repo_url TEXT,
+        commit_sha TEXT,
+        build_status TEXT,
+        is_failure INTEGER NOT NULL DEFAULT 0,
+        primary_failure_category TEXT,
+        confidence REAL,
+        root_cause_candidate TEXT,
+        events_count INTEGER NOT NULL DEFAULT 0,
+        incidents_count INTEGER NOT NULL DEFAULT 0,
+        ingested_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        FOREIGN KEY (token_id) REFERENCES jenkins_tokens(id) ON DELETE SET NULL,
+        FOREIGN KEY (file_id) REFERENCES source_files(id) ON DELETE CASCADE
+    );
+    """)
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_jenkins_builds_job ON jenkins_builds(job_name);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_jenkins_builds_file ON jenkins_builds(file_id);")
+
     conn.commit()
     conn.close()
 

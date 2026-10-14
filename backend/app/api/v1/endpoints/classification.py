@@ -24,7 +24,13 @@ def predict_failure_category(request: PredictRequest):
         if not baseline_model.load():
             raise HTTPException(status_code=503, detail="Baseline model is not loaded. Train the model first.")
 
-    res = baseline_model.predict(request.text)
+    try:
+        res = baseline_model.predict(request.text)
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Baseline model inference failed: {str(exc)}"
+        )
     return ModelPrediction(
         model_name=res["model_name"],
         predicted_category=res["predicted_category"],

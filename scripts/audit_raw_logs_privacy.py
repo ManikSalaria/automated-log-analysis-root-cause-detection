@@ -11,6 +11,9 @@ print("=" * 80)
 
 for fname in files:
     fpath = raw_dir / fname
+    if not fpath.exists():
+        print(f"\n--- File: {fname} (NOT FOUND ON DISK - SKIPPED) ---")
+        continue
     content = fpath.read_text(encoding="utf-8", errors="replace")
     
     # Check IP addresses

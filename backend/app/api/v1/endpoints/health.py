@@ -18,7 +18,8 @@ def get_system_health():
         "connected": False,
         "source_files_count": 0,
         "parsed_events_count": 0,
-        "incidents_count": 0
+        "incidents_count": 0,
+        "jenkins_builds_count": 0
     }
 
     try:
@@ -30,6 +31,8 @@ def get_system_health():
         db_stats["parsed_events_count"] = c.fetchone()[0]
         c.execute("SELECT COUNT(*) FROM incidents;")
         db_stats["incidents_count"] = c.fetchone()[0]
+        c.execute("SELECT COUNT(*) FROM jenkins_builds;")
+        db_stats["jenkins_builds_count"] = c.fetchone()[0]
         db_stats["connected"] = True
         conn.close()
     except Exception:

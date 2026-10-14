@@ -1,0 +1,94 @@
+// ==============================================================================
+// TRACE: AI-Powered CI/CD Log Intelligence Platform
+// Example Jenkins Declarative Pipeline with Automated TRACE Ingestion
+// ==============================================================================
+// Prerequisites in Jenkins:
+// 1. Manage Jenkins -> Credentials -> System -> Global credentials
+// 2. Add Credentials -> Kind: "Secret text"
+//    - Secret: <Your TRACE Integration Token, e.g. trc_abc123...>
+//    - ID: "trace-api-token"
+// 3. Configure TRACE_ENDPOINT below to your TRACE backend URL
+// ==============================================================================
+
+pipeline {
+    agent any
+
+    environment {
+        // TRACE Backend Ingestion Endpoint URL (Update host/port as appropriate)
+        TRACE_ENDPOINT = 'http://127.0.0.1:8000/api/v1/jenkins/ingest'
+        
+        // Jenkins Secret Text Credential ID
+        TRACE_CREDENTIAL_ID = 'trace-api-token'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                echo "Executing application build and test suite..."
+                // Replace with your real project build commands:
+                // sh 'mvn clean test'
+                // sh 'pytest backend/tests/'
+                // sh 'npm test'
+            }
+        }
+    }
+
+    post {
+        always {
+            // withCredentials securely injects TRACE_TOKEN and masks it from console logs
+            withCredentials([string(credentialsId: env.TRACE_CREDENTIAL_ID, variable: 'TRACE_TOKEN')]) {
+                script {
+                    def buildStatus = currentBuild.currentResult ?: 'UNKNOWN'
+                    
+                    echo "[TRACE] Exporting console log and transmitting build telemetry to TRACE..."
+                    
+                    // Execute non-fatal shell upload
+                    sh '''
+                        set +x  # Prevent printing credentials or command traces
+
+                        CONSOLE_LOG="jenkins_build_${BUILD_NUMBER}.log"
+
+                        # Retrieve full console text via Jenkins build REST API
+                        if [ -n "$BUILD_URL" ]; then
+                            curl -s -k --globoff "${BUILD_URL}consoleText" > "$CONSOLE_LOG" 2>/dev/null || true
+                        fi
+
+                        # Fallback if consoleText API endpoint was not reachable
+                        if [ ! -s "$CONSOLE_LOG" ]; then
+                            echo "[INFO] Build ${JOB_NAME} #${BUILD_NUMBER} completed with status: ${buildStatus}" > "$CONSOLE_LOG"
+                        fi
+
+                        # Submit log and build metadata to TRACE backend
+                        HTTP_CODE=$(curl -s -w "%{http_code}" -o trace_ingest_response.json \
+                            -X POST "${TRACE_ENDPOINT}" \
+                            -H "Authorization: Bearer ${TRACE_TOKEN}" \
+                            -F "job_name=${JOB_NAME}" \
+                            -F "build_number=${BUILD_NUMBER}" \
+                            -F "build_status=${buildStatus}" \
+                            -F "build_url=${BUILD_URL}" \
+                            -F "repo_url=${GIT_URL}" \
+                            -F "commit_sha=${GIT_COMMIT}" \
+                            -F "file=@${CONSOLE_LOG}")
+
+                        if [ "$HTTP_CODE" -eq 200 ]; then
+                            echo "[TRACE] Ingestion successful. Build analysis is ready on the TRACE dashboard."
+                        else
+                            echo "[TRACE] Ingestion returned HTTP $HTTP_CODE (non-fatal, build result preserved)."
+                            cat trace_ingest_response.json 2>/dev/null || true
+                            echo ""
+                        fi
+
+                        # Remove local temporary files
+                        rm -f "$CONSOLE_LOG" trace_ingest_response.json
+                    '''
+                }
+            }
+        }
+    }
+}

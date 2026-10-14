@@ -1,11 +1,12 @@
 from fastapi import APIRouter
 from app.api.v1.endpoints import (
     ingestion, analysis, classification, 
-    incidents, metrics, events, health
+    incidents, metrics, events, health, jenkins
 )
 
 api_router = APIRouter()
 api_router.include_router(ingestion.router, prefix="/ingest", tags=["Log Ingestion"])
+api_router.include_router(jenkins.router, prefix="/jenkins", tags=["Jenkins Integration"])
 api_router.include_router(analysis.router, prefix="/analysis", tags=["Incident & Root Cause Analysis"])
 api_router.include_router(classification.router, prefix="/classification", tags=["Baseline Classification"])
 api_router.include_router(incidents.router, prefix="/incidents", tags=["Incidents Registry"])

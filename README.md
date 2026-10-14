@@ -155,6 +155,17 @@ SQLite database operating in Write-Ahead Logging (`WAL`) mode with foreign keys 
 - `parsed_events`: Normalized structured log events.
 - `incidents`: Detected failure incidents with line spans, predictions, and evidence text.
 - `model_evaluations`: Persisted evaluation metrics and confusion matrices.
+- `jenkins_tokens`: SHA-256 hashed API integration access tokens for remote Jenkins instances.
+- `jenkins_builds`: Ingested CI/CD build metadata linked to source files and failure classifications.
+
+### 5.5 Jenkins CI/CD Pipeline Integration (`app/api/v1/endpoints/jenkins.py`)
+Enables remote Jenkins pipelines to automatically push build console output upon job completion over HTTP/HTTPS:
+- **Authentication:** High-entropy integration tokens (`trc_...`) verified via SHA-256 hashes (`jenkins_tokens`).
+- **Telemetry Ingestion:** Receives console logs, job names, build numbers, Git commit SHAs, and statuses (`POST /api/v1/jenkins/ingest`).
+- **Zero-PII Scrubbing:** Credentials and IPs redacted prior to SQLite storage or classification.
+- **Idempotency:** Re-sent or retried builds are identified by log hash without creating duplicate records.
+- **Interactive Workbench:** Built-in token manager, configuration guide, and telemetry simulator in the web dashboard.
+- **Detailed Documentation:** Refer to [`docs/JENKINS_INTEGRATION.md`](docs/JENKINS_INTEGRATION.md) and [`examples/Jenkinsfile`](examples/Jenkinsfile).
 
 ---
 

@@ -31,7 +31,11 @@ def analyze_log_incident(request: AnalyzeRequest):
         raise HTTPException(status_code=400, detail="Log text cannot be empty.")
 
     if not baseline_model.is_trained:
-        baseline_model.load()
+        if not baseline_model.load():
+            raise HTTPException(
+                status_code=503,
+                detail="Baseline model is not loaded. Train the model using 'scripts/train_and_evaluate_baseline.py' first."
+            )
 
     # Step 1: Privacy audit & sanitization
     privacy_audit = SecretMasker.audit_leaks(raw_text)
@@ -54,7 +58,13 @@ def analyze_log_incident(request: AnalyzeRequest):
             break
 
     # Step 3: Run Baseline ML Prediction
-    pred_res = baseline_model.predict(sanitized_text)
+    try:
+        pred_res = baseline_model.predict(sanitized_text)
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Baseline model inference failed: {str(exc)}"
+        )
     model_pred = ModelPrediction(
         model_name=pred_res["model_name"],
         predicted_category=pred_res["predicted_category"],
