@@ -1,0 +1,88 @@
+{
+  "stage": "Stage 4 (RAG Retrieval Pipeline)",
+  "pipeline_name": "TRACE Hybrid RAG Retriever",
+  "dataset_split": "Canonical Group-Aware Stratified Split (Leakage-Free)",
+  "train_corpus_size": 268,
+  "test_query_count": 57,
+  "relevance_criterion": "Category Match (Heuristic/Weak Supervision Ground Truth)",
+  "rrf_k": 60,
+  "fusion_weights": {
+    "alpha_semantic": 0.5,
+    "beta_bm25": 0.3,
+    "gamma_metadata": 0.2
+  },
+  "evaluation_summary": {
+    "hybrid": {
+      "recall_at_1": 0.9474,
+      "recall_at_3": 0.9474,
+      "recall_at_5": 0.9474,
+      "recall_at_10": 1.0,
+      "precision_at_1": 0.9474,
+      "precision_at_3": 0.9357,
+      "precision_at_5": 0.9193,
+      "mrr": 0.9532,
+      "mean_top1_similarity": 0.7626,
+      "avg_latency_ms": 31.63,
+      "p95_latency_ms": 49.96
+    },
+    "semantic_only": {
+      "recall_at_1": 0.7193,
+      "recall_at_3": 0.8772,
+      "recall_at_5": 0.8947,
+      "recall_at_10": 0.9474,
+      "precision_at_1": 0.7193,
+      "precision_at_3": 0.6842,
+      "precision_at_5": 0.6491,
+      "mrr": 0.7946,
+      "mean_top1_similarity": 0.7742,
+      "avg_latency_ms": 27.47,
+      "p95_latency_ms": 36.36
+    },
+    "bm25_only": {
+      "recall_at_1": 0.7368,
+      "recall_at_3": 0.8947,
+      "recall_at_5": 0.8947,
+      "recall_at_10": 0.9298,
+      "precision_at_1": 0.7368,
+      "precision_at_3": 0.7661,
+      "precision_at_5": 0.7193,
+      "mrr": 0.8082,
+      "mean_top1_similarity": 0.0,
+      "avg_latency_ms": 1.38,
+      "p95_latency_ms": 1.76
+    }
+  },
+  "comparison_table": [
+    {
+      "modality": "Hybrid (BM25 + SBERT + Category Prior)",
+      "recall_at_1": 0.9474,
+      "recall_at_3": 0.9474,
+      "recall_at_5": 0.9474,
+      "mrr": 0.9532,
+      "avg_latency_ms": 31.63
+    },
+    {
+      "modality": "Dense Semantic (Sentence-BERT all-MiniLM-L6-v2)",
+      "recall_at_1": 0.7193,
+      "recall_at_3": 0.8772,
+      "recall_at_5": 0.8947,
+      "mrr": 0.7946,
+      "avg_latency_ms": 27.47
+    },
+    {
+      "modality": "Sparse Lexical (Okapi BM25)",
+      "recall_at_1": 0.7368,
+      "recall_at_3": 0.8947,
+      "recall_at_5": 0.8947,
+      "mrr": 0.8082,
+      "avg_latency_ms": 1.38
+    }
+  ],
+  "limitations_and_disclosures": [
+    "Relevance is evaluated using weak heuristic category ground-truth labels from RootCauseCandidateAnalyzer.",
+    "Group-aware split ensures query incidents originate from independent log files/builds, preventing template leakage.",
+    "Stage 4 implements evidence and incident retrieval only; LLM generation and report synthesis are deferred to Stage 5.",
+    "Surrounding chronological events are fetched from SQLite on-demand via indexed line spans."
+  ],
+  "generated_at": "2026-10-15 22:02:56 UTC"
+}

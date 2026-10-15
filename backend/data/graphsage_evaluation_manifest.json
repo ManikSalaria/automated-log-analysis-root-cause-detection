@@ -1,0 +1,220 @@
+{
+  "model_name": "TRACE Stage 3 (GraphSAGE)",
+  "architecture": "GraphSAGE (SAGEConv)",
+  "aggregation": "mean",
+  "dataset_split": "Canonical Group-Aware Stratified Split (Leakage-Free)",
+  "sample_count": 57,
+  "feature_dimension": 412,
+  "training_time_sec": 22.432,
+  "accuracy": 0.7368,
+  "precision_macro": 0.6179,
+  "recall_macro": 0.7429,
+  "f1_macro": 0.649,
+  "f1_weighted": 0.7004,
+  "avg_latency_ms": 30.52,
+  "p95_latency_ms": 35.54,
+  "evaluated_at": "2026-10-15 17:20:13 UTC",
+  "classes": [
+    "AUTHENTICATION_SECURITY_ERROR",
+    "DATABASE_AND_CACHE_TIMEOUT",
+    "ENVIRONMENT_AND_PIPELINE_ERROR",
+    "INTERNAL_APPLICATION_LOGIC_ERROR",
+    "MESSAGE_BROKER_FAILURE",
+    "NETWORK_DEPENDENCY_FAILURE",
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR",
+    "RESOURCE_EXHAUSTION_CRASH",
+    "STORAGE_AND_IO_ERROR",
+    "TEST_ASSERTION_FAILURE"
+  ],
+  "per_class_metrics": {
+    "AUTHENTICATION_SECURITY_ERROR": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 6
+    },
+    "DATABASE_AND_CACHE_TIMEOUT": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 3
+    },
+    "ENVIRONMENT_AND_PIPELINE_ERROR": {
+      "precision": 0.8077,
+      "recall": 0.84,
+      "f1": 0.8235,
+      "support": 25
+    },
+    "INTERNAL_APPLICATION_LOGIC_ERROR": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 3
+    },
+    "MESSAGE_BROKER_FAILURE": {
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "support": 1
+    },
+    "NETWORK_DEPENDENCY_FAILURE": {
+      "precision": 1.0,
+      "recall": 0.7143,
+      "f1": 0.8333,
+      "support": 7
+    },
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 2
+    },
+    "RESOURCE_EXHAUSTION_CRASH": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 1
+    },
+    "STORAGE_AND_IO_ERROR": {
+      "precision": 0.5385,
+      "recall": 0.875,
+      "f1": 0.6667,
+      "support": 8
+    },
+    "TEST_ASSERTION_FAILURE": {
+      "precision": 0.3333,
+      "recall": 1.0,
+      "f1": 0.5,
+      "support": 1
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      0
+    ],
+    [
+      0,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      21,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      1,
+      5,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      7,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "observations": [
+    "GraphSAGE achieved 73.68% accuracy and 64.90% macro-F1 on 57 held-out incidents.",
+    "Learned preprocessors (OneHotEncoder, StandardScaler) were strictly fit on training incidents only.",
+    "Edges were constructed without label leakage using trace correlations, temporal co-occurrence, and semantic cosine similarity.",
+    "Target labels originate from heuristic/rule-derived analyzers rather than manually verified ground truth.",
+    "Class imbalance remains a significant factor in minority categories with small sample sizes."
+  ]
+}

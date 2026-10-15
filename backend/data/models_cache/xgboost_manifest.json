@@ -1,0 +1,21 @@
+{
+  "model_name": "TRACE Stage 2 (Sentence-BERT + XGBoost)",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "feature_dimension": 384,
+  "classes": [
+    "AUTHENTICATION_SECURITY_ERROR",
+    "DATABASE_AND_CACHE_TIMEOUT",
+    "ENVIRONMENT_AND_PIPELINE_ERROR",
+    "INTERNAL_APPLICATION_LOGIC_ERROR",
+    "MESSAGE_BROKER_FAILURE",
+    "NETWORK_DEPENDENCY_FAILURE",
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR",
+    "RESOURCE_EXHAUSTION_CRASH",
+    "STORAGE_AND_IO_ERROR",
+    "TEST_ASSERTION_FAILURE"
+  ],
+  "n_estimators": 100,
+  "max_depth": 4,
+  "learning_rate": 0.05,
+  "random_state": 42
+}

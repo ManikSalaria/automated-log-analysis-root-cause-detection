@@ -63,12 +63,17 @@ backend/data/*.db-wal
 backend/data/*.db-shm
 
 # --- Machine Learning Models & Large Binary Artifacts ---
-# Model artifacts can be generated dynamically via scripts/train_and_evaluate_baseline.py
+# Model artifacts can be generated dynamically via scripts/train_and_evaluate_*.py
 backend/data/models_cache/*.joblib
 backend/data/models_cache/*.pkl
 backend/data/models_cache/*.bin
 backend/data/models_cache/*.onnx
+backend/data/models_cache/*.pt
+backend/data/models_cache/*.npy
+backend/data/models_cache/sbert/
+backend/data/models_cache/rag/
 !backend/data/models_cache/.gitkeep
+!backend/data/models_cache/*.json
 
 # --- Deprecated & Archived Samples ---
 backend/data/archive_deprecated_samples/

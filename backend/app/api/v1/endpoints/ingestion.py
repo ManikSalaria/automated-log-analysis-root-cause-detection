@@ -2,7 +2,8 @@ import uuid
 import hashlib
 from datetime import datetime
 from pathlib import Path
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from typing import Optional
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from app.core.config import settings
 from app.core.security import SecretMasker
 from app.core.database import get_connection
@@ -16,11 +17,20 @@ baseline_model = BaselineTfidfRandomForest()
 baseline_model.load()
 
 @router.post("/upload", response_model=IngestionUploadResponse)
-async def upload_log_file(file: UploadFile = File(...)):
+async def upload_log_file(
+    file: UploadFile = File(...),
+    job_name: Optional[str] = Form(None),
+    build_number: Optional[str] = Form(None),
+    build_status: Optional[str] = Form(None),
+    build_url: Optional[str] = Form(None),
+    repo_url: Optional[str] = Form(None),
+    commit_sha: Optional[str] = Form(None)
+):
     """
     Ingest an authentic CI/CD build log or microservice telemetry file (.log / .txt).
-    Computes SHA-256 hash, masks all credentials, parses structured fields,
-    persists events to SQLite, detects failures, and classifies them with the Baseline model.
+    Supports optional Jenkins build metadata (job_name, build_number, build_status,
+    build_url, repo_url, commit_sha), computes SHA-256 hash, masks credentials,
+    persists events and incident associations to SQLite, and performs baseline ML classification.
     """
     if not file.filename.endswith((".log", ".txt")):
         raise HTTPException(status_code=400, detail="Only .log and .txt files are supported for ingestion.")
@@ -28,6 +38,13 @@ async def upload_log_file(file: UploadFile = File(...)):
     content = await file.read()
     if not content:
         raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+
+    clean_job_name = job_name.strip() if job_name and job_name.strip() else None
+    clean_build_number = str(build_number).strip() if build_number and str(build_number).strip() else None
+    clean_build_status = build_status.strip() if build_status and build_status.strip() else None
+    clean_build_url = build_url.strip() if build_url and build_url.strip() else None
+    clean_repo_url = repo_url.strip() if repo_url and repo_url.strip() else None
+    clean_commit_sha = commit_sha.strip() if commit_sha and commit_sha.strip() else None
 
     raw_text = content.decode("utf-8", errors="replace")
     lines = raw_text.splitlines()
@@ -46,19 +63,32 @@ async def upload_log_file(file: UploadFile = File(...)):
     conn = get_connection()
     cursor = conn.cursor()
 
-    # Save to source_files table (support re-upload without crashing)
+    # Save to source_files table (support re-upload without crashing and retain Jenkins metadata)
     cursor.execute("""
-        INSERT OR REPLACE INTO source_files (filename, source_type, byte_size, line_count, sha256_hash, ingested_at)
-        VALUES (?, ?, ?, ?, ?, ?);
-    """, (file.filename, source_type, len(content), len(lines), sha256_hash, ingested_at))
+        INSERT OR REPLACE INTO source_files (
+            filename, source_type, byte_size, line_count, sha256_hash, ingested_at,
+            job_name, build_number, build_status, build_url, repo_url, commit_sha
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    """, (
+        file.filename, source_type, len(content), len(lines), sha256_hash, ingested_at,
+        clean_job_name, clean_build_number, clean_build_status, clean_build_url, clean_repo_url, clean_commit_sha
+    ))
     file_id = cursor.lastrowid
+    if not file_id:
+        cursor.execute("SELECT id FROM source_files WHERE filename = ?", (file.filename,))
+        row = cursor.fetchone()
+        file_id = row[0]
 
     # Parse and insert events
     events_to_insert = []
+    parsed_entries = []
     for line_no, raw_line in enumerate(lines, 1):
         if not raw_line.strip():
+            parsed_entries.append(None)
             continue
         entry = LogParserEngine.parse_line(raw_line)
+        parsed_entries.append(entry)
         events_to_insert.append((
             file_id,
             line_no,
@@ -83,24 +113,35 @@ async def upload_log_file(file: UploadFile = File(...)):
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     """, events_to_insert)
 
-    # Detect failures and create incidents
+    # Detect failures and create incidents (context-aware)
     i = 0
     incidents_count = 0
     while i < len(lines):
         line = lines[i]
-        if any(k in line for k in ["ERROR", "FAILED", "AssertionError", "Exception", "mkdir:", "qemu-img:"]):
+        entry = parsed_entries[i] if i < len(parsed_entries) else None
+        if LogParserEngine.is_incident_start(line, entry):
             start_line = i + 1
             block = [line]
             j = i + 1
             while j < len(lines):
                 next_l = lines[j]
-                if (next_l.startswith("\t") or next_l.startswith("   ") or next_l.startswith("E   ") or 
-                    "Caused:" in next_l or "Traceback" in next_l or "assert " in next_l or 
-                    (next_l.startswith("FAILED ") and j == i + 1)):
-                    block.append(next_l)
-                    j += 1
-                else:
+                next_entry = parsed_entries[j] if j < len(parsed_entries) else None
+                # If next line is empty or normal INFO/WARNING/DEBUG, the failure block terminates
+                if not next_l.strip() or next_l.startswith(("[INFO]", "[WARNING]", "[DEBUG]")):
                     break
+
+                is_continuation = (
+                    next_l.startswith(("\t", "   ", "E   ", "Caused by:", "Caused:", "Traceback", "assert ")) or
+                    "at " in next_l or next_l.strip().startswith("at ") or
+                    next_l.startswith("[ERROR]") or
+                    (next_entry and next_entry.level in ("ERROR", "CRITICAL", "SEVERE", "FATAL")) or
+                    re.match(r"^(?:java\.[a-zA-Z0-9_\.]+|org\.[a-zA-Z0-9_\.]+|com\.[a-zA-Z0-9_\.]+|[a-zA-Z0-9_\.]+(?:Exception|Error|Failure))", next_l.strip())
+                )
+                if not is_continuation:
+                    break
+
+                block.append(next_l)
+                j += 1
 
             sanitized_block = SecretMasker.sanitize("\n".join(block), mask_ips=True)
             pred = baseline_model.predict(sanitized_block) if baseline_model.is_trained else {"predicted_category": "UNKNOWN", "confidence": 0.0}
@@ -111,8 +152,8 @@ async def upload_log_file(file: UploadFile = File(...)):
                 INSERT INTO incidents (
                     incident_code, file_id, start_line, end_line, primary_severity,
                     failure_category, confidence, root_cause_candidate, detected_signature,
-                    evidence_text, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                    evidence_text, created_at, job_name, build_number
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
             """, (
                 incident_code,
                 file_id,
@@ -124,7 +165,9 @@ async def upload_log_file(file: UploadFile = File(...)):
                 rca["root_cause_candidate"],
                 sanitized_block[:150].strip(),
                 sanitized_block,
-                ingested_at
+                ingested_at,
+                clean_job_name,
+                clean_build_number
             ))
             incidents_count += 1
             i = j
@@ -143,5 +186,11 @@ async def upload_log_file(file: UploadFile = File(...)):
         sha256_hash=sha256_hash,
         events_inserted=len(events_to_insert),
         incidents_detected=incidents_count,
-        ingested_at=ingested_at
+        ingested_at=ingested_at,
+        job_name=clean_job_name,
+        build_number=clean_build_number,
+        build_status=clean_build_status,
+        build_url=clean_build_url,
+        repo_url=clean_repo_url,
+        commit_sha=clean_commit_sha
     )

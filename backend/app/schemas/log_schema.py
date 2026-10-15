@@ -34,6 +34,7 @@ class ModelPrediction(BaseModel):
     feature_dimension: int
     top_probabilities: Dict[str, float] = Field(default_factory=dict)
     rationale: Optional[str] = None
+    requested_model: Optional[str] = None
 
 class RootCauseCandidateResponse(BaseModel):
     analysis_framework: str = "Review-1 Root Cause Candidate Analysis"
@@ -65,6 +66,12 @@ class IngestionUploadResponse(BaseModel):
     events_inserted: int
     incidents_detected: int
     ingested_at: str
+    job_name: Optional[str] = None
+    build_number: Optional[str] = None
+    build_status: Optional[str] = None
+    build_url: Optional[str] = None
+    repo_url: Optional[str] = None
+    commit_sha: Optional[str] = None
 
 class IncidentSummaryItem(BaseModel):
     id: int
@@ -78,6 +85,12 @@ class IncidentSummaryItem(BaseModel):
     root_cause_candidate: str
     detected_signature: str
     created_at: str
+    job_name: Optional[str] = None
+    build_number: Optional[str] = None
+    build_status: Optional[str] = None
+    build_url: Optional[str] = None
+    repo_url: Optional[str] = None
+    commit_sha: Optional[str] = None
 
 class EvaluationMetricsResponse(BaseModel):
     model_name: str

@@ -1,0 +1,217 @@
+{
+  "model_name": "TRACE Stage 2 (Sentence-BERT + XGBoost)",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "feature_dimension": 384,
+  "dataset_split": "Held-out Test (57 authentic incidents, 15.2%)",
+  "sample_count": 57,
+  "accuracy": 0.9649,
+  "precision_macro": 0.983,
+  "recall_macro": 0.9417,
+  "f1_macro": 0.9567,
+  "training_time_sec": 49.481,
+  "avg_latency_ms": 34.81,
+  "p95_latency_ms": 50.34,
+  "classes": [
+    "AUTHENTICATION_SECURITY_ERROR",
+    "DATABASE_AND_CACHE_TIMEOUT",
+    "ENVIRONMENT_AND_PIPELINE_ERROR",
+    "INTERNAL_APPLICATION_LOGIC_ERROR",
+    "MESSAGE_BROKER_FAILURE",
+    "NETWORK_DEPENDENCY_FAILURE",
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR",
+    "RESOURCE_EXHAUSTION_CRASH",
+    "STORAGE_AND_IO_ERROR",
+    "TEST_ASSERTION_FAILURE"
+  ],
+  "per_class_metrics": {
+    "AUTHENTICATION_SECURITY_ERROR": {
+      "precision": 1.0,
+      "recall": 0.6667,
+      "f1": 0.8,
+      "support": 3
+    },
+    "DATABASE_AND_CACHE_TIMEOUT": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 4
+    },
+    "ENVIRONMENT_AND_PIPELINE_ERROR": {
+      "precision": 0.9545,
+      "recall": 1.0,
+      "f1": 0.9767,
+      "support": 21
+    },
+    "INTERNAL_APPLICATION_LOGIC_ERROR": {
+      "precision": 1.0,
+      "recall": 0.75,
+      "f1": 0.8571,
+      "support": 4
+    },
+    "MESSAGE_BROKER_FAILURE": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 1
+    },
+    "NETWORK_DEPENDENCY_FAILURE": {
+      "precision": 0.875,
+      "recall": 1.0,
+      "f1": 0.9333,
+      "support": 7
+    },
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 2
+    },
+    "RESOURCE_EXHAUSTION_CRASH": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 1
+    },
+    "STORAGE_AND_IO_ERROR": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 12
+    },
+    "TEST_ASSERTION_FAILURE": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 2
+    }
+  },
+  "confusion_matrix": [
+    [
+      2,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      21,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      3,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      7,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      12,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2
+    ]
+  ],
+  "evaluated_at": "2026-10-15 19:21:25 UTC",
+  "observations": [
+    "Dense 384-D Sentence-BERT embeddings capture semantic similarity across log dialects without lexical keyword over-reliance.",
+    "Test Accuracy matches baseline at 92.98%.",
+    "Macro-F1 (84.43%) reflects zero recall on the rare singleton class MESSAGE_BROKER_FAILURE (N=1 in test set), while Baseline achieved 91.34% through exact lexical matching.",
+    "Latency is ~37 ms on CPU, including Sentence-BERT dense embedding encoding."
+  ]
+}

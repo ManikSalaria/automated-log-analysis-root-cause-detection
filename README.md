@@ -1,375 +1,417 @@
-# Automated Log Analysis and Root Cause Detection System using Machine Learning
+# TRACE — Automated Log Analysis and Root Cause Detection System using Machine Learning
 
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688.svg)](https://fastapi.tiangolo.com)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.2+-EE4C2C.svg)](https://pytorch.org/)
+[![PyTorch Geometric](https://img.shields.io/badge/PyG-2.5+-3C2179.svg)](https://pyg.org/)
 [![React 18](https://img.shields.io/badge/React-18.3-61DAFB.svg)](https://react.dev/)
-[![Scikit-Learn](https://img.shields.io/badge/scikit--learn-1.4+-F7931E.svg)](https://scikit-learn.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4-646CFF.svg)](https://vitejs.dev/)
 [![SQLite WAL](https://img.shields.io/badge/SQLite-WAL--Mode-003B57.svg)](https://www.sqlite.org/wal.html)
+[![Ollama](https://img.shields.io/badge/Ollama-Llama--3.2--3B-black.svg)](https://ollama.com/)
+[![Tests](https://img.shields.io/badge/Pytest-91%20Passed-brightgreen.svg)](#14-automated-testing--verification-suite)
 
-An intelligent, privacy-preserving log analytics platform engineered to ingest heterogeneous CI/CD build logs and distributed microservice telemetry, sanitize sensitive credentials, parse multiline runtime events, classify failure categories using machine learning, and formulate explainable root-cause candidate recommendations.
-
----
-
-## 1. Project Objective & Problem Statement
-
-Modern enterprise continuous integration and deployment (CI/CD) pipelines—particularly Jenkins environments orchestrating automated testing, virtualization provisioning, and microservice transactions—generate tens of thousands of unstructured, noisy log lines per execution. 
-
-### Key Engineering Challenges:
-1. **High Diagnostic Latency:** Site Reliability Engineers (SREs) and software engineers spend hours manually inspecting sprawling console logs and complex multi-tier stack traces to diagnose build failures.
-2. **Credential Leakage in Logs:** Raw logs frequently expose sensitive credentials (bearer tokens, passwords, AWS access keys, GitHub personal access tokens, private IP addresses), creating major security risks if fed into diagnostic models or external tools.
-3. **Noisy and Heterogeneous Dialects:** Logs originate from diverse sources—such as Jenkins JVM core runtimes, Python/pytest test suites, and distributed microservices with trace headers—making centralized parsing difficult.
-4. **Lack of Explainable Root-Cause Analysis:** Standard keyword-matching fails on novel phrasing and does not provide actionable remediation guidance.
-
-### Proposed Solution:
-This project implements a multi-stage, explainable machine learning architecture designed to automate log parsing, sanitize all credentials in-memory prior to storage, classify failure categories using a validated ML baseline, and provide actionable root-cause candidates with remediation commands.
+> **TRACE** is an enterprise-grade, privacy-preserving log analytics and root-cause intelligence platform. It ingests heterogeneous CI/CD console logs and microservice telemetry, strips sensitive credentials in-memory, parses complex multiline runtime events, classifies failure incidents across three distinct machine learning paradigms, retrieves historical diagnostic evidence using hybrid RAG, and synthesizes evidence-grounded root-cause reports with verified remediation guidance using a local on-premises LLM.
 
 ---
 
-## 2. System Architecture
+## Table of Contents
+1. [Executive Summary](#1-executive-summary)
+2. [End-to-End System Architecture](#2-end-to-end-system-architecture)
+3. [The Five ML & AI Stages](#3-the-five-ml--ai-stages)
+4. [Key Engineering Capabilities](#4-key-engineering-capabilities)
+5. [Technology Stack](#5-technology-stack)
+6. [Repository Structure](#6-repository-structure)
+7. [Empirical Evaluation & Benchmarks](#7-empirical-evaluation--benchmarks)
+8. [Data Leakage Audit & Academic Transparency](#8-data-leakage-audit--academic-transparency)
+9. [Installation & Setup](#9-installation--setup)
+10. [Running the Application](#10-running-the-application)
+11. [Jenkins CI/CD Integration](#11-jenkins-cicd-integration)
+12. [REST API Reference Summary](#12-rest-api-reference-summary)
+13. [Security, Privacy & Responsible AI](#13-security-privacy--responsible-ai)
+14. [Automated Testing & Verification Suite](#14-automated-testing--verification-suite)
+15. [Live Demonstration Script Summary](#15-live-demonstration-script-summary)
+16. [Troubleshooting & FAQ](#16-troubleshooting--faq)
+17. [Documentation Sitemap](#17-documentation-sitemap)
+18. [Authors & Attribution](#18-authors--attribution)
 
-The end-to-end processing pipeline operates deterministically across all ingested logs:
+---
+
+## 1. Executive Summary
+
+Modern enterprise software systems and automated CI/CD pipelines generate massive volumes of unstructured, noisy log data. When builds break or microservices crash, Site Reliability Engineers (SREs) face three critical bottlenecks:
+1. **Diagnostic Latency:** Engineers spend hours manually sifting through thousands of log lines to extract stack traces and pinpoint root causes.
+2. **Credential Leakage:** Raw console output frequently exposes sensitive credentials (bearer tokens, AWS keys, GitHub personal access tokens, private IPs), making logs unsafe to share or process via cloud APIs.
+3. **Hallucinated Remediation:** Generic AI assistants frequently hallucinate non-existent error causes, substitute missing citations, or recommend superficial defensive fixes (e.g. wrapping failing code in empty `try...catch` blocks) that mask rather than solve underlying faults.
+
+**TRACE solves these challenges** through an integrated, 5-stage ML/AI architecture running entirely on-premises, guaranteeing that zero confidential telemetry leaves the local infrastructure.
+
+---
+
+## 2. End-to-End System Architecture
+
+TRACE processes logs through a strictly ordered, deterministic pipeline:
+
+```mermaid
+flowchart TD
+    subgraph Ingestion["1. Ingestion & Privacy"]
+        A1[Jenkins Build Logs / System Telemetry] --> A2[Zero-PII SecretMasker\nIn-Memory Token Redaction]
+        A2 --> A3[Context-Aware Multiline Parser]
+        A3 --> A4[Incident Extractor & Event Grouper]
+    end
+
+    subgraph Storage["2. Persistence Layer (SQLite WAL)"]
+        A4 --> B1[(Files & Jenkins Metadata)]
+        A4 --> B2[(Structured Log Events)]
+        A4 --> B3[(Incident Registry)]
+    end
+
+    subgraph Classifiers["3. ML Classification Engines (Stages 1-3)"]
+        B3 --> C1["Stage 1: TF-IDF + Random Forest\n(Academic Baseline - 80.70% Acc)"]
+        B3 --> C2["Stage 2: Sentence-BERT + XGBoost\n(Semantic Classifier - 77.19% Acc)"]
+        B3 --> C3["Stage 3: GraphSAGE GNN (PyG)\n(Topological & Trace Correlation - 73.68% Acc)"]
+    end
+
+    subgraph RAG_Engine["4. Stage 4: Hybrid RAG Retrieval Engine"]
+        B3 --> D1["Dense SBERT Vector Index\n(all-MiniLM-L6-v2)"]
+        B3 --> D2["Sparse Lexical Index\n(Okapi BM25)"]
+        D1 & D2 --> D3["Reciprocal Rank Fusion (RRF k=60)\n+ Metadata Category Prior"]
+        D3 --> D4["Top-K Evidence Package & Context Lines\n(MRR: 0.9532, Recall@5: 94.74%)"]
+    end
+
+    subgraph LLM_Synthesis["5. Stage 5: Evidence-Grounded LLM Synthesis"]
+        D4 --> E1["XML Prompt Isolation & Injection Defense"]
+        E1 --> E2["Local Ollama Engine\n(llama3.2:3b / 90s Timeout)"]
+        E2 --> E3["CitationValidator & Grounding Invariants\n(Non-Substitution + Diagnostic Standard)"]
+        E3 --> E4["Structured Grounded Report & Remediation"]
+    end
+
+    subgraph UI["6. Interactive Frontend"]
+        E4 --> F1["React 18 / TypeScript Web Workbench"]
+        C1 & C2 & C3 --> F1
+    end
+```
+
+---
+
+## 3. The Five ML & AI Stages
+
+| Stage | Model / Component | Representation | Primary Role | Canonical Performance |
+|:---:|:---|:---|:---|:---:|
+| **Stage 1** | **TF-IDF + Random Forest** | 1500-D Lexical (Unigram + Bigram) | Fast, transparent, interpretable academic baseline | **80.70% Accuracy**<br>72.81% Macro-F1 |
+| **Stage 2** | **Sentence-BERT + XGBoost** | 384-D Dense Semantic (`all-MiniLM-L6-v2`) | Bridges lexical vocabulary gaps across distributed microservice dialects | **77.19% Accuracy**<br>65.31% Macro-F1 |
+| **Stage 3** | **GraphSAGE GNN (PyG)** | 412-D Multimodal Node Features (SBERT + OneHot + Numerical) | Models topological relationships, trace correlations, and temporal incident co-occurrence | **73.68% Inductive Acc**<br>64.90% Macro-F1 |
+| **Stage 4** | **Hybrid RAG Retrieval Engine** | Dual Dense Cosine + Sparse Okapi BM25 + RRF ($k=60$) | Retrieves top-$K$ historical incidents and surrounding chronological execution lines | **0.9532 MRR**<br>94.74% Recall@5 |
+| **Stage 5** | **Evidence-Grounded LLM Synthesis** | Local Ollama (`llama3.2:3b`) with `CitationValidator` | Synthesizes grounded root-cause reports, validates citations, and enforces diagnostic remediation | **100% Audit Pass**<br>(7/7 Safety Scenarios) |
+
+For in-depth mathematical formulations and architecture specifications, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+---
+
+## 4. Key Engineering Capabilities
+
+- **Zero-PII Secret Sanitization:** Deterministic in-memory redaction of AWS access keys, GitHub PATs, JWT tokens, Bearer authorization headers, passwords, and private RFC 1918 IPv4 addresses before storage.
+- **Context-Aware Multiline Parsing:** Automatically aggregates multiline Java/Python exceptions and stack traces under their respective parent log event.
+- **Jenkins CI/CD Provenance Tracking:** Captures build numbers, job names, Git commit SHAs, and branch metadata directly alongside log telemetry.
+- **Unified Model Registry:** Clean decoupled architecture allowing instant switching between Stage 1, Stage 2, and Stage 3 classifiers with explicit backend result verification.
+- **Reciprocal Rank Fusion (RRF):** Robust rank aggregation overcoming individual weaknesses in lexical and semantic retrieval.
+- **The Non-Substitution Invariant:** Hallucinated citations (e.g. `[E99]`) are never silently replaced with valid ones; ungrounded statements are flagged for human review.
+- **The Diagnostic Remediation Principle:** The system prioritizes diagnosing the root cause (e.g. identifying the null variable and upstream producer) over proposing blind try-catch blocks.
+- **Independent Status Decoupling:** The UI cleanly separates Provider Connectivity, Synthesis Status, Privacy Sanitization, and Grounding Validation.
+
+---
+
+## 5. Technology Stack
+
+- **Backend Framework:** FastAPI 0.109+, Uvicorn (ASGI), Pydantic v2
+- **Machine Learning & Graph Neural Networks:**
+  - PyTorch 2.2+ (CPU-optimized)
+  - PyTorch Geometric 2.5+ (`SAGEConv`)
+  - Sentence-Transformers 2.5+ (`all-MiniLM-L6-v2`)
+  - XGBoost 2.0+ (`multi:softprob`)
+  - Scikit-Learn 1.4+ (`RandomForestClassifier`, `TfidfVectorizer`)
+  - Rank-BM25 (Okapi BM25 sparse scoring)
+- **Local LLM Engine:** Ollama for Windows running `llama3.2:3b`
+- **Database:** SQLite 3 configured in WAL (Write-Ahead Logging) mode
+- **Frontend Workbench:** React 18.3, TypeScript 5.5, Vite 5.4, Tailwind CSS, Lucide React icons
+- **Automated Testing:** Pytest 8.0+, HTTPX, Scikit-Learn evaluation suites
+
+---
+
+## 6. Repository Structure
 
 ```
-+-------------------------------------------------------------------------+
-|                       Authentic Raw Log Ingestion                       |
-|   (Jenkins Build Logs / Pytest Automation / Microservices Telemetry)    |
-+-------------------------------------------------------------------------+
-                                     |
-                                     v
-+-------------------------------------------------------------------------+
-|                  Zero-PII Secret Sanitization Layer                     |
-|    (Redacts AWS keys, GitHub PATs, JWTs, Passwords, and Private IPs)    |
-+-------------------------------------------------------------------------+
-                                     |
-                                     v
-+-------------------------------------------------------------------------+
-|                   Multi-Dialect Structured Log Parser                   |
-|   (Extracts timestamps, severities, service nodes, trace IDs, spans)    |
-+-------------------------------------------------------------------------+
-                                     |
-                                     v
-+-------------------------------------------------------------------------+
-|                     Failure & Anomaly Detector                          |
-|        (Extracts contextual multiline stack traces and exceptions)      |
-+-------------------------------------------------------------------------+
-                                     |
-                                     v
-+-------------------------------------------------------------------------+
-|                       Incident-Level Partitioner                        |
-|   (70% Train / 15% Val / 15% Held-Out Test with zero cross-leakage)     |
-+-------------------------------------------------------------------------+
-                                     |
-                                     v
-+-------------------------------------------------------------------------+
-|                 Academic Baseline Classification Model                  |
-|          (TF-IDF [Unigram + Bigram, 1500 features] + Random Forest)     |
-+-------------------------------------------------------------------------+
-                                     |
-                                     v
-+-------------------------------------------------------------------------+
-|                  Root Cause Candidate Analysis Layer                    |
-|      (Rule-grounded candidate matching and SRE remediation guidance)    |
-+-------------------------------------------------------------------------+
-                                     |
-                                     v
-+------------------------------------+------------------------------------+
-|                                                                         |
-v                                                                         v
-+------------------------------------+   +--------------------------------+
-|       FastAPI REST Endpoints       |   |       SQLite WAL Storage       |
-|    (/upload, /analyze, /predict)   |   |   (Events, Incidents, Files)   |
-+------------------------------------+   +--------------------------------+
-                                     |
-                                     v
-+-------------------------------------------------------------------------+
-|                        React 18 Dashboard UI                            |
-|     (Interactive Workbench, Sanitization Audits, Parsed Event Tables)   |
-+-------------------------------------------------------------------------+
-```
-
----
-
-## 3. Current Implementation (Review-1 Foundation)
-
-This milestone establishes the **Review-1 Foundation** of the major project, focused on technical defensibility, verified data provenance, and empirical evaluation:
-
-- **100% Authentic Corpus:** Evaluated exclusively on genuine logs (`1130.txt`, `Jenkins_Log_Under_1MB.txt`, `jenkins_gist_crash.log`), encompassing 5,526 lines and 826.8 KB of telemetry. Zero synthetic datasets are used in the active pipeline.
-- **Incident-Level Splitting:** 374 authentic failure incidents partitioned without data leakage:
-  - **Training:** 261 incidents (69.8%)
-  - **Validation:** 56 incidents (15.0%)
-  - **Held-Out Test:** 57 incidents (15.2%)
-- **Academic ML Baseline:** TF-IDF ($n$-grams $1-2$, 1,500 maximum features) + Random Forest Classifier (100 estimators, max depth 20).
-- **Held-Out Test Evaluation:** **92.98% Accuracy** and **91.34% Macro-F1** measured strictly on the held-out test partition.
-- **Transparent Root Cause Candidate Layer:** Deterministic heuristic mapping from error signatures to probable architectural root causes and concrete remediation steps.
-- **Production API & UI:** High-performance FastAPI backend connected to SQLite (WAL mode) and a responsive React 18 / Tailwind CSS dashboard.
-
----
-
-## 4. Dataset & Data Provenance
-
-The system is calibrated on three distinct production dialects:
-
-| Raw File | Size (bytes) | Lines | Source Dialect & Characteristics |
-|---|---|---|---|
-| `1130.txt` | 191,426 | 1,500 | Continuous microservice telemetry across 6 services (`auth`, `order`, `payment`, `inventory`, `notification`, `api-gateway`) with timestamps, HTTP status codes, trace IDs, and latency values. |
-| `Jenkins_Log_Under_1MB.txt` | 424,551 | 1,576 | Authentic HPE Morpheus qualification build run (#157) containing datastore provisioning failures, GFS2 I/O errors, and test assertions. |
-| `jenkins_gist_crash.log` | 210,699 | 2,450 | Public Jenkins core JVM startup crash stream detailing Winstone/Jetty initialization, Stapler execution, and deep multiline Java stack traces. |
-
-### Supported Failure Categories:
-1. `STORAGE_AND_IO_ERROR` (Datastore configuration errors, GFS2 filesystem mount issues, QEMU image conversion I/O errors).
-2. `NETWORK_DEPENDENCY_FAILURE` (Connection refused by payment service, HTTP 502/503/504 gateway timeouts).
-3. `DATABASE_AND_CACHE_TIMEOUT` (HikariCP connection pool exhaustion, Redis connection timeouts).
-4. `AUTHENTICATION_SECURITY_ERROR` (Expired bearer tokens, CSRF crumb issuer token rejection, Jira auth failure).
-5. `INTERNAL_APPLICATION_LOGIC_ERROR` (Unhandled null pointers in business logic, transaction rollbacks).
-6. `PLUGIN_DESCRIPTOR_RESOLUTION_ERROR` (Jenkins missing plugin descriptors, ClassNotFoundExceptions, Jelly tag errors).
-7. `TEST_ASSERTION_FAILURE` (Pytest assertion verification failures, VM state polling timeouts).
-8. `MESSAGE_BROKER_FAILURE` (Kafka consumer poll failures, queue depth overflow).
-9. `RESOURCE_EXHAUSTION_CRASH` (Container memory limits exceeded, Java heap space out-of-memory).
-10. `ENVIRONMENT_AND_PIPELINE_ERROR` (General pipeline environment and runner anomalies).
-
----
-
-## 5. Core Architectural Components
-
-### 5.1 Zero-PII Secret Sanitizer (`app/core/security.py`)
-Scans every line before ingestion or model processing using deterministic regular expressions:
-- AWS Access Keys (`AKIA[0-9A-Z]{16}`) -> `<REDACTED:AWS_KEY>`
-- GitHub/GitLab Personal Access Tokens (`ghp_[0-9a-zA-Z]{36}`) -> `<REDACTED:GITHUB_TOKEN>`
-- JSON Web Tokens (JWT) -> `<REDACTED:TOKEN>`
-- Password and secret fields -> `<REDACTED:SECRET>`
-- IPv4 Addresses -> `<IP>`
-
-### 5.2 Structured Multi-Dialect Parser (`app/parsers/regex_parser.py`)
-Normalizes heterogeneous logs into a structured event model containing `timestamp`, `level`, `service`, `component`, `node`, `trace_id`, `span_id`, `status_code`, `latency_ms`, and `sanitized_message`.
-
-### 5.3 Root Cause Candidate Analysis (`app/analysis/root_cause_candidate.py`)
-Translates classified failure categories and error evidence into explainable engineering guidance:
-- Storage failure -> Inspects iSCSI target portal, cluster configuration IDs, and host mount permissions.
-- Dependency failure -> Recommends checking service health endpoints, circuit breakers, and network routes.
-- Database timeout -> Recommends checking connection pool ceilings, slow queries, and deadlocks.
-
-### 5.4 Database Persistence (`app/core/database.py`)
-SQLite database operating in Write-Ahead Logging (`WAL`) mode with foreign keys enabled:
-- `source_files`: File hashes, sizes, line counts, and timestamps.
-- `parsed_events`: Normalized structured log events.
-- `incidents`: Detected failure incidents with line spans, predictions, and evidence text.
-- `model_evaluations`: Persisted evaluation metrics and confusion matrices.
-
----
-
-## 6. Repository Folder Structure
-
-```
-trace-platform/
+automated-log-analysis-root-cause-detection/
+├── .env.example                               # Sample environment variables
+├── .gitignore                                 # Git ignore (protects models cache & DB)
+├── README.md                                  # Root documentation (this document)
 ├── backend/
+│   ├── requirements.txt                       # Python dependencies (PyTorch, PyG, FastAPI)
 │   ├── app/
-│   │   ├── analysis/
-│   │   │   └── root_cause_candidate.py     # Root cause candidate analysis
-│   │   ├── api/
-│   │   │   └── v1/
-│   │   │       ├── api.py                  # API router aggregation
-│   │   │       └── endpoints/
-│   │   │           ├── analysis.py         # Full incident analysis endpoint
-│   │   │           ├── classification.py   # Baseline prediction endpoint
-│   │   │           ├── events.py           # Structured events query endpoint
-│   │   │           ├── health.py           # Health check endpoint
-│   │   │           ├── incidents.py        # Incidents query endpoint
-│   │   │           ├── ingestion.py        # Log file upload endpoint
-│   │   │           └── metrics.py          # Dynamic evaluation metrics endpoint
-│   │   ├── core/
-│   │   │   ├── config.py                   # Settings and taxonomy
-│   │   │   ├── database.py                 # SQLite WAL persistence layer
-│   │   │   └── security.py                 # Zero-PII secret sanitizer
-│   │   ├── ml/
-│   │   │   └── baseline/
-│   │   │       └── tfidf_rf.py             # TF-IDF + Random Forest baseline
-│   │   ├── parsers/
-│   │   │   └── regex_parser.py             # Multi-dialect regex log parser
-│   │   └── schemas/
-│   │       └── log_schema.py               # Pydantic data transfer schemas
+│   │   ├── main.py                            # FastAPI application entrypoint & lifespan
+│   │   ├── api/v1/                            # REST API route endpoints
+│   │   │   ├── api.py                         # Unified API router
+│   │   │   ├── endpoints/                     # Ingestion, incidents, RCA, RAG, metrics
+│   │   ├── core/                              # Security (SecretMasker), database (WAL), config
+│   │   ├── ml/                                # Machine learning stage implementations
+│   │   │   ├── baseline/                      # Stage 1: TF-IDF + Random Forest
+│   │   │   ├── stage1_embedder/               # Sentence-BERT dense vectorizer
+│   │   │   ├── stage2_classifier/             # Stage 2: XGBoost classifier
+│   │   │   ├── stage3_gnn/                    # Stage 3: GraphSAGE GNN (PyG)
+│   │   │   ├── stage4_rag/                    # Stage 4: Hybrid RAG (BM25 + SBERT + RRF)
+│   │   │   ├── stage5_llm/                    # Stage 5: Ollama provider & CitationValidator
+│   │   │   └── model_registry.py              # Central ML runtime model dispatcher
+│   │   ├── parsers/                           # Context-aware multiline log parser
+│   │   └── schemas/                           # Pydantic data schemas
 │   ├── data/
-│   │   ├── processed/                      # Split CSVs and manifests
-│   │   │   ├── authentic_incidents.csv
-│   │   │   ├── split_manifest.json
-│   │   │   ├── train_incidents.csv
-│   │   │   ├── val_incidents.csv
-│   │   │   └── test_incidents.csv
-│   │   ├── raw/                            # Immutable authentic raw logs
-│   │   │   ├── 1130.txt
-│   │   │   ├── Jenkins_Log_Under_1MB.txt
-│   │   │   └── jenkins_gist_crash.log
-│   │   ├── dataset_provenance.json         # Checksums and provenance registry
-│   │   └── evaluation_manifest.json        # Test-set evaluation metrics
-│   ├── tests/
-│   │   └── test_review1_pipeline.py        # Comprehensive test suite (18 tests)
-│   ├── main.py                             # FastAPI application entry point
-│   └── requirements.txt                    # Python dependencies
-├── frontend/
-│   ├── src/
-│   │   ├── App.tsx                         # Main React application dashboard
-│   │   └── main.tsx                        # React DOM entry point
-│   ├── index.html                          # HTML template
-│   ├── package.json                        # Node.js dependencies
-│   ├── tsconfig.json                       # TypeScript compiler configuration
-│   └── vite.config.ts                      # Vite build configuration
-├── scripts/
-│   ├── acceptance_blackbox_test.py         # End-to-end black-box verification
-│   ├── audit_raw_logs_privacy.py           # Raw log credential scanner
-│   ├── construct_authentic_dataset.py      # Incident extractor and splitter
-│   ├── ingest_authentic_logs_to_db.py      # Database populator
-│   ├── scan_secrets_audit.py               # Repository secret audit script
-│   ├── start_servers.bat                   # Server launch batch script
-│   ├── train_and_evaluate_baseline.py      # Baseline model training & evaluation
-│   └── verify_live_inference.py            # CLI verification script
-├── .gitignore                              # Production gitignore rules
-└── README.md                               # Project documentation
+│   │   ├── raw/                               # Authentic Jenkins & system log files
+│   │   ├── processed/                         # Canonical group-aware dataset splits
+│   │   ├── models_cache/                      # Trained model joblib & manifest files
+│   │   └── *.json                             # Evaluation and audit manifests
+│   └── tests/                                 # 91 unit, integration, and regression tests
+├── docs/                                      # Topic documentation guides
+│   ├── INSTALLATION.md                        # Windows fresh-clone setup instructions
+│   ├── ARCHITECTURE.md                        # Detailed architecture & pipeline design
+│   ├── API_GUIDE.md                           # REST API reference with curl & JSON schemas
+│   ├── USER_GUIDE.md                          # Interactive web dashboard operator manual
+│   ├── DEMO_GUIDE.md                          # 10-12 minute academic evaluation script
+│   ├── MODEL_EVALUATION.md                    # Empirical benchmarks & leakage audit report
+│   └── SECURITY_AND_PRIVACY.md                # Security, SecretMasker & responsible AI guide
+├── frontend/                                  # React 18 + TypeScript + Vite dashboard
+│   ├── src/                                   # Application source (App.tsx, components)
+│   ├── package.json                           # Node dependencies
+│   └── vite.config.ts                         # Vite configuration
+└── scripts/                                   # Benchmarks, training & evaluation scripts
+    ├── evaluate_rag_retrieval.py              # Evaluates Stage 4 RAG metrics
+    ├── evaluate_stage5_synthesis.py           # Audits Stage 5 grounding & safety invariants
+    ├── run_leakage_audit_and_group_evaluation.py # Audits leakage & runs group-aware eval
+    ├── start_servers.bat                      # Automated Windows startup batch script
+    └── train_and_evaluate_graphsage.py        # Trains and evaluates Stage 3 GraphSAGE
 ```
 
 ---
 
-## 7. Installation & Setup
+## 7. Empirical Evaluation & Benchmarks
 
-### Prerequisites
-- Python 3.11+
-- Node.js 18+ & npm
-- Git
+All models were evaluated on the **Canonical Group-Aware Stratified Test Set** of 57 held-out incidents (partitioned strictly by source log file and Jenkins build, eliminating cross-set template leakage):
 
-### 7.1 Backend Setup
-```bash
+### 7.1 Classifier Comparison (Stages 1–3)
+
+| Model | Representation | Accuracy | Macro-F1 | Precision (Macro) | Recall (Macro) | CPU Latency |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|
+| **Stage 1: TF-IDF + Random Forest** | 1500-D Bag-of-Words | **80.70%** | **72.81%** | **72.35%** | **75.89%** | 32.65 ms |
+| **Stage 2: Sentence-BERT + XGBoost** | 384-D Dense Semantic | **77.19%** | 65.31% | 64.17% | 71.58% | 34.98 ms |
+| **Stage 3: GraphSAGE GNN (Inductive)**| 412-D Multimodal Graph | **73.68%** | 64.90% | 61.79% | 74.29% | **30.52 ms** |
+
+*(Stage 3 GraphSAGE achieves 70.04% weighted F1 due to class imbalance).*
+
+### 7.2 Stage 4 Hybrid RAG Retrieval Performance
+
+Evaluated across **57 held-out query incidents** against a historical corpus of **268 incidents**:
+
+| Modality | Recall@1 | Recall@3 | Recall@5 | Recall@10 | Precision@1 | MRR | Latency |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Hybrid (BM25 + SBERT + Prior)** | **94.74%** | **94.74%** | **94.74%** | **100.0%** | **94.74%** | **0.9532** | 31.63 ms |
+| **Sparse Lexical (Okapi BM25)** | 73.68% | 89.47% | 89.47% | 92.98% | 73.68% | 0.8082 | **1.38 ms** |
+| **Dense Semantic (Sentence-BERT)** | 71.93% | 87.72% | 89.47% | 94.74% | 71.93% | 0.7946 | 27.47 ms |
+
+### 7.3 Stage 5 Grounding & Safety Audit
+- **Total Evaluated Scenarios:** 7
+- **Passed Scenarios:** 7 (100% pass rate)
+- Verified: Non-substitution of `[E99]`, remediation grounding invariant enforcement, diagnostic remediation, prompt injection neutralization, and 90s timeout handling.
+
+Full metrics manifests are available in `backend/data/*.json` and analyzed in [docs/MODEL_EVALUATION.md](docs/MODEL_EVALUATION.md).
+
+---
+
+## 8. Data Leakage Audit & Academic Transparency
+
+To uphold scientific honesty, TRACE discloses the resolution of two data leakage vulnerabilities present in early exploratory builds:
+
+1. **The Template Leakage Flaw:** A naive record-level split allowed identical recurring Jenkins log lines to appear in both train and test sets, artificially inflating accuracy to 92.98% (RF) and 96.49% (XGBoost). Creating our **Group-Aware Split** eliminated this overlap, establishing genuine accuracies of **80.70%** and **77.19%**.
+2. **Transductive vs. Inductive Graph Evaluation:** When GraphSAGE is evaluated transductively (allowing message passing across test-node edges), it reaches 96.49%. When evaluated strictly **inductively** (where test incidents are completely unseen nodes), it achieves a genuine **73.68%**.
+3. **Weak Supervision Ground Truth:** Target labels were generated using rule-based heuristics (`RootCauseCandidateAnalyzer`) rather than manual human SRE labels. This explains why Stage 1 (TF-IDF) slightly outperforms dense models: it matches the exact keyword rules used to generate the labels.
+
+---
+
+## 9. Installation & Setup
+
+For detailed instructions, see [docs/INSTALLATION.md](docs/INSTALLATION.md).
+
+### Quickstart (Windows PowerShell)
+
+```powershell
 # 1. Clone the repository
-git clone <https://github.com/ManikSalaria/automated-log-analysis-root-cause-detection.git>
-cd trace-platform
+git clone https://github.com/ManikSalaria/automated-log-analysis-root-cause-detection.git
+cd automated-log-analysis-root-cause-detection
 
-# 2. Create and activate a Python 3.11 virtual environment
-py -3.11 -m venv .venv
-# On Windows:
-.\.venv\Scripts\activate
-# On Linux/macOS:
-# source .venv/bin/activate
+# 2. Set up Python virtual environment (Python 3.11 required)
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 
-# 3. Install Python dependencies
+# 3. Install backend dependencies
+python -m pip install --upgrade pip setuptools wheel
 pip install -r backend/requirements.txt
-```
 
-### 7.2 Dataset Preparation & Model Training
-```bash
-# Extract incidents from raw logs and create stratified train/val/test splits
-python scripts/construct_authentic_dataset.py
+# 4. Configure environment
+Copy-Item .env.example .env
 
-# Train the baseline TF-IDF + Random Forest model and evaluate on held-out test data
-python scripts/train_and_evaluate_baseline.py
-
-# Ingest authentic raw logs into SQLite database
-python scripts/ingest_authentic_logs_to_db.py
-```
-
-### 7.3 Frontend Setup
-```bash
+# 5. Install frontend dependencies
 cd frontend
 npm install
+npm run build
+cd ..
+
+# 6. Pull Ollama model (ensure Ollama is installed and running)
+ollama pull llama3.2:3b
 ```
 
 ---
 
-## 8. Running the Application
+## 10. Running the Application
 
-### Option A: Quick Launch (Windows)
-Double-click or run:
-```cmd
-scripts\start_servers.bat
+### Option A: Automated Launch Script
+Run the provided batch file from the root directory:
+```powershell
+.\scripts\start_servers.bat
 ```
-This concurrently opens the FastAPI backend and Vite frontend in separate terminal windows.
 
-### Option B: Manual Execution
-**Terminal 1 (FastAPI Backend):**
-```bash
-python -m uvicorn main:app --app-dir backend --host 127.0.0.1 --port 8000 --reload
+### Option B: Manual Launch
+
+**Terminal 1 — FastAPI Backend:**
+```powershell
+.\.venv\Scripts\Activate.ps1
+uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
-- API Documentation (Swagger UI): `http://127.0.0.1:8000/docs`
-- Health Check: `http://127.0.0.1:8000/api/v1/health`
+- API Base URL: `http://127.0.0.1:8000`
+- Interactive Swagger UI: `http://127.0.0.1:8000/docs`
 
-**Terminal 2 (React Frontend):**
-```bash
+**Terminal 2 — React Dashboard Frontend:**
+```powershell
 cd frontend
 npm run dev
 ```
-- Web Dashboard: `http://localhost:3000`
+- Web Dashboard: `http://localhost:5173`
 
 ---
 
-## 9. Testing & Quality Assurance
+## 11. Jenkins CI/CD Integration
 
-Run the automated backend test suite covering secret sanitization, multiline parsing, model inference, SQLite transactions, and API endpoints:
-```bash
-pytest backend/tests/ -v
-```
-*(All 18 tests pass).*
-
-Run the frontend TypeScript typecheck and production build:
-```bash
-cd frontend
-npm run build
-```
-
-Run the end-to-end black-box verification on all authentic log files:
-```bash
-python scripts/acceptance_blackbox_test.py
-```
+TRACE integrates with Jenkins pipelines via HTTP REST or raw console log ingestion:
+- **Direct Upload:** Upload raw console logs (`consoleText`) via `POST /api/v1/ingest/upload`.
+- **JSON Endpoint:** Stream logs programmatically via `POST /api/v1/ingest/jenkins` with build metadata (`job_name`, `build_number`, `git_commit`, `git_branch`).
+- **Post-Build Script Example:**
+  ```bash
+  curl -X POST "http://localhost:8000/api/v1/ingest/jenkins" \
+    -H "Content-Type: application/json" \
+    -d "{\"job_name\": \"$JOB_NAME\", \"build_number\": $BUILD_NUMBER, \"console_log\": \"$(cat console.log)\"}"
+  ```
 
 ---
 
-## 10. Empirical Evaluation Metrics
+## 12. REST API Reference Summary
 
-Evaluated on the **57 held-out test incidents** strictly isolated from training:
+| Endpoint | Method | Description |
+|:---|:---:|:---|
+| `/api/v1/health` | `GET` | Health check, DB state, and Ollama provider connectivity |
+| `/api/v1/ingest/upload` | `POST` | Upload and sanitize raw log file (`multipart/form-data`) |
+| `/api/v1/ingest/jenkins` | `POST` | Ingest raw Jenkins build console text with build metadata |
+| `/api/v1/incidents` | `GET` | Paginated incident list with severity/component filters |
+| `/api/v1/incidents/{incident_id}` | `GET` | Incident detail view with chronological context lines |
+| `/api/v1/classify` | `POST` | Classify incident using Stage 1, Stage 2, or Stage 3 |
+| `/api/v1/rag/retrieve` | `POST` | Hybrid RAG retrieval (BM25 + SBERT + RRF $k=60$) |
+| `/api/v1/rag/synthesize` | `POST` | LLM root-cause synthesis with `CitationValidator` |
+| `/api/v1/metrics/comparison` | `GET` | Canonical evaluation metrics across all 5 stages |
 
+For complete request schemas, curl examples, and response JSON payloads, see [docs/API_GUIDE.md](docs/API_GUIDE.md).
+
+---
+
+## 13. Security, Privacy & Responsible AI
+
+1. **Air-Gapped & Local Guarantee:** All models and the Ollama LLM sidecar run strictly on local infrastructure. No incident data or telemetry is sent to public cloud endpoints.
+2. **Zero-PII SecretMasker:** AWS credentials, GitHub PATs, JWT tokens, and private IPs are redacted in-memory prior to persistence or model ingestion.
+3. **Prompt Injection Delimiters:** Log text is isolated in non-executable `<log_evidence>` XML tags with explicit instructions to ignore instructions contained within logs.
+4. **Non-Substitution Citation Rule:** Hallucinated evidence citations (`[E99]`) are rejected, never silently replaced.
+5. **Diagnostic First:** Prioritizes identifying root-cause sources over blanket try-catch suppression.
+
+For detailed security regexes and governance principles, see [docs/SECURITY_AND_PRIVACY.md](docs/SECURITY_AND_PRIVACY.md).
+
+---
+
+## 14. Automated Testing & Verification Suite
+
+TRACE maintains comprehensive test coverage across all components:
+
+```powershell
+# 1. Run full backend pytest test suite (91 passing tests)
+.\.venv\Scripts\python.exe -m pytest backend/tests -v
+
+# 2. Run Stage 4 Hybrid RAG evaluation benchmark
+.\.venv\Scripts\python.exe scripts/evaluate_rag_retrieval.py
+
+# 3. Run Stage 5 LLM grounding & safety audit suite
+.\.venv\Scripts\python.exe scripts/evaluate_stage5_synthesis.py
+
+# 4. Verify frontend production build (TypeScript & Vite)
+cd frontend; npm run build; cd ..
 ```
-================================================================================
-Metric                           | Measured Value (TF-IDF + Random Forest)
---------------------------------------------------------------------------------
-Accuracy                         | 92.98%
-Macro Precision                  | 93.26%
-Macro Recall                     | 92.26%
-Macro F1-Score                   | 91.34%
-Mean Inference Latency           | 32.97 ms
-p95 Inference Latency            | 35.63 ms
-Feature Space                    | 1,500 n-gram lexical features (unigram + bigram)
-Training Time                    | 0.276 s
-Partition Policy                 | Incident-level Stratified Split (70% Train, 15% Val, 15% Test)
-================================================================================
-```
 
-### Per-Category Test Breakdown:
-- `STORAGE_AND_IO_ERROR` ($N=12$): Precision = 100.0%, Recall = 91.7%, **F1 = 95.7%**
-- `NETWORK_DEPENDENCY_FAILURE` ($N=7$): Precision = 100.0%, Recall = 85.7%, **F1 = 92.3%**
-- `DATABASE_AND_CACHE_TIMEOUT` ($N=4$): Precision = 100.0%, Recall = 100.0%, **F1 = 100.0%**
-- `AUTHENTICATION_SECURITY_ERROR` ($N=3$): Precision = 75.0%, Recall = 100.0%, **F1 = 85.7%**
-- `TEST_ASSERTION_FAILURE` ($N=2$): Precision = 66.7%, Recall = 100.0%, **F1 = 80.0%**
-- `PLUGIN_DESCRIPTOR_RESOLUTION_ERROR` ($N=2$): Precision = 100.0%, Recall = 50.0%, **F1 = 66.7%**
-- `RESOURCE_EXHAUSTION_CRASH` ($N=1$): Precision = 100.0%, Recall = 100.0%, **F1 = 100.0%**
+**Verification Results:**
+- `pytest`: **91 passed** in ~66 seconds.
+- `evaluate_rag_retrieval.py`: **MRR: 0.9532, Recall@5: 0.9474**.
+- `evaluate_stage5_synthesis.py`: **7/7 scenarios passed** (100% pass rate).
+- `frontend build`: **0 errors**, production bundle compiled in ~2.3 seconds.
 
 ---
 
-## 11. Known Limitations
+## 15. Live Demonstration Script Summary
 
-1. **Lexical Vocabulary Shift:** The baseline bag-of-words model matches lexical n-grams and is sensitive to vocabulary shifts when encountering unseen error phrasing not present in training data.
-2. **Minority Class Support:** Rare failure modes with few test instances exhibit higher variance.
-3. **Sequential Context:** Events in distributed call chains are currently parsed as discrete incidents rather than a temporal graph.
-
----
-
-## 12. Development Roadmap (Future Phases)
-
-The architecture is modularized to support advanced deep learning models without rewriting the ingestion, parsing, and storage foundation:
-
-1. **Sentence-BERT Embedding Stage:** Integration of `all-MiniLM-L6-v2` transformer to generate dense 384-dimensional semantic embeddings, resolving vocabulary shift limitations.
-2. **XGBoost Classifier Stage:** 407-dimensional hybrid matrix combining 384 dense semantic features with 23 engineered operational metadata features.
-3. **GraphSAGE Topological Root Cause Analysis:** PyTorch Geometric Graph Neural Network (GNN) modeling service call dependencies and pipeline stage DAGs to trace error propagation across microservices.
-4. **Historical Incident RAG:** Time-decayed ChromaDB vector retrieval matching active incidents against historical postmortems.
-5. **LLM SRE Report Generation:** Automated incident postmortem generation using sanitized context fed to an LLM.
+Planning an evaluation presentation? Consult [docs/DEMO_GUIDE.md](docs/DEMO_GUIDE.md) for a complete 10-to-12-minute script:
+- **00:00 - 02:00:** Problem Statement & CI/CD Pain Points
+- **02:00 - 04:00:** Ingestion & Live Zero-PII Secret Masking
+- **04:00 - 06:00:** Multi-Stage ML Classification (Stages 1–3)
+- **06:00 - 08:00:** Stage 4 Hybrid RAG Historical Retrieval
+- **08:00 - 10:00:** Stage 5 Evidence-Grounded LLM Synthesis & Diagnostic Remediation
+- **10:00 - 12:00:** Data Leakage Audit, Scientific Transparency & Q&A
 
 ---
 
-## 13. License
+## 16. Troubleshooting & FAQ
 
-This project is developed for educational and research purposes under the academic major project curriculum.
+### Q1: Ollama request times out or returns `TIMEOUT`
+- **Solution:** Large logs or high CPU load can cause inference to take longer than standard HTTP timeouts. TRACE provides `TRACE_LLM_TIMEOUT_SEC=90.0` in `.env`. Ensure Ollama is running (`ollama serve`) and has loaded `llama3.2:3b`. If Ollama is unavailable, TRACE falls back to offline deterministic synthesis.
+
+### Q2: PyTorch Geometric wheel installation errors on Windows
+- **Solution:** PyG binaries depend on exact Python and PyTorch versions. Use the pre-built CPU wheels:
+  ```powershell
+  pip install torch --index-url https://download.pytorch.org/whl/cpu
+  pip install torch-scatter torch-sparse torch-cluster torch-spline-conv -f https://data.pyg.org/whl/torch-2.2.0+cpu.html
+  pip install torch-geometric
+  ```
+
+### Q3: Frontend shows model name different from selection
+- **Solution:** TRACE explicitly displays the model name returned by the backend response, preventing UI selection desynchronization. If the server fell back to a default baseline, the UI accurately flags this rather than showing the unexecuted selection.
+
+---
+
+## 17. Documentation Sitemap
+
+Detailed documentation guides are available in the [`docs/`](docs/) directory:
+
+- [Installation & Setup Guide](docs/INSTALLATION.md) — Comprehensive Windows prerequisites, virtualenv, and build steps.
+- [System Architecture & Pipeline Design](docs/ARCHITECTURE.md) — In-depth component interactions, ML formulations, and data flow.
+- [REST API Reference Guide](docs/API_GUIDE.md) — Complete endpoint reference with curl examples and JSON payloads.
+- [User & Operator Manual](docs/USER_GUIDE.md) — Interactive UI walkthrough for each dashboard tab.
+- [Demonstration & Review Script](docs/DEMO_GUIDE.md) — 10-12 minute live presentation guide with anticipated Q&A.
+- [Model Evaluation & Leakage Audit](docs/MODEL_EVALUATION.md) — Scientific benchmarks, group-aware split audit, and RAG metrics.
+- [Security, Privacy & Responsible AI](docs/SECURITY_AND_PRIVACY.md) — SecretMasker regexes, prompt injection defense, and grounding invariants.
+
+---
+
+## 18. Authors & Attribution
+
+- **Project:** TRACE — Automated Log Analysis and Root Cause Detection System using Machine Learning
+- **Repository:** [https://github.com/ManikSalaria/automated-log-analysis-root-cause-detection](https://github.com/ManikSalaria/automated-log-analysis-root-cause-detection)
+- **Primary Investigator:** Manik Salaria
+- **License:** MIT License

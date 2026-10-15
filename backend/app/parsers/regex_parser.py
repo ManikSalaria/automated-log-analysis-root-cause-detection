@@ -37,6 +37,20 @@ class LogParserEngine:
         r"(?P<message>.*)$"
     )
 
+    # Format 4: Maven / Surefire / Console Log Format
+    # Supports optional timestamp prefix e.g. "[2026-10-15T12:00:00.000Z] " or "12:00:00 "
+    MAVEN_PATTERN = re.compile(
+        r"^(?:(?:\[(?P<timestamp_bracket>[^\]]+)\]|(?P<timestamp_plain>\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+\-]\d{2}:?\d{2})?|\d{2}:\d{2}:\d{2}))\s+)?"
+        r"\[(?P<level>INFO|WARNING|WARN|ERROR|DEBUG)\]\s*"
+        r"(?P<message>.*)$"
+    )
+
+    # Test summary pattern: Tests run: X, Failures: Y, Errors: Z, Skipped: W
+    TEST_SUMMARY_PATTERN = re.compile(
+        r"\bTests run:\s*(\d+),\s*Failures:\s*(\d+),\s*Errors:\s*(\d+)(?:,\s*Skipped:\s*(\d+))?",
+        re.IGNORECASE
+    )
+
     # Key-value extractors
     KV_PATTERNS = {
         "request_id": re.compile(r"\brequest_id=([^\s,]+)"),
@@ -48,7 +62,7 @@ class LogParserEngine:
 
     # Error signature heuristics
     ERROR_INDICATORS = [
-        re.compile(r"(?i)\b(AssertionError|NullPointer|Exception|Timeout|Connection refused|Rollback|Out of memory|Input/output error|failed to poll|HTTP 5\d{2})\b"),
+        re.compile(r"(?i)\b(AssertionError|AssertionFailedError|NullPointerException|OutOfMemoryError|Connection refused|Rollback|failed to poll|HTTP 5\d{2})\b"),
         re.compile(r"(?i)\bFAILED\s+([a-zA-Z0-9_\.\/:]+)"),
         re.compile(r"^E\s+(.*)$", re.MULTILINE),
     ]
@@ -126,9 +140,78 @@ class LogParserEngine:
                 sanitized_message=SecretMasker.sanitize(groups["message"])
             )
 
+        # Try Format 4: Maven / Surefire build log
+        match_mvn = cls.MAVEN_PATTERN.match(raw_line)
+        if match_mvn:
+            groups = match_mvn.groupdict()
+            raw_lvl = groups["level"]
+            msg = groups["message"]
+            timestamp = groups.get("timestamp_bracket") or groups.get("timestamp_plain")
+
+            # Context-aware severity determination for Maven lines
+            summary_match = cls.TEST_SUMMARY_PATTERN.search(msg)
+            if summary_match:
+                failures = int(summary_match.group(2))
+                errors = int(summary_match.group(3))
+                skipped = int(summary_match.group(4) or 0)
+                if failures > 0 or errors > 0:
+                    level = "ERROR"
+                elif skipped > 0 or raw_lvl in ("WARNING", "WARN"):
+                    level = "WARN"
+                else:
+                    level = "INFO"
+            elif raw_lvl == "ERROR":
+                level = "ERROR"
+            elif raw_lvl in ("WARNING", "WARN"):
+                level = "WARN"
+            elif raw_lvl == "DEBUG":
+                level = "DEBUG"
+            else:
+                level = "INFO"
+
+            service = "maven-pipeline"
+            if msg.startswith("Running "):
+                parts = msg.split()
+                if len(parts) > 1:
+                    service = parts[1]
+            elif " - in " in msg:
+                service = msg.split(" - in ")[-1].strip()
+
+            return LogEntry(
+                timestamp=timestamp,
+                level=level,
+                service=service,
+                node=None,
+                raw_message=msg,
+                sanitized_message=SecretMasker.sanitize(msg)
+            )
+
         # Fallback: Unstructured line or stack trace line
         level = "INFO"
-        if any(err.search(raw_line) for err in cls.ERROR_INDICATORS):
+        service = "pipeline-runner"
+
+        # Check test summary without bracket prefix
+        summary_match = cls.TEST_SUMMARY_PATTERN.search(raw_line)
+        if summary_match:
+            failures = int(summary_match.group(2))
+            errors = int(summary_match.group(3))
+            skipped = int(summary_match.group(4) or 0)
+            if failures > 0 or errors > 0:
+                level = "ERROR"
+            elif skipped > 0 or "WARN" in raw_line.upper():
+                level = "WARN"
+            else:
+                level = "INFO"
+        elif re.match(r"^Running\s+[\w\.\$]+", raw_line):
+            level = "INFO"
+            parts = raw_line.split()
+            if len(parts) > 1:
+                service = parts[1]
+        elif "BUILD SUCCESS" in raw_line:
+            level = "INFO"
+        elif (raw_line.startswith(("\tat ", "   at ", "Caused by:", "Traceback (most recent call last):", "E   ", "FAILED ")) or
+              re.match(r"^(?:java\.[a-zA-Z0-9_\.]+|[a-zA-Z0-9_\.]+(?:Exception|Error|Failure))(?::\s*.*)?$", raw_line) or
+              any(err.search(raw_line) for err in cls.ERROR_INDICATORS)):
             level = "ERROR"
         elif "WARN" in raw_line.upper():
             level = "WARN"
@@ -136,10 +219,77 @@ class LogParserEngine:
         return LogEntry(
             timestamp=None,
             level=level,
-            service="pipeline-runner",
+            service=service,
             raw_message=raw_line,
             sanitized_message=sanitized_line
         )
+
+    @classmethod
+    def is_incident_start(cls, raw_line: str, entry: Optional[LogEntry] = None) -> bool:
+        """
+        Context-aware check whether a log line represents the start of an actual failure/incident.
+        Distinguishes explicit error log records, actual test failures, exceptions, and stack traces
+        from normal informational messages, test runners, skipped tests, and successful build summaries.
+        """
+        line = raw_line.strip()
+        if not line:
+            return False
+
+        if entry is None:
+            entry = cls.parse_line(raw_line)
+
+        # 1. Definite Non-Incidents (Informational / Warnings / Normal Summaries)
+        # Test runner execution message: e.g. [INFO] Running com.tracelab...ExceptionFailureScenarioTest
+        if re.match(r"^(?:\[INFO\]\s+)?Running\s+[\w\.\$]+(?:\s+.*)?$", line):
+            return False
+
+        # Build success messages and build timing info
+        if ("BUILD SUCCESS" in line or line.startswith("[INFO] Total time:") or
+            line.startswith("[INFO] Finished at:") or line.startswith("[INFO] Final Memory:")):
+            return False
+
+        # Test summaries with 0 failures and 0 errors (even if skipped tests or warnings)
+        summary_match = cls.TEST_SUMMARY_PATTERN.search(line)
+        if summary_match:
+            failures = int(summary_match.group(2))
+            errors = int(summary_match.group(3))
+            if failures == 0 and errors == 0:
+                return False
+            else:
+                return True
+
+        # Non-fatal warnings (skipped tests, deprecations, warnings)
+        if entry.level in ("WARN", "WARNING", "DEBUG"):
+            return False
+
+        # Normal informational lines
+        if entry.level == "INFO":
+            # An INFO line is not an incident unless it contains an explicit failure banner
+            if not ("<<< FAILURE!" in line or "<<< ERROR!" in line or "AssertionError" in line):
+                return False
+
+        # 2. Definite Incidents
+        # Explicit ERROR/CRITICAL/FATAL/SEVERE level
+        if entry.level in ("ERROR", "CRITICAL", "SEVERE", "FATAL"):
+            return True
+
+        # Test failure markers
+        if ("<<< FAILURE!" in line or "<<< ERROR!" in line or
+            line.startswith("FAILED ") or line.startswith("E   assert ") or
+            line.startswith("[ERROR] Failures:") or line.startswith("[ERROR] Errors:") or
+            "AssertionError" in line or "AssertionFailedError" in line):
+            return True
+
+        # Stack trace or exception indicators
+        if (line.startswith(("Traceback (most recent call last):", "Caused by:")) or
+            re.match(r"^(?:java\.[a-zA-Z0-9_\.]+|[a-zA-Z0-9_\.]+(?:Exception|Error))(?::\s*.*)?$", line)):
+            return True
+
+        # System error commands
+        if any(cmd in line for cmd in ["mkdir:", "qemu-img:"]):
+            return True
+
+        return False
 
     @classmethod
     def parse_log_text(cls, text: str) -> List[LogEntry]:

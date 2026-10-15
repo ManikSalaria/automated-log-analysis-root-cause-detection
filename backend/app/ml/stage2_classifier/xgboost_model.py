@@ -1,124 +1,116 @@
+"""XGBoost Failure Classifier Engine (TRACE Stage 2).
+
+Combines genuine Sentence-BERT dense semantic embeddings (384-D) with
+Gradient-Boosted Decision Trees (XGBClassifier) for multi-class CI/CD
+failure categorization across authentic failure modes.
+"""
+
 import time
+import json
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 import numpy as np
 import joblib
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
-from sklearn.feature_extraction.text import HashingVectorizer
-from app.core.security import SecretMasker
 from app.core.config import settings
+from app.ml.stage1_embedder.sbert_embedder import SentenceBertEmbedder
 
 class TraceXGBoostClassifier:
     """
-    Advanced TRACE Stage 2 Classifier: Gradient-Boosted Decision Trees (XGBoost).
-    Combines semantic embedding representations with operational metadata
-    to provide deterministic, high-confidence 10-class failure categorization.
+    TRACE Stage 2 Classifier: Gradient-Boosted Decision Trees over
+    genuine 384-dimensional Sentence-BERT dense semantic representations.
     """
 
-    def __init__(self, n_estimators: int = 150, max_depth: int = 6, learning_rate: float = 0.08):
+    def __init__(
+        self,
+        n_estimators: int = 100,
+        max_depth: int = 4,
+        learning_rate: float = 0.05,
+        random_state: int = 42
+    ):
         self.n_estimators = n_estimators
         self.max_depth = max_depth
         self.learning_rate = learning_rate
+        self.random_state = random_state
+
+        self.embedder = SentenceBertEmbedder()
         self.label_encoder = LabelEncoder()
-        self.model: Optional[XGBClassifier] = None
+        self.classifier: Optional[XGBClassifier] = None
         self.is_trained: bool = False
-        
-        # Dense feature extractor (projects to 384 dimensions matching Sentence-BERT)
-        self.dense_dim = 384
-        self.hasher = HashingVectorizer(n_features=self.dense_dim, alternate_sign=False)
-
-    def extract_features(self, text: str, latency_ms: float = 0.0, status_code: int = 500) -> np.ndarray:
-        """
-        Produce a 407-dimensional feature vector:
-        - 384 dense semantic dimensions (projected/embedded)
-        - 23 engineered execution metadata features
-        """
-        sanitized = SecretMasker.sanitize(text, mask_ips=True, normalize_identifiers=True).lower()
-        dense_vec = self.hasher.transform([sanitized]).toarray()[0]
-        
-        # 23-D engineered metadata features
-        metadata = np.zeros(23, dtype=np.float32)
-        metadata[0] = min(latency_ms / 5000.0, 1.0)  # normalized latency
-        metadata[1] = 1.0 if status_code >= 500 else 0.0  # server error flag
-        metadata[2] = 1.0 if status_code == 429 else 0.0  # rate limit flag
-        metadata[3] = 1.0 if "assertionerror" in sanitized else 0.0
-        metadata[4] = 1.0 if "timeout" in sanitized else 0.0
-        metadata[5] = 1.0 if "connection refused" in sanitized else 0.0
-        metadata[6] = 1.0 if "out of memory" in sanitized or "oom" in sanitized else 0.0
-        metadata[7] = 1.0 if "null pointer" in sanitized else 0.0
-        metadata[8] = 1.0 if "token" in sanitized or "auth" in sanitized else 0.0
-        metadata[9] = 1.0 if "kafka" in sanitized or "queue" in sanitized else 0.0
-        metadata[10] = 1.0 if "datastore" in sanitized or "lun" in sanitized or "cluster id" in sanitized else 0.0
-        metadata[11] = 1.0 if "input/output error" in sanitized or "ioerror" in sanitized else 0.0
-        metadata[12] = 1.0 if "syntax" in sanitized or "compile" in sanitized else 0.0
-        metadata[13] = float(len(text.split())) / 100.0  # token length factor
-        metadata[14] = 1.0 if "traceback" in sanitized else 0.0
-        metadata[15] = 1.0 if "failed" in sanitized else 0.0
-        metadata[16] = 1.0 if "redis" in sanitized else 0.0
-        metadata[17] = 1.0 if "database" in sanitized or "db" in sanitized else 0.0
-        metadata[18] = 1.0 if "rollback" in sanitized else 0.0
-        metadata[19] = 1.0 if "pool" in sanitized else 0.0
-        metadata[20] = 1.0 if "mkdir" in sanitized or "cannot create" in sanitized else 0.0
-        metadata[21] = 1.0 if "error while converting" in sanitized else 0.0
-        metadata[22] = 1.0 if "missing" in sanitized or "not found" in sanitized else 0.0
-
-        return np.concatenate([dense_vec, metadata])
+        self.feature_dimension: int = 384
+        self.classes_: List[str] = []
 
     def train(self, texts: List[str], labels: List[str]) -> Dict[str, Any]:
         """
-        Train the XGBoost multi-class classifier on 407-D feature matrices.
+        Fit the XGBoost multi-class classifier on genuine 384-D Sentence-BERT embeddings.
+        All preprocessing is strictly fit on training inputs only.
         """
         start_time = time.perf_counter()
-        
-        # Fit label encoder
+
+        if len(texts) == 0 or len(labels) == 0:
+            raise ValueError("Training inputs cannot be empty.")
+        if len(texts) != len(labels):
+            raise ValueError(f"Mismatch between texts ({len(texts)}) and labels ({len(labels)}).")
+
+        # 1. Encode training labels
         y_encoded = self.label_encoder.fit_transform(labels)
-        
-        # Build feature matrix
-        X_features = np.array([self.extract_features(t) for t in texts], dtype=np.float32)
-        
-        num_classes = len(self.label_encoder.classes_)
-        self.model = XGBClassifier(
+        self.classes_ = [str(c) for c in self.label_encoder.classes_]
+
+        # 2. Extract genuine 384-D Sentence-BERT representations
+        if not self.embedder.is_loaded:
+            self.embedder.load()
+
+        X_train = self.embedder.encode(texts, batch_size=32, normalize_embeddings=True)
+        self.feature_dimension = X_train.shape[1]
+
+        # 3. Fit XGBClassifier
+        self.classifier = XGBClassifier(
             n_estimators=self.n_estimators,
             max_depth=self.max_depth,
             learning_rate=self.learning_rate,
-            objective="multi:softprob",
-            num_class=num_classes,
+            random_state=self.random_state,
             eval_metric="mlogloss",
-            random_state=42,
+            tree_method="hist",
             n_jobs=-1
         )
-        
-        self.model.fit(X_features, y_encoded)
+        self.classifier.fit(X_train, y_encoded)
         self.is_trained = True
-        
-        elapsed_sec = time.perf_counter() - start_time
+
+        duration = time.perf_counter() - start_time
         return {
-            "model": "TRACE Stage 2 (XGBoost 407-D Classifier)",
-            "training_time_sec": round(elapsed_sec, 3),
-            "samples_count": len(texts),
-            "feature_dimension": 407,
-            "classes_count": num_classes,
-            "classes": list(self.label_encoder.classes_)
+            "training_time_sec": round(duration, 3),
+            "sample_count": len(texts),
+            "feature_dimension": self.feature_dimension,
+            "classes_count": len(self.classes_),
+            "classes": self.classes_
         }
 
-    def predict(self, text: str, latency_ms: float = 0.0, status_code: int = 500) -> Dict[str, Any]:
+    def predict(self, text: str) -> Dict[str, Any]:
         """
-        Perform high-confidence inference with 407-D feature matrix.
+        Predict failure category from log text using Sentence-BERT + XGBoost.
+        Measures real inference latency (including embedding time) on CPU.
         """
-        if not self.is_trained or self.model is None:
-            raise RuntimeError("XGBoost model is not trained or loaded.")
+        if not text or not text.strip():
+            raise ValueError("Input text cannot be empty or whitespace.")
+
+        if not self.is_trained:
+            if not self.load():
+                raise RuntimeError("TRACE XGBoost model is not loaded. Train or populate model cache first.")
 
         start_time = time.perf_counter()
-        features = self.extract_features(text, latency_ms, status_code).reshape(1, -1)
-        
-        probabilities = self.model.predict_proba(features)[0]
-        pred_idx = np.argmax(probabilities)
-        pred_category = self.label_encoder.inverse_transform([pred_idx])[0]
+
+        # Generate genuine 384-D embedding
+        emb = self.embedder.encode(text, normalize_embeddings=True)
+        features = np.expand_dims(emb, axis=0)
+
+        probabilities = self.classifier.predict_proba(features)[0]
+        pred_idx = int(np.argmax(probabilities))
+        pred_category = str(self.label_encoder.inverse_transform([pred_idx])[0])
         confidence = float(probabilities[pred_idx])
-        
-        latency_ms_val = (time.perf_counter() - start_time) * 1000.0
-        
+
+        latency_ms = (time.perf_counter() - start_time) * 1000.0
+
         top_indices = np.argsort(probabilities)[::-1][:4]
         top_probs = {
             str(self.label_encoder.inverse_transform([idx])[0]): round(float(probabilities[idx]), 4)
@@ -126,30 +118,81 @@ class TraceXGBoostClassifier:
         }
 
         return {
-            "model_name": "TRACE Stage 2 (XGBoost Classifier)",
+            "model_name": "TRACE Stage 2 (Sentence-BERT + XGBoost)",
             "predicted_category": pred_category,
             "confidence": round(confidence, 4),
-            "latency_ms": round(latency_ms_val, 2),
-            "feature_dimension": 407,
+            "latency_ms": round(latency_ms, 2),
+            "feature_dimension": self.feature_dimension,
             "top_probabilities": top_probs,
-            "rationale": f"Gradient boosted trees over 384-D dense representation + 23-D execution metadata features"
+            "rationale": (
+                f"Predicted by Gradient-Boosted Trees (XGBoost) over 384-dimensional "
+                f"dense semantic embeddings from sentence-transformers/all-MiniLM-L6-v2."
+            )
         }
 
-    def save(self, model_path: Optional[Path] = None, encoder_path: Optional[Path] = None) -> None:
-        """Persist XGBoost model and label encoder."""
+    def save(
+        self,
+        model_path: Optional[Path] = None,
+        encoder_path: Optional[Path] = None,
+        manifest_path: Optional[Path] = None
+    ) -> None:
+        """Persist fitted XGBoost model, label encoder, and provenance manifest."""
+        if not self.is_trained or self.classifier is None:
+            raise RuntimeError("Cannot save an unfitted XGBoost model.")
+
         m_path = model_path or settings.XGBOOST_MODEL_PATH
-        e_path = encoder_path or settings.LABEL_ENCODER_PATH
+        e_path = encoder_path or settings.XGBOOST_ENCODER_PATH
+        man_path = manifest_path or settings.XGBOOST_MANIFEST_PATH
+
         m_path.parent.mkdir(parents=True, exist_ok=True)
-        joblib.dump(self.model, m_path)
+        joblib.dump(self.classifier, m_path)
         joblib.dump(self.label_encoder, e_path)
 
-    def load(self, model_path: Optional[Path] = None, encoder_path: Optional[Path] = None) -> bool:
-        """Load persisted XGBoost model and label encoder."""
+        manifest = {
+            "model_name": "TRACE Stage 2 (Sentence-BERT + XGBoost)",
+            "embedding_model": settings.SBERT_MODEL_NAME,
+            "feature_dimension": self.feature_dimension,
+            "classes": self.classes_,
+            "n_estimators": self.n_estimators,
+            "max_depth": self.max_depth,
+            "learning_rate": self.learning_rate,
+            "random_state": self.random_state
+        }
+        with open(man_path, "w", encoding="utf-8") as f:
+            json.dump(manifest, f, indent=2)
+
+    def load(
+        self,
+        model_path: Optional[Path] = None,
+        encoder_path: Optional[Path] = None,
+        manifest_path: Optional[Path] = None
+    ) -> bool:
+        """Load persisted XGBoost model and label encoder from disk."""
         m_path = model_path or settings.XGBOOST_MODEL_PATH
-        e_path = encoder_path or settings.LABEL_ENCODER_PATH
-        if m_path.exists() and e_path.exists():
-            self.model = joblib.load(m_path)
+        e_path = encoder_path or settings.XGBOOST_ENCODER_PATH
+        man_path = manifest_path or settings.XGBOOST_MANIFEST_PATH
+
+        if not (m_path.exists() and e_path.exists()):
+            self.is_trained = False
+            return False
+
+        try:
+            self.classifier = joblib.load(m_path)
             self.label_encoder = joblib.load(e_path)
+            self.classes_ = [str(c) for c in self.label_encoder.classes_]
+
+            if man_path.exists():
+                with open(man_path, "r", encoding="utf-8") as f:
+                    manifest = json.load(f)
+                    self.feature_dimension = manifest.get("feature_dimension", 384)
+            else:
+                self.feature_dimension = 384
+
+            if not self.embedder.is_loaded:
+                self.embedder.load()
+
             self.is_trained = True
             return True
-        return False
+        except Exception:
+            self.is_trained = False
+            return False

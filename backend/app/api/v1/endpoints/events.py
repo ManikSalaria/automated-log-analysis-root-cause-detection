@@ -10,10 +10,14 @@ def get_parsed_events(
     offset: int = Query(0, ge=0),
     severity: Optional[str] = None,
     service: Optional[str] = None,
-    source_file: Optional[str] = None
+    source_file: Optional[str] = None,
+    file_id: Optional[int] = None,
+    order: Optional[str] = Query("desc", pattern="^(?i)(asc|desc)$")
 ):
     """
     Retrieve parsed structured log events for the Parser View in the dashboard.
+    Defaults to descending ID order so newly ingested events appear first.
+    Supports filtering by severity, service, source_file, and file_id.
     """
     conn = get_connection()
     cursor = conn.cursor()
@@ -37,8 +41,12 @@ def get_parsed_events(
         params.append(f"%{service}%")
 
     if source_file:
-        query += " AND f.filename = ?"
-        params.append(source_file)
+        query += " AND (f.filename = ? OR f.filename LIKE ?)"
+        params.extend([source_file, f"%{source_file}%"])
+
+    if file_id is not None:
+        query += " AND e.file_id = ?"
+        params.append(file_id)
 
     # Count total matching
     count_query = query.replace(
@@ -48,7 +56,8 @@ def get_parsed_events(
     cursor.execute(count_query, params)
     total_count = cursor.fetchone()[0]
 
-    query += " ORDER BY e.id ASC LIMIT ? OFFSET ?;"
+    order_dir = "ASC" if order and order.lower() == "asc" else "DESC"
+    query += f" ORDER BY e.id {order_dir} LIMIT ? OFFSET ?;"
     params.extend([limit, offset])
 
     cursor.execute(query, params)

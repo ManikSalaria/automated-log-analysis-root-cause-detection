@@ -1,0 +1,25 @@
+{
+  "model_name": "TRACE Stage 3 (GraphSAGE)",
+  "architecture": "GraphSAGE (SAGEConv)",
+  "aggregation": "mean",
+  "num_layers": 2,
+  "hidden_channels": 128,
+  "feature_dimension": 412,
+  "classes": [
+    "AUTHENTICATION_SECURITY_ERROR",
+    "DATABASE_AND_CACHE_TIMEOUT",
+    "ENVIRONMENT_AND_PIPELINE_ERROR",
+    "INTERNAL_APPLICATION_LOGIC_ERROR",
+    "MESSAGE_BROKER_FAILURE",
+    "NETWORK_DEPENDENCY_FAILURE",
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR",
+    "RESOURCE_EXHAUSTION_CRASH",
+    "STORAGE_AND_IO_ERROR",
+    "TEST_ASSERTION_FAILURE"
+  ],
+  "dropout": 0.2,
+  "learning_rate": 0.005,
+  "weight_decay": 0.0001,
+  "epochs": 150,
+  "random_state": 42
+}

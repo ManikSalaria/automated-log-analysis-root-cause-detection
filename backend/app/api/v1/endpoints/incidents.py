@@ -10,10 +10,13 @@ def get_recent_incidents(
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     category: Optional[str] = None,
-    source_file: Optional[str] = None
+    source_file: Optional[str] = None,
+    job_name: Optional[str] = None,
+    build_number: Optional[str] = None
 ):
     """
     Retrieve persisted incidents from SQLite database with filtering and pagination.
+    Supports filtering by category, source_file, job_name, and build_number.
     """
     conn = get_connection()
     cursor = conn.cursor()
@@ -21,7 +24,10 @@ def get_recent_incidents(
     query = """
         SELECT i.id, i.incident_code, f.filename as source_file, i.start_line, i.end_line,
                i.primary_severity, i.failure_category, i.confidence, i.root_cause_candidate,
-               i.detected_signature, i.created_at
+               i.detected_signature, i.created_at,
+               COALESCE(i.job_name, f.job_name) as job_name,
+               COALESCE(i.build_number, f.build_number) as build_number,
+               f.build_status, f.build_url, f.repo_url, f.commit_sha
         FROM incidents i
         JOIN source_files f ON i.file_id = f.id
         WHERE 1=1
@@ -35,6 +41,14 @@ def get_recent_incidents(
     if source_file:
         query += " AND f.filename = ?"
         params.append(source_file)
+
+    if job_name:
+        query += " AND (f.job_name = ? OR i.job_name = ?)"
+        params.extend([job_name, job_name])
+
+    if build_number:
+        query += " AND (f.build_number = ? OR i.build_number = ?)"
+        params.extend([str(build_number), str(build_number)])
 
     query += " ORDER BY i.id DESC LIMIT ? OFFSET ?;"
     params.extend([limit, offset])
@@ -55,7 +69,13 @@ def get_recent_incidents(
             confidence=row["confidence"],
             root_cause_candidate=row["root_cause_candidate"],
             detected_signature=row["detected_signature"],
-            created_at=row["created_at"]
+            created_at=row["created_at"],
+            job_name=row["job_name"],
+            build_number=row["build_number"],
+            build_status=row["build_status"],
+            build_url=row["build_url"],
+            repo_url=row["repo_url"],
+            commit_sha=row["commit_sha"]
         )
         for row in rows
     ]
@@ -63,12 +83,15 @@ def get_recent_incidents(
 @router.get("/{incident_code}")
 def get_incident_by_code(incident_code: str):
     """
-    Retrieve detailed incident information including complete evidence text.
+    Retrieve detailed incident information including complete evidence text and CI/CD provenance.
     """
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT i.*, f.filename as source_file, f.source_type
+        SELECT i.*, f.filename as source_file, f.source_type,
+               COALESCE(i.job_name, f.job_name) as job_name,
+               COALESCE(i.build_number, f.build_number) as build_number,
+               f.build_status, f.build_url, f.repo_url, f.commit_sha
         FROM incidents i
         JOIN source_files f ON i.file_id = f.id
         WHERE i.incident_code = ?;

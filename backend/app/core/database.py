@@ -20,12 +20,47 @@ def get_connection() -> sqlite3.Connection:
     conn.execute("PRAGMA foreign_keys = ON;")
     return conn
 
+def migrate_database(conn: sqlite3.Connection):
+    """
+    Safely and idempotently adds missing columns to existing SQLite tables.
+    Preserves all existing records and guarantees backward compatibility.
+    """
+    cursor = conn.cursor()
+
+    # 1. Migrate source_files table
+    cursor.execute("PRAGMA table_info(source_files);")
+    source_cols = {row["name"] for row in cursor.fetchall()}
+    new_source_cols = [
+        ("job_name", "TEXT"),
+        ("build_number", "TEXT"),
+        ("build_status", "TEXT"),
+        ("build_url", "TEXT"),
+        ("repo_url", "TEXT"),
+        ("commit_sha", "TEXT")
+    ]
+    for col_name, col_type in new_source_cols:
+        if col_name not in source_cols:
+            cursor.execute(f"ALTER TABLE source_files ADD COLUMN {col_name} {col_type};")
+
+    # 2. Migrate incidents table
+    cursor.execute("PRAGMA table_info(incidents);")
+    inc_cols = {row["name"] for row in cursor.fetchall()}
+    new_inc_cols = [
+        ("job_name", "TEXT"),
+        ("build_number", "TEXT")
+    ]
+    for col_name, col_type in new_inc_cols:
+        if col_name not in inc_cols:
+            cursor.execute(f"ALTER TABLE incidents ADD COLUMN {col_name} {col_type};")
+
+    conn.commit()
+
 def init_database():
-    """Initializes the Review-1 SQLite database schema."""
+    """Initializes and migrates the SQLite database schema."""
     conn = get_connection()
     cursor = conn.cursor()
 
-    # 1. Source Files Ingestion Registry
+    # 1. Source Files Ingestion Registry (supports CI/CD provenance metadata)
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS source_files (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,7 +69,13 @@ def init_database():
         byte_size INTEGER NOT NULL,
         line_count INTEGER NOT NULL,
         sha256_hash TEXT NOT NULL,
-        ingested_at TEXT NOT NULL
+        ingested_at TEXT NOT NULL,
+        job_name TEXT,
+        build_number TEXT,
+        build_status TEXT,
+        build_url TEXT,
+        repo_url TEXT,
+        commit_sha TEXT
     );
     """)
 
@@ -77,6 +118,8 @@ def init_database():
         detected_signature TEXT NOT NULL,
         evidence_text TEXT NOT NULL,
         created_at TEXT NOT NULL,
+        job_name TEXT,
+        build_number TEXT,
         FOREIGN KEY (file_id) REFERENCES source_files(id) ON DELETE CASCADE
     );
     """)
@@ -102,8 +145,11 @@ def init_database():
     """)
 
     conn.commit()
+
+    # Safely migrate existing databases if columns are absent
+    migrate_database(conn)
     conn.close()
 
 if __name__ == "__main__":
     init_database()
-    print(f"Database successfully initialized at: {DB_FILE}")
+    print(f"Database successfully initialized and migrated at: {DB_FILE}")

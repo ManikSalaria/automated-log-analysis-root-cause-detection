@@ -1,0 +1,36 @@
+{
+  "dataset_name": "TRACE Leakage-Resistant Canonical Group Splits",
+  "split_method": "Canonical Signature Group Stratified Split",
+  "seed": 42,
+  "total_incidents": 374,
+  "train_count": 268,
+  "val_count": 49,
+  "test_count": 57,
+  "train_groups": 150,
+  "val_groups": 33,
+  "test_groups": 33,
+  "category_distribution": {
+    "ENVIRONMENT_AND_PIPELINE_ERROR": 137,
+    "STORAGE_AND_IO_ERROR": 76,
+    "NETWORK_DEPENDENCY_FAILURE": 45,
+    "DATABASE_AND_CACHE_TIMEOUT": 25,
+    "INTERNAL_APPLICATION_LOGIC_ERROR": 22,
+    "AUTHENTICATION_SECURITY_ERROR": 22,
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR": 18,
+    "TEST_ASSERTION_FAILURE": 13,
+    "MESSAGE_BROKER_FAILURE": 9,
+    "RESOURCE_EXHAUSTION_CRASH": 7
+  },
+  "test_category_distribution": {
+    "ENVIRONMENT_AND_PIPELINE_ERROR": 25,
+    "STORAGE_AND_IO_ERROR": 8,
+    "NETWORK_DEPENDENCY_FAILURE": 7,
+    "AUTHENTICATION_SECURITY_ERROR": 6,
+    "DATABASE_AND_CACHE_TIMEOUT": 3,
+    "INTERNAL_APPLICATION_LOGIC_ERROR": 3,
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR": 2,
+    "MESSAGE_BROKER_FAILURE": 1,
+    "RESOURCE_EXHAUSTION_CRASH": 1,
+    "TEST_ASSERTION_FAILURE": 1
+  }
+}

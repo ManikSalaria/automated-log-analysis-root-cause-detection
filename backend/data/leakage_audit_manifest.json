@@ -1,0 +1,441 @@
+{
+  "audit_name": "Phase 2.1 Leakage-Resistant ML Evaluation Audit",
+  "dataset_split": "Held-out Canonical Group Split (57 samples, 15.2%, zero duplicate or signature overlap)",
+  "sample_count": 57,
+  "leakage_eliminated": {
+    "exact_text_overlap": 0,
+    "signature_overlap": 0,
+    "group_overlap": 0
+  },
+  "baseline_metrics": {
+    "accuracy": 0.807,
+    "precision_macro": 0.7235,
+    "recall_macro": 0.7589,
+    "f1_macro": 0.7281,
+    "mean_latency_ms": 32.65,
+    "training_time_sec": 0.244,
+    "confusion_matrix": [
+      [
+        0,
+        0,
+        6,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        25,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        1,
+        5,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        7,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    ]
+  },
+  "xgboost_metrics": {
+    "accuracy": 0.7719,
+    "precision_macro": 0.6417,
+    "recall_macro": 0.7158,
+    "f1_macro": 0.6531,
+    "mean_latency_ms": 34.98,
+    "training_time_sec": 4.021,
+    "confusion_matrix": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        3,
+        0,
+        3,
+        0
+      ],
+      [
+        0,
+        2,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        23,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        1,
+        4,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    ]
+  },
+  "classes": [
+    "AUTHENTICATION_SECURITY_ERROR",
+    "DATABASE_AND_CACHE_TIMEOUT",
+    "ENVIRONMENT_AND_PIPELINE_ERROR",
+    "INTERNAL_APPLICATION_LOGIC_ERROR",
+    "MESSAGE_BROKER_FAILURE",
+    "NETWORK_DEPENDENCY_FAILURE",
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR",
+    "RESOURCE_EXHAUSTION_CRASH",
+    "STORAGE_AND_IO_ERROR",
+    "TEST_ASSERTION_FAILURE"
+  ],
+  "per_class_metrics": {
+    "AUTHENTICATION_SECURITY_ERROR": {
+      "support": 6,
+      "baseline": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "xgboost": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "DATABASE_AND_CACHE_TIMEOUT": {
+      "support": 3,
+      "baseline": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "xgboost": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8
+      }
+    },
+    "ENVIRONMENT_AND_PIPELINE_ERROR": {
+      "support": 25,
+      "baseline": {
+        "precision": 0.7353,
+        "recall": 1.0,
+        "f1": 0.8475
+      },
+      "xgboost": {
+        "precision": 1.0,
+        "recall": 0.92,
+        "f1": 0.9583
+      }
+    },
+    "INTERNAL_APPLICATION_LOGIC_ERROR": {
+      "support": 3,
+      "baseline": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "xgboost": {
+        "precision": 0.75,
+        "recall": 1.0,
+        "f1": 0.8571
+      }
+    },
+    "MESSAGE_BROKER_FAILURE": {
+      "support": 1,
+      "baseline": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "xgboost": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "NETWORK_DEPENDENCY_FAILURE": {
+      "support": 7,
+      "baseline": {
+        "precision": 1.0,
+        "recall": 0.7143,
+        "f1": 0.8333
+      },
+      "xgboost": {
+        "precision": 0.6667,
+        "recall": 0.5714,
+        "f1": 0.6154
+      }
+    },
+    "PLUGIN_DESCRIPTOR_RESOLUTION_ERROR": {
+      "support": 2,
+      "baseline": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "xgboost": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      }
+    },
+    "RESOURCE_EXHAUSTION_CRASH": {
+      "support": 1,
+      "baseline": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "xgboost": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    },
+    "STORAGE_AND_IO_ERROR": {
+      "support": 8,
+      "baseline": {
+        "precision": 1.0,
+        "recall": 0.875,
+        "f1": 0.9333
+      },
+      "xgboost": {
+        "precision": 0.6667,
+        "recall": 1.0,
+        "f1": 0.8
+      }
+    },
+    "TEST_ASSERTION_FAILURE": {
+      "support": 1,
+      "baseline": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "xgboost": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    }
+  },
+  "comparison_with_original_evaluation": {
+    "original_evaluation": {
+      "split_type": "Record-level naive stratified split (10 text duplicates crossing train/test)",
+      "baseline_accuracy": 0.9298,
+      "baseline_f1_macro": 0.9134,
+      "xgboost_accuracy": 0.9649,
+      "xgboost_f1_macro": 0.9567
+    },
+    "leakage_free_evaluation": {
+      "split_type": "Group-aware canonical split (0 duplicates or signatures crossing train/test)",
+      "baseline_accuracy": 0.807,
+      "baseline_f1_macro": 0.7281,
+      "xgboost_accuracy": 0.7719,
+      "xgboost_f1_macro": 0.6531
+    },
+    "accuracy_difference_baseline": -12.28,
+    "accuracy_difference_xgboost": -19.3,
+    "f1_difference_baseline": -18.53,
+    "f1_difference_xgboost": -30.36
+  },
+  "audit_takeaways": [
+    "Data leakage in the initial naive split accounted for an artificial accuracy inflation of ~12.3% on Baseline and ~19.3% on XGBoost.",
+    "In the leakage-free group-aware split, Baseline achieves 80.70% accuracy and 72.81% Macro-F1; XGBoost achieves 77.19% accuracy and 65.31% Macro-F1.",
+    "Baseline outperforms XGBoost on this dataset because the ground-truth labels are rule-derived keyword matches (e.g. status=502, kafka, storage), which bag-of-words captures directly.",
+    "Neither model generalizes to unseen AUTHENTICATION_SECURITY_ERROR formats (F1=0.0%), proving that genuine multi-run out-of-distribution evaluation is essential."
+  ],
+  "evaluated_at": "2026-10-15 19:47:41 UTC"
+}
