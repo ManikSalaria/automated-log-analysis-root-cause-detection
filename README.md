@@ -433,4 +433,3 @@ Detailed documentation guides are available in the [`docs/`](docs/) directory:
 - **Project:** TRACE — Automated Log Analysis and Root Cause Detection System using Machine Learning
 - **Repository:** [https://github.com/ManikSalaria/automated-log-analysis-root-cause-detection](https://github.com/ManikSalaria/automated-log-analysis-root-cause-detection)
 - **Primary Investigator:** Manik Salaria
-- **License:** MIT License
