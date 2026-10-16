@@ -36,10 +36,17 @@ class SentenceBertEmbedder:
         try:
             from sentence_transformers import SentenceTransformer
             self.cache_folder.mkdir(parents=True, exist_ok=True)
-            self.model = SentenceTransformer(
-                self.model_name,
-                cache_folder=str(self.cache_folder)
-            )
+            try:
+                self.model = SentenceTransformer(
+                    self.model_name,
+                    cache_folder=str(self.cache_folder),
+                    local_files_only=True
+                )
+            except Exception:
+                self.model = SentenceTransformer(
+                    self.model_name,
+                    cache_folder=str(self.cache_folder)
+                )
             # Verify embedding dimensionality
             sample_emb = self.model.encode(["probe verification"], show_progress_bar=False)
             if sample_emb.shape[-1] != self.dimension:

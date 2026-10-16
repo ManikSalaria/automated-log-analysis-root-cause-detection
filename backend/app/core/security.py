@@ -18,8 +18,8 @@ class SecretMasker:
         ("GITLAB_PAT", re.compile(r"\bglpat-[A-Za-z0-9\-]{20,}\b"), "<REDACTED:GITLAB_TOKEN>"),
         # Generic Bearer Tokens
         ("BEARER_TOKEN", re.compile(r"(?i)\bBearer\s+[A-Za-z0-9\-\._~\+\/]+=*", re.IGNORECASE), "Bearer <REDACTED:TOKEN>"),
-        # Password key-value pairs (JSON, query, log output)
-        ("PASSWORD_KV", re.compile(r"""(?i)(["']?(?:password|passwd|pwd|secret|api_key|apikey|private_key|token|access_token)["']?\s*[:=]\s*["']?)([^"',\s\}]{3,})""", re.IGNORECASE), r"\1<REDACTED:SECRET>"),
+        # Password key-value pairs (JSON, query, log output) - enforces word boundaries to preserve technical identifiers
+        ("PASSWORD_KV", re.compile(r"""(?i)(["']?\b(?:password|passwd|pwd|secret|api_key|apikey|private_key|token|access_token)\b["']?\s*[:=]\s*["']?)(?!<REDACTED)([^"',\s\}]{3,})""", re.IGNORECASE), r"\1<REDACTED:SECRET>"),
         # Pre-flagged placeholder patterns (as seen in enterprise CI logs)
         ("ENTERPRISE_SECRET_MARKER", re.compile(r"\*\*\*(?:POTENTIAL_SECRET|GMAIL_APP_PASSWORD|[A-Z_]+)\*\*\*"), "<REDACTED:SECRET>"),
         # API Keys in UUID/Hex format when labeled as apiKey

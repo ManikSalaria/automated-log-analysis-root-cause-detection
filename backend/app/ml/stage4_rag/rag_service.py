@@ -73,19 +73,23 @@ def execute_rag_retrieval(request: RAGQueryRequest) -> RAGQueryResponse:
 
     # 2. Retrieve candidates
     was_cold_start = (_rag_retriever_instance is None)
+    t_load_start = time.perf_counter()
     retriever = get_rag_retriever()
+    cold_start_latency_ms = round((time.perf_counter() - t_load_start) * 1000.0, 2) if was_cold_start else 0.0
     exclude_codes = set(request.exclude_incident_codes or [])
 
     t_retrieval_start = time.perf_counter()
     mode = (request.retrieval_mode or "hybrid").strip().lower()
     if mode == "semantic_only":
-        raw_results = retriever.retrieve_semantic_only(
+        raw_results, meta_info = retriever.retrieve_semantic_only(
             query_text=sanitized_query,
             top_k=request.top_k,
             exclude_incident_codes=exclude_codes,
             similarity_threshold=request.similarity_threshold,
+            diversify=True,
+            return_meta=True,
         )
-        # Adapt keys
+        # Adapt keys: explicitly set hybrid_score and bm25_score to None
         retrieved_list = []
         for r in raw_results:
             retrieved_list.append({
@@ -99,17 +103,22 @@ def execute_rag_retrieval(request: RAGQueryRequest) -> RAGQueryResponse:
                 "start_line": r.get("start_line", 0),
                 "end_line": r.get("end_line", 0),
                 "text": r.get("text", ""),
-                "hybrid_score": r.get("score", 0.0),
-                "semantic_similarity": r.get("score", 0.0),
-                "bm25_score": 0.0,
+                "hybrid_score": None,
+                "semantic_similarity": round(float(r.get("score", 0.0)), 4),
+                "bm25_score": None,
                 "category_match": (r.get("failure_category") == request.query_category) if request.query_category else False,
+                "duplicate_count": r.get("duplicate_count", 0),
+                "duplicate_incident_codes": r.get("duplicate_incident_codes", []),
             })
     elif mode == "bm25_only":
-        raw_results = retriever.retrieve_bm25_only(
+        raw_results, meta_info = retriever.retrieve_bm25_only(
             query_text=sanitized_query,
             top_k=request.top_k,
             exclude_incident_codes=exclude_codes,
+            diversify=True,
+            return_meta=True,
         )
+        # Adapt keys: explicitly set hybrid_score and semantic_similarity to None
         retrieved_list = []
         for r in raw_results:
             retrieved_list.append({
@@ -123,19 +132,23 @@ def execute_rag_retrieval(request: RAGQueryRequest) -> RAGQueryResponse:
                 "start_line": r.get("start_line", 0),
                 "end_line": r.get("end_line", 0),
                 "text": r.get("text", ""),
-                "hybrid_score": r.get("score", 0.0),
-                "semantic_similarity": 0.0,
-                "bm25_score": r.get("score", 0.0),
+                "hybrid_score": None,
+                "semantic_similarity": None,
+                "bm25_score": round(float(r.get("score", 0.0)), 2),
                 "category_match": (r.get("failure_category") == request.query_category) if request.query_category else False,
+                "duplicate_count": r.get("duplicate_count", 0),
+                "duplicate_incident_codes": r.get("duplicate_incident_codes", []),
             })
     else:
         # Default: Hybrid RRF
-        retrieved_list = retriever.retrieve(
+        retrieved_list, meta_info = retriever.retrieve(
             query_text=sanitized_query,
             top_k=request.top_k,
             query_category=request.query_category,
             exclude_incident_codes=exclude_codes,
             similarity_threshold=request.similarity_threshold,
+            diversify=True,
+            return_meta=True,
         )
     retrieval_latency_ms = round((time.perf_counter() - t_retrieval_start) * 1000.0, 2)
 
@@ -170,6 +183,8 @@ def execute_rag_retrieval(request: RAGQueryRequest) -> RAGQueryResponse:
             semantic_similarity=item["scores"]["semantic_similarity"],
             bm25_score=item["scores"]["bm25"],
             category_match=item["scores"]["category_match"],
+            duplicate_count=item.get("duplicate_count", 0),
+            duplicate_incident_codes=item.get("duplicate_incident_codes", []),
             supporting_log_lines=item.get("supporting_log_lines", []),
         ))
 
@@ -182,7 +197,11 @@ def execute_rag_retrieval(request: RAGQueryRequest) -> RAGQueryResponse:
         latency_ms=elapsed_ms,
         retrieval_latency_ms=retrieval_latency_ms,
         context_latency_ms=context_latency_ms,
+        cold_start_latency_ms=cold_start_latency_ms,
         is_cold_start=was_cold_start,
+        is_diversified=meta_info.get("is_diversified", True),
+        distinct_clusters_count=meta_info.get("distinct_clusters_count", len(result_items)),
+        diversification_summary=meta_info.get("diversification_summary"),
         results=result_items,
         category_distribution=context_pkg.get("category_distribution", {}),
         provenance_summary=context_pkg.get("provenance_summary", {}),

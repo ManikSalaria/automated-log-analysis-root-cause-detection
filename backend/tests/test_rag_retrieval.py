@@ -8,6 +8,17 @@ Verifies:
 5. FastAPI RAG endpoints (/api/v1/rag/retrieve, /corpus-stats, /evaluation-metrics).
 """
 
+import sys
+from pathlib import Path
+
+# Add backend and project root to sys.path
+root_dir = Path(__file__).resolve().parent.parent.parent
+backend_dir = root_dir / "backend"
+if str(backend_dir) not in sys.path:
+    sys.path.insert(0, str(backend_dir))
+if str(root_dir) not in sys.path:
+    sys.path.insert(0, str(root_dir))
+
 import pytest
 import numpy as np
 from fastapi.testclient import TestClient
@@ -19,6 +30,7 @@ from app.ml.stage4_rag.retrieval_corpus import CorpusIncident, load_csv_corpus
 from app.ml.stage4_rag.context_builder import build_evidence_context
 from app.schemas.rag_schema import RAGQueryRequest
 from app.core.config import settings
+from app.core.security import SecretMasker
 from main import app
 
 
@@ -272,3 +284,205 @@ def test_api_rag_evaluation_metrics(test_client):
         data = response.json()
         assert "evaluation_summary" in data
         assert "hybrid" in data["evaluation_summary"]
+
+
+# ---------------------------------------------------------
+# 6. TARGETED TESTS: SCORE LABELS, MODES, DIVERSIFICATION,
+#    LATENCY REPORTING & TECHNICAL IDENTIFIERS
+# ---------------------------------------------------------
+
+def test_rag_mode_score_labels_and_nullability(test_client):
+    """Verify that scores are accurately reported and never falsely labeled as hybrid."""
+    query = "AssertionError: storage cluster id is missing from config in datastore alletra_datastore_abgrdg_dnd creation"
+
+    # 1. Semantic Only Mode
+    resp_sem = test_client.post("/api/v1/rag/retrieve", json={
+        "query_text": query,
+        "top_k": 3,
+        "retrieval_mode": "semantic_only"
+    })
+    assert resp_sem.status_code == 200, resp_sem.text
+    data_sem = resp_sem.json()
+    assert data_sem["retrieval_mode"] == "semantic_only"
+    for item in data_sem["results"]:
+        assert item["hybrid_score"] is None, "hybrid_score must be None in dense semantic only mode"
+        assert item["semantic_similarity"] is not None, "semantic_similarity must be populated"
+        assert 0.0 <= item["semantic_similarity"] <= 1.0, f"semantic_similarity out of bounds: {item['semantic_similarity']}"
+        assert item["bm25_score"] is None, "bm25_score must be None in dense semantic only mode"
+
+    # 2. BM25 Only Mode
+    resp_bm = test_client.post("/api/v1/rag/retrieve", json={
+        "query_text": query,
+        "top_k": 3,
+        "retrieval_mode": "bm25_only"
+    })
+    assert resp_bm.status_code == 200, resp_bm.text
+    data_bm = resp_bm.json()
+    assert data_bm["retrieval_mode"] == "bm25_only"
+    for item in data_bm["results"]:
+        assert item["hybrid_score"] is None, "hybrid_score must be None in lexical BM25 only mode"
+        assert item["semantic_similarity"] is None, "semantic_similarity must be None in lexical BM25 only mode"
+        assert item["bm25_score"] is not None, "bm25_score must be populated in BM25 only mode"
+        assert item["bm25_score"] >= 0.0, f"bm25_score must be non-negative: {item['bm25_score']}"
+
+    # 3. Hybrid Mode
+    resp_hyb = test_client.post("/api/v1/rag/retrieve", json={
+        "query_text": query,
+        "top_k": 3,
+        "retrieval_mode": "hybrid"
+    })
+    assert resp_hyb.status_code == 200, resp_hyb.text
+    data_hyb = resp_hyb.json()
+    assert data_hyb["retrieval_mode"] == "hybrid"
+    for item in data_hyb["results"]:
+        assert item["hybrid_score"] is not None, "hybrid_score must be populated in hybrid mode"
+        assert item["hybrid_score"] > 0.0, "hybrid_score must be greater than 0"
+        assert item["semantic_similarity"] is not None
+        assert item["bm25_score"] is not None
+
+
+def test_rag_duplicate_handling_and_diversification(test_client):
+    """Verify that near-duplicate failure episodes from the same log are diversified and clustered."""
+    query = (
+        "2026-02-25 21:12:39 MST test_vme_storage_plugin_e2e.py:320 ERROR : Actual error is: "
+        "storage cluster id is missing from config in datastore alletra_datastore_abgrdg_dnd creation "
+        "assert 'hpe_storage_cluster_id' in {'enableransomware': False, 'hpe_storage_cpg': 'SSD_r6'}"
+    )
+
+    resp = test_client.post("/api/v1/rag/retrieve", json={
+        "query_text": query,
+        "top_k": 5,
+        "retrieval_mode": "hybrid"
+    })
+    assert resp.status_code == 200, resp.text
+    data = resp.json()
+
+    assert data["is_diversified"] is True
+    assert data["distinct_clusters_count"] >= 1
+    assert "Diversified" in data["diversification_summary"] or "distinct" in data["diversification_summary"]
+
+    # Verify that the top 5 results do not contain identical adjacent line spans in the same source file
+    results = data["results"]
+    for i in range(len(results)):
+        for j in range(i + 1, len(results)):
+            item_a = results[i]
+            item_b = results[j]
+            if item_a["source_file"] == item_b["source_file"] and item_a["source_file"]:
+                # Ensure they are not adjacent lines from the exact same failure block (e.g. lines 48-52)
+                line_dist = abs(item_a["start_line"] - item_b["start_line"])
+                assert line_dist > 25 or item_a["incident_code"] != item_b["incident_code"], (
+                    f"Near-duplicates {item_a['incident_code']} and {item_b['incident_code']} "
+                    f"crowded top results at lines {item_a['start_line']} and {item_b['start_line']}"
+                )
+
+    # Verify that at least one item clustered near-duplicates and reported provenance
+    total_dups = sum(item["duplicate_count"] for item in results)
+    assert total_dups > 0, "Expected at least one candidate to record clustered near-duplicate incidents"
+    top_item = results[0]
+    assert isinstance(top_item["duplicate_incident_codes"], list)
+
+
+def test_rag_diversification_fallback_when_few_distinct_results():
+    """Verify that diversification does not hide useful evidence when fewer distinct items exist."""
+    corpus = [
+        CorpusIncident(
+            incident_code="INC-DUP-01",
+            source_file="pipeline.log",
+            source_type="TEST",
+            failure_category="STORAGE_AND_IO_ERROR",
+            root_cause_candidate="Datastore failure",
+            evidence_signature="storage cluster id missing",
+            text="ERROR datastore creation failed: storage cluster id missing in config",
+            start_line=10,
+            end_line=11,
+        ),
+        CorpusIncident(
+            incident_code="INC-DUP-02",
+            source_file="pipeline.log",
+            source_type="TEST",
+            failure_category="STORAGE_AND_IO_ERROR",
+            root_cause_candidate="Datastore failure",
+            evidence_signature="storage cluster id missing",
+            text="ERROR datastore creation failed: storage cluster id missing in config retry 1",
+            start_line=12,
+            end_line=13,
+        ),
+    ]
+
+    retriever = HybridRetriever(alpha=0.5, beta=0.5, gamma=0.0)
+    retriever.build_index(corpus)
+
+    # Request top_k=2 with return_meta=True
+    results, meta = retriever.retrieve(
+        "storage cluster id missing in config",
+        top_k=2,
+        diversify=True,
+        return_meta=True
+    )
+
+    # Must return all 2 items to fulfill requested top_k without hiding evidence
+    assert len(results) == 2
+    assert meta["is_diversified"] is True
+    assert meta["distinct_clusters_count"] == 1
+    assert "additional variant run" in meta["diversification_summary"] or "retained" in meta["diversification_summary"]
+
+
+def test_rag_latency_reporting(test_client):
+    """Verify accurate separation of cold-start and warm retrieval latency."""
+    resp = test_client.post("/api/v1/rag/retrieve", json={
+        "query_text": "HikariPool connection timeout pool exhausted",
+        "top_k": 2,
+        "retrieval_mode": "hybrid"
+    })
+    assert resp.status_code == 200, resp.text
+    data = resp.json()
+
+    assert "latency_ms" in data
+    assert "retrieval_latency_ms" in data
+    assert "context_latency_ms" in data
+    assert "cold_start_latency_ms" in data
+    assert "is_cold_start" in data
+
+    # Warm latency checks
+    assert data["retrieval_latency_ms"] <= data["latency_ms"]
+    if not data["is_cold_start"]:
+        assert data["cold_start_latency_ms"] == 0.0
+        # Warm ranking should execute in under 500ms
+        assert data["retrieval_latency_ms"] < 500.0
+
+
+def test_technical_identifier_preservation_and_secret_masking():
+    """Verify technical identifiers like hpe_storage_cluster_id are preserved while secrets are redacted."""
+    # 1. Technical identifiers and config keys must NOT be masked
+    log_with_technical_keys = (
+        "assert 'hpe_storage_cluster_id' in {'enableransomware': False, 'hpe_storage_cpg': 'SSD_r6'}\n"
+        "cluster_id: 42, datastore_id: 108, client_id=svc_prod, hpe_storage_cluster_id='alletra-01'"
+    )
+    sanitized_tech = SecretMasker.sanitize(log_with_technical_keys)
+    assert "hpe_storage_cluster_id" in sanitized_tech
+    assert "enableransomware" in sanitized_tech
+    assert "hpe_storage_cpg" in sanitized_tech
+    assert "client_id=svc_prod" in sanitized_tech
+    assert "alletra-01" in sanitized_tech
+    assert "<REDACTED:SECRET>" not in sanitized_tech
+
+    # Audit must find 0 leaks in purely technical configuration logs
+    leak_audit = SecretMasker.audit_leaks(log_with_technical_keys)
+    assert leak_audit["clean"] is True
+    assert leak_audit["leak_count"] == 0
+
+    # 2. Genuine passwords, tokens, and placeholders must continue to be masked
+    dirty_log = (
+        "password=\"SuperSecretPassword123!\"\n"
+        "api_key: \"abcdef0123456789abcdef0123456789\"\n"
+        "token=ghp_1234567890abcdefghijklmnopqrstuvwxyz\n"
+        "***GMAIL_APP_PASSWORD***\n"
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.c2lnbmF0dXJl\n"
+        "raw_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.c2lnbmF0dXJl"
+    )
+    sanitized_dirty = SecretMasker.sanitize(dirty_log)
+    assert "SuperSecretPassword123!" not in sanitized_dirty
+    assert "<REDACTED:SECRET>" in sanitized_dirty
+    assert "<REDACTED:GITHUB_TOKEN>" in sanitized_dirty
+    assert "<REDACTED:TOKEN>" in sanitized_dirty
+    assert "<REDACTED:JWT>" in sanitized_dirty

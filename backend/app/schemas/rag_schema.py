@@ -31,10 +31,12 @@ class RetrievedIncidentItem(BaseModel):
     start_line: int
     end_line: int
     evidence_text: str
-    hybrid_score: float
-    semantic_similarity: float
-    bm25_score: float
+    hybrid_score: Optional[float] = Field(None, description="Fused RRF score, populated only when hybrid retrieval is used")
+    semantic_similarity: Optional[float] = Field(None, description="Dense SBERT cosine similarity, populated for hybrid or dense modes")
+    bm25_score: Optional[float] = Field(None, description="Sparse BM25 lexical score, populated for hybrid or sparse modes")
     category_match: bool
+    duplicate_count: int = Field(0, description="Count of near-duplicate occurrences clustered under this failure signature")
+    duplicate_incident_codes: List[str] = Field(default_factory=list, description="Incident codes of near-duplicate occurrences from the same source log or signature")
     supporting_log_lines: List[Dict[str, Any]] = Field(default_factory=list)
 
 
@@ -48,7 +50,11 @@ class RAGQueryResponse(BaseModel):
     latency_ms: float
     retrieval_latency_ms: Optional[float] = Field(None, description="Pure search and ranking latency in milliseconds")
     context_latency_ms: Optional[float] = Field(None, description="SQLite context window retrieval latency in milliseconds")
+    cold_start_latency_ms: Optional[float] = Field(None, description="Model loading and index compilation latency in milliseconds if cold start")
     is_cold_start: bool = Field(False, description="Whether this request triggered initial model loading or index building")
+    is_diversified: bool = Field(True, description="Whether signature-aware diversification and near-duplicate grouping was applied")
+    distinct_clusters_count: int = Field(0, description="Number of distinct failure signature clusters represented in results")
+    diversification_summary: Optional[str] = Field(None, description="Human-readable explanation of diversification and distinct vs duplicate results")
     results: List[RetrievedIncidentItem]
     category_distribution: Dict[str, int] = Field(default_factory=dict)
     provenance_summary: Dict[str, List[str]] = Field(default_factory=dict)

@@ -71,11 +71,13 @@ def build_evidence_context(
             "start_line": result.get("start_line", 0),
             "end_line": result.get("end_line", 0),
             "scores": {
-                "hybrid": result.get("hybrid_score", 0.0),
-                "semantic_similarity": result.get("semantic_similarity", 0.0),
-                "bm25": result.get("bm25_score", 0.0),
+                "hybrid": result.get("hybrid_score"),
+                "semantic_similarity": result.get("semantic_similarity"),
+                "bm25": result.get("bm25_score"),
                 "category_match": result.get("category_match", False),
             },
+            "duplicate_count": result.get("duplicate_count", 0),
+            "duplicate_incident_codes": result.get("duplicate_incident_codes", []),
             "supporting_log_lines": [],
         }
 
@@ -141,8 +143,9 @@ def _fetch_surrounding_log_lines(
     if not source_file or start_line <= 0:
         return []
 
+    conn = None
     try:
-        conn = get_connection()
+        conn = get_connection(timeout=5.0)
         cursor = conn.cursor()
 
         window_start = max(1, start_line - context_window)
@@ -160,7 +163,6 @@ def _fetch_surrounding_log_lines(
         """, (source_file, window_start, window_end, max_lines))
 
         rows = cursor.fetchall()
-        conn.close()
 
         return [
             {
@@ -177,6 +179,9 @@ def _fetch_surrounding_log_lines(
         ]
     except Exception:
         return []
+    finally:
+        if conn:
+            conn.close()
 
 
 def format_context_for_display(context: Dict[str, Any]) -> str:

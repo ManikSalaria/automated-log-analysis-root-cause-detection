@@ -36,23 +36,25 @@ from app.schemas.synthesis_schema import (
 
 def load_incident_from_db(incident_code: str) -> Dict[str, Any]:
     """Retrieve full incident record and joined source file metadata from SQLite."""
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("""
-        SELECT i.*, f.filename as source_file, f.source_type
-        FROM incidents i
-        JOIN source_files f ON i.file_id = f.id
-        WHERE i.incident_code = ?;
-    """, (incident_code,))
-    row = cursor.fetchone()
-    conn.close()
+    conn = get_connection(timeout=10.0)
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT i.*, f.filename as source_file, f.source_type
+            FROM incidents i
+            JOIN source_files f ON i.file_id = f.id
+            WHERE i.incident_code = ?;
+        """, (incident_code,))
+        row = cursor.fetchone()
 
-    if not row:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Incident with code '{incident_code}' not found in registry."
-        )
-    return dict(row)
+        if not row:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Incident with code '{incident_code}' not found in registry."
+            )
+        return dict(row)
+    finally:
+        conn.close()
 
 
 def execute_synthesis_pipeline(request: SynthesizeRequest) -> SynthesizeResponse:

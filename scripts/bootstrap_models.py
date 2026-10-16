@@ -15,6 +15,8 @@ Usage:
 import sys
 import time
 import argparse
+import re
+from typing import Optional
 from pathlib import Path
 import pandas as pd
 import numpy as np
@@ -55,9 +57,9 @@ def check_artifacts_exist() -> bool:
     return all(p.exists() for p in required)
 
 
-def seed_demo_database():
-    """Seed the SQLite database with parsed events from tracked demo logs if empty."""
-    conn = get_connection()
+def seed_demo_database(db_path: Optional[Path] = None):
+    """Seed the SQLite database with parsed events and failure incidents from tracked demo logs if empty."""
+    conn = get_connection(db_path=db_path)
     c = conn.cursor()
     c.execute("SELECT COUNT(*) FROM source_files;")
     file_count = c.fetchone()[0]
@@ -72,6 +74,9 @@ def seed_demo_database():
         ("demo_jenkins_build.log", "JENKINS_BUILD_LOG", "trace-ci-pipeline", "101"),
         ("jenkins_gist_crash.log", "JENKINS_JVM_CRASH", "jenkins-core", "42")
     ]
+
+    baseline_model = BaselineTfidfRandomForest()
+    baseline_loaded = baseline_model.load()
 
     for fname, source_type, job_name, build_num in demo_files:
         fpath = settings.RAW_DATA_DIR / fname
@@ -90,10 +95,13 @@ def seed_demo_database():
         file_id = c.lastrowid
 
         events_to_insert = []
+        parsed_entries = []
         for line_no, raw_line in enumerate(lines, 1):
             if not raw_line.strip():
+                parsed_entries.append(None)
                 continue
             entry = LogParserEngine.parse_line(raw_line)
+            parsed_entries.append(entry)
             # Mask raw secrets before persistence
             masked_raw = SecretMasker.sanitize(raw_line, mask_ips=True) if not settings.ALLOW_RAW_LOG_RETENTION else raw_line
             events_to_insert.append((
@@ -109,9 +117,85 @@ def seed_demo_database():
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         """, events_to_insert)
 
+        # Detect incidents and insert into incidents table
+        i = 0
+        incidents_data = []
+        while i < len(lines):
+            line = lines[i]
+            entry = parsed_entries[i] if i < len(parsed_entries) else None
+            if LogParserEngine.is_incident_start(line, entry):
+                start_line = i + 1
+                block = [line]
+                j = i + 1
+                while j < len(lines):
+                    next_l = lines[j]
+                    next_entry = parsed_entries[j] if j < len(parsed_entries) else None
+                    if not next_l.strip() or next_l.startswith(("[INFO]", "[WARNING]", "[DEBUG]")):
+                        break
+
+                    is_continuation = (
+                        next_l.startswith(("\t", "   ", "E   ", "Caused by:", "Caused:", "Traceback", "assert ")) or
+                        "at " in next_l or next_l.strip().startswith("at ") or
+                        next_l.startswith("[ERROR]") or
+                        (next_entry and next_entry.level in ("ERROR", "CRITICAL", "SEVERE", "FATAL")) or
+                        bool(re.match(r"^(?:java\.[a-zA-Z0-9_\.]+|org\.[a-zA-Z0-9_\.]+|com\.[a-zA-Z0-9_\.]+|[a-zA-Z0-9_\.]+(?:Exception|Error|Failure))", next_l.strip()))
+                    )
+                    if not is_continuation:
+                        break
+
+                    block.append(next_l)
+                    j += 1
+
+                sanitized_block = SecretMasker.sanitize("\n".join(block), mask_ips=True)
+                pred = baseline_model.predict(sanitized_block) if baseline_loaded else {"predicted_category": "UNKNOWN", "confidence": 0.0}
+                rca = RootCauseCandidateAnalyzer.analyze(sanitized_block, primary_category=pred["predicted_category"])
+
+                pred_cat = pred["predicted_category"]
+                if pred_cat == "UNKNOWN" and rca.get("root_cause_candidate"):
+                    pred_cat = rca.get("primary_category", "UNKNOWN")
+
+                incidents_data.append({
+                    "start_line": start_line,
+                    "end_line": j,
+                    "predicted_category": pred_cat,
+                    "confidence": pred["confidence"] if pred["confidence"] > 0 else 0.85,
+                    "root_cause_candidate": rca["root_cause_candidate"],
+                    "detected_signature": sanitized_block[:150].strip(),
+                    "evidence_text": sanitized_block
+                })
+                i = j
+            else:
+                i += 1
+
+        final_incidents = [
+            (
+                f"INC-{file_id:02d}-{inc['start_line']:04d}",
+                file_id,
+                inc["start_line"],
+                inc["end_line"],
+                "ERROR",
+                inc["predicted_category"],
+                inc["confidence"],
+                inc["root_cause_candidate"],
+                inc["detected_signature"],
+                inc["evidence_text"],
+                job_name,
+                build_num
+            )
+            for inc in incidents_data
+        ]
+        if final_incidents:
+            c.executemany("""
+                INSERT OR REPLACE INTO incidents (
+                    incident_code, file_id, start_line, end_line, primary_severity,
+                    failure_category, confidence, root_cause_candidate, detected_signature,
+                    evidence_text, created_at, job_name, build_number
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?);
+            """, final_incidents)
+
     conn.commit()
     conn.close()
-    print("  - Seeded demo events successfully.")
+    print("  - Seeded demo events and incidents successfully.")
 
 
 def bootstrap_stage1(train_df: pd.DataFrame):

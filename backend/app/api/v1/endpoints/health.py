@@ -21,8 +21,9 @@ def get_system_health():
         "incidents_count": 0
     }
 
+    conn = None
     try:
-        conn = get_connection()
+        conn = get_connection(timeout=5.0)
         c = conn.cursor()
         c.execute("SELECT COUNT(*) FROM source_files;")
         db_stats["source_files_count"] = c.fetchone()[0]
@@ -31,9 +32,11 @@ def get_system_health():
         c.execute("SELECT COUNT(*) FROM incidents;")
         db_stats["incidents_count"] = c.fetchone()[0]
         db_stats["connected"] = True
-        conn.close()
     except Exception:
         db_stats["connected"] = False
+    finally:
+        if conn:
+            conn.close()
 
     llm_info = {"provider": settings.TRACE_LLM_PROVIDER, "is_available": False}
     try:

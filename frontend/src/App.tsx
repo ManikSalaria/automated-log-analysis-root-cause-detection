@@ -13,7 +13,7 @@ const AUTHENTIC_PRESETS = [
   {
     title: "1. HPE Jenkins Qualification Failure (Build #157)",
     file: "Jenkins_Log_Under_1MB.txt",
-    snippet: `2026-02-25 21:12:39 MST test_vme_storage_plugin_e2e.py:320 ERROR : Actual error is: storage cluster id is missing from config in datastore alletra_datastore_abgrdg_dnd creation assert 'hpe_storage_cluster_id' in {'***GMAIL_APP_PASSWORD***': False, 'hpe_storage_cpg': 'SSD_r6', 'protocolType': 'iSCSI'}\nAssertionError: storage cluster id is missing from config in datastore alletra_datastore_abgrdg_dnd creation\nFAILED morpheus_automation/tests/api/test_vme_storage_plugin_e2e.py::TestVMEStoragePlugin::test_create_update_delete_datastore[False]`
+    snippet: `2026-02-25 21:12:39 MST test_vme_storage_plugin_e2e.py:320 ERROR : Actual error is: storage cluster id is missing from config in datastore alletra_datastore_abgrdg_dnd creation assert 'hpe_storage_cluster_id' in {'enableransomware': False, 'hpe_storage_cpg': 'SSD_r6', 'protocolType': 'iSCSI'}\nAssertionError: storage cluster id is missing from config in datastore alletra_datastore_abgrdg_dnd creation\nFAILED morpheus_automation/tests/api/test_vme_storage_plugin_e2e.py::TestVMEStoragePlugin::test_create_update_delete_datastore[False]`
   },
   {
     title: "2. Microservice Payment Dependency Cascade",
@@ -233,7 +233,7 @@ export default function App() {
 
   const handleFileUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedFile) return;
+    if (!selectedFile || isUploading) return;
     setIsUploading(true);
     setUploadStatus(null);
     try {
@@ -339,14 +339,16 @@ export default function App() {
               <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-1">
                 <span className="text-[11px] uppercase tracking-wider text-slate-400">Total Ingested Events</span>
                 <p className="text-2xl font-bold text-cyan-400 font-mono">
-                  {healthData?.database?.parsed_events_count?.toLocaleString() || "5,365"}
+                  {healthData?.database?.parsed_events_count !== undefined ? healthData.database.parsed_events_count.toLocaleString() : "—"}
                 </p>
-                <span className="text-[10px] text-slate-400 block">Across 3 authentic raw files</span>
+                <span className="text-[10px] text-slate-400 block font-mono">
+                  Across {healthData?.database?.source_files_count ?? 0} ingested file{healthData?.database?.source_files_count === 1 ? '' : 's'}
+                </span>
               </div>
               <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-1">
                 <span className="text-[11px] uppercase tracking-wider text-slate-400">Detected Failure Incidents</span>
                 <p className="text-2xl font-bold text-amber-400 font-mono">
-                  {healthData?.database?.incidents_count || "374"}
+                  {healthData?.database?.incidents_count !== undefined ? healthData.database.incidents_count.toLocaleString() : "—"}
                 </p>
                 <span className="text-[10px] text-slate-400 block">Identified by structural parser</span>
               </div>
@@ -1200,10 +1202,10 @@ Authorization: Bearer <REDACTED:TOKEN>`}
                         </span>
                       </div>
                       <div className="flex flex-wrap items-center gap-3 text-slate-400 font-mono text-[11px]">
-                        <span>Total Latency: <strong className="text-slate-200">{ragResult.latency_ms} ms</strong></span>
+                        <span>Total Request: <strong className="text-slate-200">{ragResult.latency_ms} ms</strong></span>
                         {ragResult.retrieval_latency_ms !== undefined && ragResult.retrieval_latency_ms !== null && (
                           <span className="text-cyan-400">
-                            Ranking: <strong className="text-cyan-300">{ragResult.retrieval_latency_ms} ms</strong>
+                            Warm Ranking: <strong className="text-cyan-300">{ragResult.retrieval_latency_ms} ms</strong>
                           </span>
                         )}
                         {ragResult.context_latency_ms !== undefined && ragResult.context_latency_ms !== null && (
@@ -1212,9 +1214,13 @@ Authorization: Bearer <REDACTED:TOKEN>`}
                           </span>
                         )}
                         <span>Mode: <strong className="text-cyan-300">{ragResult.retrieval_mode}</strong></span>
-                        {ragResult.is_cold_start && (
-                          <span className="px-1.5 py-0.5 rounded bg-amber-950/70 text-amber-300 border border-amber-800 text-[10px]" title="Cold-start includes model loading; subsequent warm queries run at ~24ms">
-                            Cold-Start Init
+                        {ragResult.is_cold_start ? (
+                          <span className="px-1.5 py-0.5 rounded bg-amber-950/70 text-amber-300 border border-amber-800 text-[10px]" title={`Cold-start includes model loading (${ragResult.cold_start_latency_ms || 0} ms); subsequent warm queries run at ~20-60 ms`}>
+                            Cold Start ({ragResult.cold_start_latency_ms ? `${ragResult.cold_start_latency_ms} ms load` : 'Model Load'})
+                          </span>
+                        ) : (
+                          <span className="px-1.5 py-0.5 rounded bg-emerald-950/70 text-emerald-300 border border-emerald-800 text-[10px]" title="Model cached in-memory; warm ranking execution">
+                            Warm Cache
                           </span>
                         )}
                         <span className="flex items-center gap-1 text-emerald-400">
@@ -1223,6 +1229,17 @@ Authorization: Bearer <REDACTED:TOKEN>`}
                         </span>
                       </div>
                     </div>
+
+                    {/* Result Diversification Summary Banner */}
+                    {ragResult.diversification_summary && (
+                      <div className="bg-slate-900/60 border border-slate-800/80 rounded-lg px-3.5 py-2 text-xs font-mono text-cyan-300/90 flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                          <span>Result Diversification: {ragResult.diversification_summary}</span>
+                        </div>
+                        <span className="text-[10px] text-slate-400">Provenance Preserved</span>
+                      </div>
+                    )}
 
                     {/* Retrieved Cards List */}
                     <div className="space-y-4">
@@ -1245,17 +1262,39 @@ Authorization: Bearer <REDACTED:TOKEN>`}
                               </span>
                             </div>
 
-                            {/* Multi-Signal Pills */}
+                            {/* Mode-Specific Signal Pills */}
                             <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-mono">
-                              <span className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
-                                Hybrid: {item.hybrid_score.toFixed(4)}
-                              </span>
-                              <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300">
-                                SBERT: {(item.semantic_similarity * 100).toFixed(1)}%
-                              </span>
-                              <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300">
-                                BM25: {item.bm25_score.toFixed(1)}
-                              </span>
+                              {ragResult.retrieval_mode === 'semantic_only' ? (
+                                <>
+                                  <span className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-semibold">
+                                    SBERT Semantic: {item.semantic_similarity !== null && item.semantic_similarity !== undefined ? (item.semantic_similarity * 100).toFixed(1) + '%' : 'N/A'}
+                                  </span>
+                                  <span className="px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/50">
+                                    BM25: N/A (Dense Mode)
+                                  </span>
+                                </>
+                              ) : ragResult.retrieval_mode === 'bm25_only' ? (
+                                <>
+                                  <span className="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 font-semibold">
+                                    BM25 Lexical: {item.bm25_score !== null && item.bm25_score !== undefined ? item.bm25_score.toFixed(2) : 'N/A'}
+                                  </span>
+                                  <span className="px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/50">
+                                    SBERT: N/A (Lexical Mode)
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  <span className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-semibold">
+                                    Hybrid (RRF): {item.hybrid_score !== null && item.hybrid_score !== undefined ? item.hybrid_score.toFixed(4) : 'N/A'}
+                                  </span>
+                                  <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+                                    SBERT: {item.semantic_similarity !== null && item.semantic_similarity !== undefined ? (item.semantic_similarity * 100).toFixed(1) + '%' : 'N/A'}
+                                  </span>
+                                  <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+                                    BM25: {item.bm25_score !== null && item.bm25_score !== undefined ? item.bm25_score.toFixed(1) : 'N/A'}
+                                  </span>
+                                </>
+                              )}
                               {item.category_match && (
                                 <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
                                   +Prior Match
@@ -1263,6 +1302,14 @@ Authorization: Bearer <REDACTED:TOKEN>`}
                               )}
                             </div>
                           </div>
+
+                          {/* Near-Duplicate Cluster Indicator */}
+                          {item.duplicate_count > 0 && (
+                            <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-cyan-300/80 bg-cyan-950/40 px-2.5 py-1 rounded border border-cyan-900/50">
+                              <span>Clustered {item.duplicate_count} near-duplicate run{item.duplicate_count > 1 ? 's' : ''}:</span>
+                              <span className="text-slate-300 font-semibold">{item.duplicate_incident_codes.join(', ')}</span>
+                            </div>
+                          )}
 
                           {/* Candidate Diagnosis */}
                           <div className="min-w-0">
@@ -1474,17 +1521,23 @@ Authorization: Bearer <REDACTED:TOKEN>`}
                   {reportInputMode === 'incident' && (
                     <div className="space-y-1.5">
                       <label className="text-xs text-slate-400 block font-medium">Persisted Incident Record:</label>
-                      <select
-                        value={reportSelectedIncident}
-                        onChange={(e) => setReportSelectedIncident(e.target.value)}
-                        className="w-full p-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 font-mono text-xs focus:outline-none focus:border-purple-500"
-                      >
-                        {incidents.map((inc: any) => (
-                          <option key={inc.incident_code} value={inc.incident_code}>
-                            {inc.incident_code} - {inc.failure_category} ({inc.source_file})
-                          </option>
-                        ))}
-                      </select>
+                      {incidents.length > 0 ? (
+                        <select
+                          value={reportSelectedIncident}
+                          onChange={(e) => setReportSelectedIncident(e.target.value)}
+                          className="w-full p-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 font-mono text-xs focus:outline-none focus:border-purple-500"
+                        >
+                          {incidents.map((inc: any) => (
+                            <option key={inc.incident_code} value={inc.incident_code}>
+                              {inc.incident_code} - {inc.failure_category} ({inc.source_file})
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-amber-400 font-mono text-xs">
+                          No persisted incidents found in database. Ingest logs or run bootstrap to populate.
+                        </div>
+                      )}
                     </div>
                   )}
 

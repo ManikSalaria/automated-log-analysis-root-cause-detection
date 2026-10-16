@@ -12,8 +12,9 @@ Where rank scores use RRF: 1 / (k + rank), with k = 60 (standard constant).
 This avoids raw score normalization issues between BM25 and cosine similarity.
 """
 
-from typing import List, Dict, Tuple, Optional, Set, Any
+from typing import List, Dict, Tuple, Optional, Set, Any, Union
 from collections import defaultdict
+import re
 import numpy as np
 
 from app.ml.stage4_rag.bm25_retriever import BM25Retriever
@@ -136,6 +137,112 @@ class HybridRetriever:
         doc_category = self.corpus_metadata[doc_idx].get("failure_category", "")
         return 1.0 if doc_category == query_category else 0.0
 
+    @staticmethod
+    def _normalize_signature(text: str) -> str:
+        """Normalize failure signature for duplicate grouping and cluster identification."""
+        t = (text or "").lower()
+        # Remove timestamps
+        t = re.sub(r"\d{4}-\d{2}-\d{2}[ t]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[+-]\d{2}:?\d{2}|[A-Z]{3})?", "", t)
+        # Remove thread / ID brackets / trace identifiers
+        t = re.sub(r"\[id=\d+\]|\[node-\d+\]|\[req-[a-z0-9-]+\]|trace[-_]id=[a-z0-9-]+|span[-_]id=[a-z0-9-]+", "", t)
+        # Remove memory addresses and UUIDs
+        t = re.sub(r"\b0x[0-9a-fA-F]+\b", "<ADDR>", t)
+        t = re.sub(r"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b", "<UUID>", t)
+        # Remove dynamic datastore/target resource names
+        t = re.sub(r"\b(?:alletra_datastore_|datastore_)[a-z0-9_]+", "datastore_<NAME>", t)
+        # Normalize whitespace
+        t = re.sub(r"\s+", " ", t).strip()
+        return t[:120]
+
+    def diversify_results(
+        self,
+        candidate_results: List[Dict[str, Any]],
+        top_k: int = 5,
+        line_proximity_threshold: int = 25,
+    ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+        """Diversify candidate results to prevent identical/near-duplicate crowding.
+
+        Identifies near-duplicates based on:
+        1. Source log episode proximity (same source file and overlapping/adjacent line span).
+        2. Normalized error signature similarity within the same source file or failure mode.
+
+        Clusters near-duplicates under the highest-scoring representative item,
+        recording provenance and incident codes. If fewer distinct clusters exist,
+        gracefully backfills with the highest-scoring remaining variants and explains
+        the situation in the summary.
+        """
+        if not candidate_results:
+            return [], {
+                "is_diversified": False,
+                "distinct_clusters_count": 0,
+                "diversification_summary": "No candidates available for diversification."
+            }
+
+        distinct_items: List[Dict[str, Any]] = []
+        duplicate_items: List[Dict[str, Any]] = []
+        cluster_duplicates: Dict[str, List[str]] = defaultdict(list)
+
+        for candidate in candidate_results:
+            sig = self._normalize_signature(candidate.get("text", "") or candidate.get("evidence_signature", ""))
+            src_file = candidate.get("source_file", "")
+            start_l = candidate.get("start_line", 0)
+            code = candidate.get("incident_code", "")
+
+            matched_cluster_code = None
+            for selected in distinct_items:
+                sel_sig = self._normalize_signature(selected.get("text", "") or selected.get("evidence_signature", ""))
+                sel_file = selected.get("source_file", "")
+                sel_start = selected.get("start_line", 0)
+
+                # Condition 1: Same source file with line span proximity (adjacent lines of same failure block)
+                same_episode = (src_file and src_file == sel_file and abs(start_l - sel_start) <= line_proximity_threshold)
+                # Condition 2: Identical normalized signature from the same source file
+                same_sig = (sig and sig == sel_sig and src_file == sel_file)
+
+                if same_episode or same_sig:
+                    matched_cluster_code = selected.get("incident_code", "")
+                    break
+
+            if matched_cluster_code:
+                cluster_duplicates[matched_cluster_code].append(code)
+                duplicate_items.append(candidate)
+            else:
+                cluster_duplicates[code] = []
+                distinct_items.append(candidate)
+
+        distinct_count = len(distinct_items)
+        final_results = distinct_items[:top_k]
+
+        # Backfill if fewer distinct items than requested top_k to preserve coverage
+        if len(final_results) < top_k and duplicate_items:
+            needed = top_k - len(final_results)
+            final_results.extend(duplicate_items[:needed])
+            diversification_summary = (
+                f"Corpus yielded {distinct_count} distinct failure signature(s); "
+                f"{len(final_results) - distinct_count} additional variant run(s) from the same source log were retained."
+            )
+        else:
+            total_clustered = sum(len(dups) for dups in cluster_duplicates.values())
+            diversification_summary = (
+                f"Diversified {len(final_results)} results across {distinct_count} distinct failure signature(s) "
+                f"(clustered {total_clustered} near-duplicate run(s))."
+            )
+
+        # Enrich items with duplicate provenance and normalized rank
+        for rank_idx, item in enumerate(final_results):
+            item["rank"] = rank_idx + 1
+            item_code = item.get("incident_code", "")
+            dups = cluster_duplicates.get(item_code, [])
+            item["duplicate_count"] = len(dups)
+            item["duplicate_incident_codes"] = dups
+
+        meta_info = {
+            "is_diversified": True,
+            "distinct_clusters_count": distinct_count,
+            "diversification_summary": diversification_summary,
+        }
+        return final_results, meta_info
+
     def retrieve(
         self,
         query_text: str,
@@ -145,7 +252,9 @@ class HybridRetriever:
         exclude_indices: Optional[Set[int]] = None,
         similarity_threshold: float = 0.0,
         candidate_pool_size: int = 50,
-    ) -> List[Dict[str, Any]]:
+        diversify: bool = True,
+        return_meta: bool = False,
+    ) -> Union[List[Dict[str, Any]], Tuple[List[Dict[str, Any]], Dict[str, Any]]]:
         """Retrieve top-k incidents using hybrid BM25 + semantic + metadata fusion.
         
         Uses Reciprocal Rank Fusion (RRF) to combine rankings from different
@@ -159,12 +268,14 @@ class HybridRetriever:
             exclude_indices: Corpus indices to exclude.
             similarity_threshold: Minimum semantic similarity to include.
             candidate_pool_size: Size of candidate pool from each retriever.
+            diversify: Whether to cluster near-duplicates and return distinct failure modes.
+            return_meta: If True, returns (results, meta_info) tuple.
         
         Returns:
-            List of result dicts with scores, metadata, and provenance.
+            List of result dicts with scores, metadata, and provenance (or tuple if return_meta=True).
         """
         if not self._is_built:
-            return []
+            return ([], {}) if return_meta else []
 
         # Build exclusion index set
         exclude_idx = set(exclude_indices or set())
@@ -211,16 +322,17 @@ class HybridRetriever:
             scored_results.append((idx, hybrid_score, scores))
 
         scored_results.sort(key=lambda x: x[1], reverse=True)
-        top_results = scored_results[:top_k]
+        candidate_count = max(candidate_pool_size, top_k * 4) if diversify else top_k
+        top_candidates = scored_results[:candidate_count]
 
-        # Build response objects
-        results = []
-        for idx, hybrid_score, component_scores in top_results:
+        # Build candidate response objects
+        candidates = []
+        for idx, hybrid_score, component_scores in top_candidates:
             meta = self.corpus_metadata[idx] if idx < len(self.corpus_metadata) else {}
             text = self.corpus_texts[idx] if idx < len(self.corpus_texts) else ""
 
-            results.append({
-                "rank": len(results) + 1,
+            candidates.append({
+                "rank": len(candidates) + 1,
                 "incident_code": meta.get("incident_code", ""),
                 "failure_category": meta.get("failure_category", ""),
                 "root_cause_candidate": meta.get("root_cause_candidate", ""),
@@ -236,7 +348,20 @@ class HybridRetriever:
                 "category_match": component_scores["metadata_bonus"] > 0,
             })
 
-        return results
+        if diversify:
+            div_items, meta_info = self.diversify_results(candidates, top_k=top_k)
+            return (div_items, meta_info) if return_meta else div_items
+
+        for r_idx, c in enumerate(candidates[:top_k]):
+            c["rank"] = r_idx + 1
+            c["duplicate_count"] = 0
+            c["duplicate_incident_codes"] = []
+        no_div_meta = {
+            "is_diversified": False,
+            "distinct_clusters_count": len(candidates[:top_k]),
+            "diversification_summary": "Diversification disabled."
+        }
+        return (candidates[:top_k], no_div_meta) if return_meta else candidates[:top_k]
 
     def retrieve_semantic_only(
         self,
@@ -244,10 +369,12 @@ class HybridRetriever:
         top_k: int = 5,
         exclude_incident_codes: Optional[Set[str]] = None,
         similarity_threshold: float = 0.0,
-    ) -> List[Dict[str, Any]]:
+        diversify: bool = True,
+        return_meta: bool = False,
+    ) -> Union[List[Dict[str, Any]], Tuple[List[Dict[str, Any]], Dict[str, Any]]]:
         """Retrieve using only semantic similarity (for ablation comparison)."""
         if not self._is_built:
-            return []
+            return ([], {}) if return_meta else []
 
         exclude_idx = set()
         if exclude_incident_codes:
@@ -255,23 +382,36 @@ class HybridRetriever:
                 if meta.get("incident_code", "") in exclude_incident_codes:
                     exclude_idx.add(i)
 
+        candidate_k = max(50, top_k * 4) if diversify else top_k
         results = self.semantic.retrieve(
-            query_text, top_k=top_k,
+            query_text, top_k=candidate_k,
             exclude_indices=exclude_idx,
             similarity_threshold=similarity_threshold
         )
 
-        return self._format_results(results)
+        formatted = self._format_results(results)
+        if diversify:
+            div_items, meta_info = self.diversify_results(formatted, top_k=top_k)
+            return (div_items, meta_info) if return_meta else div_items
+
+        no_div_meta = {
+            "is_diversified": False,
+            "distinct_clusters_count": len(formatted[:top_k]),
+            "diversification_summary": "Diversification disabled."
+        }
+        return (formatted[:top_k], no_div_meta) if return_meta else formatted[:top_k]
 
     def retrieve_bm25_only(
         self,
         query_text: str,
         top_k: int = 5,
         exclude_incident_codes: Optional[Set[str]] = None,
-    ) -> List[Dict[str, Any]]:
+        diversify: bool = True,
+        return_meta: bool = False,
+    ) -> Union[List[Dict[str, Any]], Tuple[List[Dict[str, Any]], Dict[str, Any]]]:
         """Retrieve using only BM25 lexical matching (for ablation comparison)."""
         if not self._is_built:
-            return []
+            return ([], {}) if return_meta else []
 
         exclude_idx = set()
         if exclude_incident_codes:
@@ -279,14 +419,25 @@ class HybridRetriever:
                 if meta.get("incident_code", "") in exclude_incident_codes:
                     exclude_idx.add(i)
 
+        candidate_k = max(50, top_k * 4) if diversify else top_k
         results = self.bm25.retrieve(
-            query_text, top_k=top_k, exclude_indices=exclude_idx
+            query_text, top_k=candidate_k, exclude_indices=exclude_idx
         )
 
-        return self._format_results(results)
+        formatted = self._format_results(results)
+        if diversify:
+            div_items, meta_info = self.diversify_results(formatted, top_k=top_k)
+            return (div_items, meta_info) if return_meta else div_items
+
+        no_div_meta = {
+            "is_diversified": False,
+            "distinct_clusters_count": len(formatted[:top_k]),
+            "diversification_summary": "Diversification disabled."
+        }
+        return (formatted[:top_k], no_div_meta) if return_meta else formatted[:top_k]
 
     def _format_results(self, raw_results: List[Tuple[int, float]]) -> List[Dict[str, Any]]:
-        """Format raw (index, score) results into response dicts."""
+        """Format raw (index, score) results into response dicts with full provenance."""
         results = []
         for rank, (idx, score) in enumerate(raw_results):
             meta = self.corpus_metadata[idx] if idx < len(self.corpus_metadata) else {}
@@ -298,6 +449,9 @@ class HybridRetriever:
                 "root_cause_candidate": meta.get("root_cause_candidate", ""),
                 "evidence_signature": meta.get("evidence_signature", ""),
                 "source_file": meta.get("source_file", ""),
+                "source_type": meta.get("source_type", ""),
+                "start_line": meta.get("start_line", 0),
+                "end_line": meta.get("end_line", 0),
                 "text": text,
                 "score": round(score, 4),
             })

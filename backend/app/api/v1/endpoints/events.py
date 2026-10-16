@@ -19,54 +19,56 @@ def get_parsed_events(
     Defaults to descending ID order so newly ingested events appear first.
     Supports filtering by severity, service, source_file, and file_id.
     """
-    conn = get_connection()
-    cursor = conn.cursor()
+    conn = get_connection(timeout=10.0)
+    try:
+        cursor = conn.cursor()
 
-    query = """
-        SELECT e.id, f.filename as source_file, e.line_number, e.timestamp,
-               e.severity, e.service, e.component, e.node, e.request_id,
-               e.trace_id, e.status_code, e.latency_ms, e.sanitized_message
-        FROM parsed_events e
-        JOIN source_files f ON e.file_id = f.id
-        WHERE 1=1
-    """
-    params = []
+        query = """
+            SELECT e.id, f.filename as source_file, e.line_number, e.timestamp,
+                   e.severity, e.service, e.component, e.node, e.request_id,
+                   e.trace_id, e.status_code, e.latency_ms, e.sanitized_message
+            FROM parsed_events e
+            JOIN source_files f ON e.file_id = f.id
+            WHERE 1=1
+        """
+        params = []
 
-    if severity:
-        query += " AND e.severity = ?"
-        params.append(severity.upper())
+        if severity:
+            query += " AND e.severity = ?"
+            params.append(severity.upper())
 
-    if service:
-        query += " AND e.service LIKE ?"
-        params.append(f"%{service}%")
+        if service:
+            query += " AND e.service LIKE ?"
+            params.append(f"%{service}%")
 
-    if source_file:
-        query += " AND (f.filename = ? OR f.filename LIKE ?)"
-        params.extend([source_file, f"%{source_file}%"])
+        if source_file:
+            query += " AND (f.filename = ? OR f.filename LIKE ?)"
+            params.extend([source_file, f"%{source_file}%"])
 
-    if file_id is not None:
-        query += " AND e.file_id = ?"
-        params.append(file_id)
+        if file_id is not None:
+            query += " AND e.file_id = ?"
+            params.append(file_id)
 
-    # Count total matching
-    count_query = query.replace(
-        "SELECT e.id, f.filename as source_file, e.line_number, e.timestamp, e.severity, e.service, e.component, e.node, e.request_id, e.trace_id, e.status_code, e.latency_ms, e.sanitized_message", 
-        "SELECT COUNT(*)"
-    )
-    cursor.execute(count_query, params)
-    total_count = cursor.fetchone()[0]
+        # Count total matching
+        count_query = query.replace(
+            "SELECT e.id, f.filename as source_file, e.line_number, e.timestamp, e.severity, e.service, e.component, e.node, e.request_id, e.trace_id, e.status_code, e.latency_ms, e.sanitized_message",
+            "SELECT COUNT(*)"
+        )
+        cursor.execute(count_query, params)
+        total_count = cursor.fetchone()[0]
 
-    order_dir = "ASC" if order and order.lower() == "asc" else "DESC"
-    query += f" ORDER BY e.id {order_dir} LIMIT ? OFFSET ?;"
-    params.extend([limit, offset])
+        order_dir = "ASC" if order and order.lower() == "asc" else "DESC"
+        query += f" ORDER BY e.id {order_dir} LIMIT ? OFFSET ?;"
+        params.extend([limit, offset])
 
-    cursor.execute(query, params)
-    rows = cursor.fetchall()
-    conn.close()
+        cursor.execute(query, params)
+        rows = cursor.fetchall()
 
-    return {
-        "total": total_count,
-        "limit": limit,
-        "offset": offset,
-        "events": [dict(r) for r in rows]
-    }
+        return {
+            "total": total_count,
+            "limit": limit,
+            "offset": offset,
+            "events": [dict(r) for r in rows]
+        }
+    finally:
+        conn.close()

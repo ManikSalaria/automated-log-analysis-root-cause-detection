@@ -1,8 +1,10 @@
+import re
 import uuid
+import sqlite3
 import hashlib
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Dict, Any
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from app.core.config import settings
 from app.core.security import SecretMasker
@@ -60,28 +62,8 @@ async def upload_log_file(
     elif any("pytest" in l.lower() or "morpheus" in l.lower() for l in lines[:20]):
         source_type = "JENKINS_PYTEST_QUALIFICATION"
 
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    # Save to source_files table (support re-upload without crashing and retain Jenkins metadata)
-    cursor.execute("""
-        INSERT OR REPLACE INTO source_files (
-            filename, source_type, byte_size, line_count, sha256_hash, ingested_at,
-            job_name, build_number, build_status, build_url, repo_url, commit_sha
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-    """, (
-        file.filename, source_type, len(content), len(lines), sha256_hash, ingested_at,
-        clean_job_name, clean_build_number, clean_build_status, clean_build_url, clean_repo_url, clean_commit_sha
-    ))
-    file_id = cursor.lastrowid
-    if not file_id:
-        cursor.execute("SELECT id FROM source_files WHERE filename = ?", (file.filename,))
-        row = cursor.fetchone()
-        file_id = row[0]
-
-    # Parse and insert events
-    events_to_insert = []
+    # Step 1: Parse and structure log events in memory prior to acquiring DB lock
+    events_data = []
     parsed_entries = []
     for line_no, raw_line in enumerate(lines, 1):
         if not raw_line.strip():
@@ -92,8 +74,7 @@ async def upload_log_file(
         # Zero-PII Invariant: secrets are redacted prior to persistent storage.
         # Raw line retention is disabled by default; when disabled, raw_message stores sanitized text.
         persisted_raw = raw_line if settings.ALLOW_RAW_LOG_RETENTION else SecretMasker.sanitize(raw_line, mask_ips=True)
-        events_to_insert.append((
-            file_id,
+        events_data.append((
             line_no,
             entry.timestamp,
             entry.level,
@@ -109,16 +90,9 @@ async def upload_log_file(
             persisted_raw
         ))
 
-    cursor.executemany("""
-        INSERT INTO parsed_events (
-            file_id, line_number, timestamp, severity, service, component, node,
-            request_id, trace_id, span_id, status_code, latency_ms, sanitized_message, raw_message
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-    """, events_to_insert)
-
-    # Detect failures and create incidents (context-aware)
+    # Step 2: Detect failure blocks and evaluate root-cause candidates in memory
     i = 0
-    incidents_count = 0
+    incidents_data: List[Dict[str, Any]] = []
     while i < len(lines):
         line = lines[i]
         entry = parsed_entries[i] if i < len(parsed_entries) else None
@@ -138,7 +112,7 @@ async def upload_log_file(
                     "at " in next_l or next_l.strip().startswith("at ") or
                     next_l.startswith("[ERROR]") or
                     (next_entry and next_entry.level in ("ERROR", "CRITICAL", "SEVERE", "FATAL")) or
-                    re.match(r"^(?:java\.[a-zA-Z0-9_\.]+|org\.[a-zA-Z0-9_\.]+|com\.[a-zA-Z0-9_\.]+|[a-zA-Z0-9_\.]+(?:Exception|Error|Failure))", next_l.strip())
+                    bool(re.match(r"^(?:java\.[a-zA-Z0-9_\.]+|org\.[a-zA-Z0-9_\.]+|com\.[a-zA-Z0-9_\.]+|[a-zA-Z0-9_\.]+(?:Exception|Error|Failure))", next_l.strip()))
                 )
                 if not is_continuation:
                     break
@@ -149,36 +123,111 @@ async def upload_log_file(
             sanitized_block = SecretMasker.sanitize("\n".join(block), mask_ips=True)
             pred = baseline_model.predict(sanitized_block) if baseline_model.is_trained else {"predicted_category": "UNKNOWN", "confidence": 0.0}
             rca = RootCauseCandidateAnalyzer.analyze(sanitized_block, primary_category=pred["predicted_category"])
-            incident_code = f"INC-{file_id:02d}-{start_line:04d}"
 
-            cursor.execute("""
-                INSERT INTO incidents (
-                    incident_code, file_id, start_line, end_line, primary_severity,
-                    failure_category, confidence, root_cause_candidate, detected_signature,
-                    evidence_text, created_at, job_name, build_number
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-            """, (
-                incident_code,
-                file_id,
-                start_line,
-                j,
-                "ERROR",
-                pred["predicted_category"],
-                pred["confidence"],
-                rca["root_cause_candidate"],
-                sanitized_block[:150].strip(),
-                sanitized_block,
-                ingested_at,
-                clean_job_name,
-                clean_build_number
-            ))
-            incidents_count += 1
+            incidents_data.append({
+                "start_line": start_line,
+                "end_line": j,
+                "predicted_category": pred["predicted_category"],
+                "confidence": pred["confidence"],
+                "root_cause_candidate": rca["root_cause_candidate"],
+                "detected_signature": sanitized_block[:150].strip(),
+                "evidence_text": sanitized_block
+            })
             i = j
         else:
             i += 1
 
-    conn.commit()
-    conn.close()
+    # Step 3: Atomic database persistence with connection lifecycle guarantees
+    conn = get_connection(timeout=30.0)
+    try:
+        with conn:
+            cursor = conn.cursor()
+
+            # Manage source_files record idempotently
+            cursor.execute("SELECT id FROM source_files WHERE filename = ?;", (file.filename,))
+            existing_row = cursor.fetchone()
+
+            if existing_row:
+                file_id = existing_row["id"]
+                # Cleanly purge prior parsed events and incidents for this file to ensure zero duplicates
+                cursor.execute("DELETE FROM parsed_events WHERE file_id = ?;", (file_id,))
+                cursor.execute("DELETE FROM incidents WHERE file_id = ?;", (file_id,))
+                cursor.execute("""
+                    UPDATE source_files SET
+                        source_type = ?, byte_size = ?, line_count = ?, sha256_hash = ?, ingested_at = ?,
+                        job_name = ?, build_number = ?, build_status = ?, build_url = ?, repo_url = ?, commit_sha = ?
+                    WHERE id = ?;
+                """, (
+                    source_type, len(content), len(lines), sha256_hash, ingested_at,
+                    clean_job_name, clean_build_number, clean_build_status, clean_build_url, clean_repo_url, clean_commit_sha,
+                    file_id
+                ))
+            else:
+                cursor.execute("""
+                    INSERT INTO source_files (
+                        filename, source_type, byte_size, line_count, sha256_hash, ingested_at,
+                        job_name, build_number, build_status, build_url, repo_url, commit_sha
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                """, (
+                    file.filename, source_type, len(content), len(lines), sha256_hash, ingested_at,
+                    clean_job_name, clean_build_number, clean_build_status, clean_build_url, clean_repo_url, clean_commit_sha
+                ))
+                file_id = cursor.lastrowid
+
+            # Insert parsed structured events
+            final_events = [
+                (file_id, *ev) for ev in events_data
+            ]
+            cursor.executemany("""
+                INSERT INTO parsed_events (
+                    file_id, line_number, timestamp, severity, service, component, node,
+                    request_id, trace_id, span_id, status_code, latency_ms, sanitized_message, raw_message
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            """, final_events)
+
+            # Insert detected incidents
+            final_incidents = [
+                (
+                    f"INC-{file_id:02d}-{inc['start_line']:04d}",
+                    file_id,
+                    inc["start_line"],
+                    inc["end_line"],
+                    "ERROR",
+                    inc["predicted_category"],
+                    inc["confidence"],
+                    inc["root_cause_candidate"],
+                    inc["detected_signature"],
+                    inc["evidence_text"],
+                    ingested_at,
+                    clean_job_name,
+                    clean_build_number
+                )
+                for inc in incidents_data
+            ]
+            if final_incidents:
+                cursor.executemany("""
+                    INSERT INTO incidents (
+                        incident_code, file_id, start_line, end_line, primary_severity,
+                        failure_category, confidence, root_cause_candidate, detected_signature,
+                        evidence_text, created_at, job_name, build_number
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                """, final_incidents)
+
+    except sqlite3.OperationalError as oe:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Database is currently locked or busy ({str(oe)}). Transaction rolled back safely; please retry."
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Log ingestion failed: {str(e)}"
+        )
+    finally:
+        conn.close()
 
     return IngestionUploadResponse(
         file_id=file_id,
@@ -187,8 +236,8 @@ async def upload_log_file(
         byte_size=len(content),
         line_count=len(lines),
         sha256_hash=sha256_hash,
-        events_inserted=len(events_to_insert),
-        incidents_detected=incidents_count,
+        events_inserted=len(events_data),
+        incidents_detected=len(incidents_data),
         ingested_at=ingested_at,
         job_name=clean_job_name,
         build_number=clean_build_number,
