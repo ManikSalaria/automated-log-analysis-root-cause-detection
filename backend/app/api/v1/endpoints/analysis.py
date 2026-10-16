@@ -2,6 +2,7 @@ import uuid
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
+from app.core.config import settings
 from app.core.security import SecretMasker
 from app.parsers.regex_parser import LogParserEngine
 from app.analysis.root_cause_candidate import RootCauseCandidateAnalyzer
@@ -81,7 +82,7 @@ def analyze_log_incident(
 
     return FullIncidentAnalysisResponse(
         analysis_id=f"ANL-{uuid.uuid4().hex[:8].upper()}",
-        original_input_snippet=raw_text[:350],
+        original_input_snippet=raw_text[:350] if settings.ALLOW_RAW_LOG_RETENTION else sanitized_text[:350],
         sanitized_input=sanitized_text[:350],
         detected_failure_signature=failure_sig,
         is_failure=is_failure,

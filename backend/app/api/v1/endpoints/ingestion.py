@@ -89,6 +89,9 @@ async def upload_log_file(
             continue
         entry = LogParserEngine.parse_line(raw_line)
         parsed_entries.append(entry)
+        # Zero-PII Invariant: secrets are redacted prior to persistent storage.
+        # Raw line retention is disabled by default; when disabled, raw_message stores sanitized text.
+        persisted_raw = raw_line if settings.ALLOW_RAW_LOG_RETENTION else SecretMasker.sanitize(raw_line, mask_ips=True)
         events_to_insert.append((
             file_id,
             line_no,
@@ -103,7 +106,7 @@ async def upload_log_file(
             entry.status_code,
             entry.latency_ms,
             entry.sanitized_message,
-            raw_line
+            persisted_raw
         ))
 
     cursor.executemany("""

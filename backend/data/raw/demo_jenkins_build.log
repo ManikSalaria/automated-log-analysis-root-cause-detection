@@ -1,0 +1,28 @@
+[2026-10-15 14:20:00] [INFO] Started by user test-runner
+[2026-10-15 14:20:01] [INFO] Running in /var/jenkins_home/workspace/trace-ci-pipeline
+[2026-10-15 14:20:02] [INFO] Git checkout revision 4b82c1840e6981fae5e6e9b8971032db73b18401 on branch main
+[2026-10-15 14:20:05] [INFO] Building Docker container environment for pytest validation
+[2026-10-15 14:20:10] [INFO] Running test suite: pytest tests/ --junitxml=reports/junit.xml
+2026-10-15 14:20:12 [INFO] [test_auth] Starting authentication integration tests
+2026-10-15 14:20:15 [INFO] [test_auth] PASSED: test_valid_token_authentication
+2026-10-15 14:20:18 [INFO] [test_storage] Initializing artifact cache volume /var/lib/docker/volumes/cache
+2026-10-15 14:20:20 [ERROR] [test_storage] Storage volume capacity reached critical threshold 99%
+2026-10-15 14:20:21 [CRITICAL] [test_storage] java.io.IOException: No space left on device: /var/lib/docker/volumes/cache/data.bin
+	at java.base/java.io.FileOutputStream.writeBytes(Native Method)
+	at java.base/java.io.FileOutputStream.write(FileOutputStream.java:354)
+	at com.trace.storage.DiskCacheManager.flush(DiskCacheManager.java:184)
+	at com.trace.storage.DiskCacheManager.commitTransaction(DiskCacheManager.java:92)
+2026-10-15 14:20:25 [INFO] [test_database] Starting distributed database and cache cluster verification
+2026-10-15 14:20:30 [WARNING] [test_database] Connection pool acquisition latency high: 4890ms
+2026-10-15 14:20:35 [ERROR] [test_database] redis.exceptions.ConnectionTimeoutError: Timeout 5000ms exceeded acquiring connection from pool
+	at com.trace.cache.RedisClient.getConnection(RedisClient.java:112)
+	at com.trace.cache.SessionCache.get(SessionCache.java:45)
+	at com.trace.services.OrderWorkflow.execute(OrderWorkflow.java:78)
+2026-10-15 14:20:40 [INFO] [test_integration] Running end-to-end checkout validation
+2026-10-15 14:20:42 [ERROR] [test_integration] AssertionError: Expected status code 200, got 500
+E       AssertionError: assert 500 == 200
+E       +  where 500 = <Response [500]>.status_code
+tests/integration/test_checkout.py:142: AssertionError
+2026-10-15 14:20:45 [ERROR] [pipeline-runner] Build failed with exit code 1. Tests failed: 3 failures out of 18 tests.
+[2026-10-15 14:20:46] [INFO] Publishing JUnit test results
+[2026-10-15 14:20:47] [INFO] Finished: FAILURE

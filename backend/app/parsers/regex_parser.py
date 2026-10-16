@@ -73,7 +73,7 @@ class LogParserEngine:
         Parse a single log line into a structured LogEntry with secrets redacted.
         """
         raw_line = line.strip()
-        sanitized_line = SecretMasker.sanitize(raw_line)
+        sanitized_line = SecretMasker.sanitize(raw_line, mask_ips=True)
 
         # Try Format 1: Microservice log
         match_ms = cls.MICROSERVICE_PATTERN.match(raw_line)
@@ -102,7 +102,7 @@ class LogParserEngine:
                 status_code=int(extracted_kv["status_code"]) if "status_code" in extracted_kv else None,
                 latency_ms=float(extracted_kv["latency_ms"]) if "latency_ms" in extracted_kv else None,
                 raw_message=clean_msg if clean_msg else rest.strip(),
-                sanitized_message=SecretMasker.sanitize(clean_msg if clean_msg else rest.strip())
+                sanitized_message=SecretMasker.sanitize(clean_msg if clean_msg else rest.strip(), mask_ips=True)
             )
 
         # Try Format 2: Jenkins Pytest log
@@ -121,7 +121,7 @@ class LogParserEngine:
                 service=groups["source"].split(":")[0],
                 node=None,
                 raw_message=groups["message"],
-                sanitized_message=SecretMasker.sanitize(groups["message"])
+                sanitized_message=SecretMasker.sanitize(groups["message"], mask_ips=True)
             )
 
         # Try Format 3: Jenkins JVM log
@@ -137,7 +137,7 @@ class LogParserEngine:
                 service=groups["logger"].split("#")[0],
                 node=f"thread-{groups.get('thread_id')}",
                 raw_message=groups["message"],
-                sanitized_message=SecretMasker.sanitize(groups["message"])
+                sanitized_message=SecretMasker.sanitize(groups["message"], mask_ips=True)
             )
 
         # Try Format 4: Maven / Surefire build log
@@ -183,7 +183,7 @@ class LogParserEngine:
                 service=service,
                 node=None,
                 raw_message=msg,
-                sanitized_message=SecretMasker.sanitize(msg)
+                sanitized_message=SecretMasker.sanitize(msg, mask_ips=True)
             )
 
         # Fallback: Unstructured line or stack trace line

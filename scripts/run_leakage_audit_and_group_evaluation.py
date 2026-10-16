@@ -239,6 +239,7 @@ def run_leakage_resistant_evaluation():
             "recall_macro": round(float(rf_r), 4),
             "f1_macro": round(float(rf_f1), 4),
             "mean_latency_ms": round(float(np.mean(rf_latencies)), 2),
+            "p95_latency_ms": round(float(np.percentile(rf_latencies, 95)), 2),
             "training_time_sec": round(float(rf_train_time), 3),
             "confusion_matrix": rf_cm.tolist()
         },
@@ -248,6 +249,7 @@ def run_leakage_resistant_evaluation():
             "recall_macro": round(float(xgb_r), 4),
             "f1_macro": round(float(xgb_f1), 4),
             "mean_latency_ms": round(float(np.mean(xgb_latencies)), 2),
+            "p95_latency_ms": round(float(np.percentile(xgb_latencies, 95)), 2),
             "training_time_sec": round(float(xgb_train_time), 3),
             "confusion_matrix": xgb_cm.tolist()
         },

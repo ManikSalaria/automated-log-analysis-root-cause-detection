@@ -7,6 +7,7 @@ This document provides a comprehensive scientific report on the evaluation metho
 ## 1. Dataset Provenance & Incident Partitioning
 
 All experiments are conducted exclusively on authentic CI/CD build logs and distributed service telemetry:
+- `backend/data/raw/demo_jenkins_build.log` (tracked demo Jenkins build log with sanitized failure episodes)
 - `backend/data/raw/Jenkins_Log_Under_1MB.txt` (3,120 lines, Jenkins build pipeline)
 - `backend/data/raw/1130.txt` (2,104 lines, microservice orchestration)
 - `backend/data/raw/jenkins_gist_crash.log` (302 lines, JVM crash and fatal pipeline abort)
@@ -78,15 +79,16 @@ The table below presents the genuine, leakage-free performance of all three clas
 
 Stage 4 was evaluated across **57 held-out test query incidents** searching a disjoint historical corpus of **268 training incidents**:
 
-| Retrieval Modality | Recall@1 | Recall@3 | Recall@5 | Recall@10 | Precision@1 | MRR | Avg Latency |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Hybrid (BM25 + SBERT + Category Prior)** | **94.74%** | **94.74%** | **94.74%** | **100.0%** | **94.74%** | **0.9532** | 31.63 ms |
-| **Sparse Lexical (Okapi BM25)** | 73.68% | 89.47% | 89.47% | 92.98% | 73.68% | 0.8082 | **1.38 ms** |
-| **Dense Semantic (Sentence-BERT)** | 71.93% | 87.72% | 89.47% | 94.74% | 71.93% | 0.7946 | 27.47 ms |
+| Retrieval Modality | HitRate@1 (Recall@1) | HitRate@3 | HitRate@5 | HitRate@10 | True Recall@5 | Precision@1 | MRR | Avg Latency |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Hybrid (BM25 + SBERT + Category Prior)** | **94.74%** | **94.74%** | **94.74%** | **100.0%** | **15.64%** | **94.74%** | **0.9532** | 17.98 ms |
+| **Sparse Lexical (Okapi BM25)** | 73.68% | 89.47% | 89.47% | 94.74% | 12.47% | 73.68% | 0.8082 | **1.16 ms** |
+| **Dense Semantic (Sentence-BERT)** | 71.93% | 87.72% | 89.47% | 94.74% | 10.65% | 71.93% | 0.7946 | 16.15 ms |
 
 ### Observations:
 - **Reciprocal Rank Fusion Synergy:** Combining sparse lexical matching ($k_1=1.5, b=0.75$) with dense semantic embeddings and a metadata category prior boosts Mean Reciprocal Rank (MRR) from $\sim 0.80$ to **0.9532**.
-- **Recall@5:** Reaches **94.74%**, ensuring the subsequent Stage 5 LLM prompt receives highly relevant historical evidence packages.
+- **HitRate@5 (Success@5) vs. True Recall@5:** In information retrieval, `Recall@k` is frequently reported as HitRate@k (the proportion of queries where at least one retrieved incident in the top-$k$ matches the target category). On this metric, Hybrid achieves **94.74%**. When computed as true coverage over the entire corpus (retrieved matching incidents / total matching category incidents in the 268-document training corpus), Hybrid achieves **15.64%** True Recall@5. Both metrics are preserved and disclosed for scientific transparency.
+- **Latency Advantage:** Sparse BM25 executes in just **1.16 ms**, while Hybrid runs in **17.98 ms**, making it suitable for real-time CI/CD pipeline gating.
 
 ---
 

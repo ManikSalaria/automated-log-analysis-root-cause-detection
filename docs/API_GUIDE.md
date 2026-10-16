@@ -184,13 +184,16 @@ curl -X GET "http://127.0.0.1:8000/api/v1/incidents/INC-0012"
 
 ---
 
-## 4. Machine Learning Classification Endpoint
+## 4. Machine Learning Classification & Analysis Endpoints
 
-### `POST /api/v1/classify`
-Classifies an incident using one of the three integrated ML models:
-- `stage1_baseline`: TF-IDF + Random Forest
-- `stage2_xgboost`: Sentence-BERT + XGBoost
-- `stage3_graphsage`: GraphSAGE GNN (PyTorch Geometric)
+### `POST /api/v1/analysis/analyze`
+Comprehensive incident analysis: runs Zero-PII Secret Sanitization (captures privacy audit diff), parses structured attributes, detects failure indicators, and executes live ML classification with the requested model.
+
+### `POST /api/v1/classify` (or `POST /api/v1/classification/classify`)
+Direct ML model inference endpoint. Supports:
+- `baseline` (or `stage1_baseline`): TF-IDF + Random Forest
+- `xgboost` (or `stage2_xgboost`): Sentence-BERT + XGBoost
+- `graphsage` (or `stage3_graphsage`): GraphSAGE GNN (PyTorch Geometric)
 
 #### Example Request
 ```bash
@@ -287,14 +290,14 @@ curl -X POST "http://127.0.0.1:8000/api/v1/rag/retrieve" \
 
 ---
 
-## 6. Stage 5 LLM Synthesis Endpoint
+## 6. Stage 5 LLM Synthesis & Provider Status Endpoints
 
-### `POST /api/v1/rag/synthesize`
+### `POST /api/v1/analysis/synthesize` (or `POST /api/v1/rag/synthesize`)
 Generates an evidence-grounded root cause explanation and diagnostic remediation suggestions using local Ollama (`llama3.2:3b`).
 
 #### Example Request
 ```bash
-curl -X POST "http://127.0.0.1:8000/api/v1/rag/synthesize" \
+curl -X POST "http://127.0.0.1:8000/api/v1/analysis/synthesize" \
   -H "Content-Type: application/json" \
   -d '{
     "incident_id": "INC-0012",
@@ -354,6 +357,25 @@ curl -X POST "http://127.0.0.1:8000/api/v1/rag/synthesize" \
   "privacy_sanitized": true,
   "report": null,
   "error_message": "LLM request timed out after 90.0 seconds. No report was generated; please verify Ollama resource allocation."
+}
+```
+
+### `GET /api/v1/analysis/llm-provider-status`
+Returns live diagnostic information for the active LLM provider (Ollama base URL, model name, connectivity status, and timeout setting).
+
+#### Example Request
+```bash
+curl -X GET "http://127.0.0.1:8000/api/v1/analysis/llm-provider-status"
+```
+
+#### Example Response (200 OK)
+```json
+{
+  "provider": "ollama",
+  "base_url": "http://localhost:11434",
+  "model": "llama3.2:3b",
+  "status": "reachable",
+  "timeout_sec": 90.0
 }
 ```
 

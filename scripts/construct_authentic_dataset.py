@@ -36,7 +36,9 @@ def extract_authentic_incidents() -> pd.DataFrame:
 
     for filename, source_type in files:
         filepath = raw_dir / filename
-        assert filepath.exists(), f"Missing authentic raw file: {filepath}"
+        if not filepath.exists():
+            print(f"Notice: Optional raw file '{filename}' not found at {filepath}. Skipping.")
+            continue
         
         lines = filepath.read_text(encoding="utf-8", errors="replace").splitlines()
         i = 0
@@ -83,7 +85,7 @@ def extract_authentic_incidents() -> pd.DataFrame:
                     "root_cause_candidate": analysis["root_cause_candidate"],
                     "evidence_signature": sanitized_text[:120].strip(),
                     "text": sanitized_text,
-                    "raw_text": raw_text
+                    "raw_text": sanitized_text
                 })
                 incident_counter += 1
                 i = j
@@ -161,20 +163,12 @@ def build_and_split_dataset():
         "test_categories": test_df["failure_category"].value_counts().to_dict(),
         "source_files": [
             {
-                "name": "1130.txt",
-                "sha256": compute_sha256(settings.RAW_DATA_DIR / "1130.txt"),
-                "lines": 1500
-            },
-            {
-                "name": "Jenkins_Log_Under_1MB.txt",
-                "sha256": compute_sha256(settings.RAW_DATA_DIR / "Jenkins_Log_Under_1MB.txt"),
-                "lines": 1576
-            },
-            {
-                "name": "jenkins_gist_crash.log",
-                "sha256": compute_sha256(settings.RAW_DATA_DIR / "jenkins_gist_crash.log"),
-                "lines": 2450
+                "name": fname,
+                "sha256": compute_sha256(settings.RAW_DATA_DIR / fname),
+                "lines": len((settings.RAW_DATA_DIR / fname).read_text(encoding="utf-8", errors="replace").splitlines())
             }
+            for fname, _ in files
+            if (settings.RAW_DATA_DIR / fname).exists()
         ]
     }
 

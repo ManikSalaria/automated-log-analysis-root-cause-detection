@@ -9,7 +9,7 @@
 [![Vite](https://img.shields.io/badge/Vite-5.4-646CFF.svg)](https://vitejs.dev/)
 [![SQLite WAL](https://img.shields.io/badge/SQLite-WAL--Mode-003B57.svg)](https://www.sqlite.org/wal.html)
 [![Ollama](https://img.shields.io/badge/Ollama-Llama--3.2--3B-black.svg)](https://ollama.com/)
-[![Tests](https://img.shields.io/badge/Pytest-91%20Passed-brightgreen.svg)](#14-automated-testing--verification-suite)
+[![Tests](https://img.shields.io/badge/Pytest-94%20Passed-brightgreen.svg)](#14-automated-testing--verification-suite)
 
 > **TRACE** is an enterprise-grade, privacy-preserving log analytics and root-cause intelligence platform. It ingests heterogeneous CI/CD console logs and microservice telemetry, strips sensitive credentials in-memory, parses complex multiline runtime events, classifies failure incidents across three distinct machine learning paradigms, retrieves historical diagnostic evidence using hybrid RAG, and synthesizes evidence-grounded root-cause reports with verified remediation guidance using a local on-premises LLM.
 
@@ -209,16 +209,19 @@ All models were evaluated on the **Canonical Group-Aware Stratified Test Set** o
 
 Evaluated across **57 held-out query incidents** against a historical corpus of **268 incidents**:
 
-| Modality | Recall@1 | Recall@3 | Recall@5 | Recall@10 | Precision@1 | MRR | Latency |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Hybrid (BM25 + SBERT + Prior)** | **94.74%** | **94.74%** | **94.74%** | **100.0%** | **94.74%** | **0.9532** | 31.63 ms |
-| **Sparse Lexical (Okapi BM25)** | 73.68% | 89.47% | 89.47% | 92.98% | 73.68% | 0.8082 | **1.38 ms** |
-| **Dense Semantic (Sentence-BERT)** | 71.93% | 87.72% | 89.47% | 94.74% | 71.93% | 0.7946 | 27.47 ms |
+| Modality | HitRate@1 (Recall@1) | HitRate@3 | HitRate@5 | HitRate@10 | True Recall@5 | Precision@1 | MRR | Latency |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Hybrid (BM25 + SBERT + Prior)** | **94.74%** | **94.74%** | **94.74%** | **100.0%** | **15.64%** | **94.74%** | **0.9532** | 17.98 ms |
+| **Sparse Lexical (Okapi BM25)** | 73.68% | 89.47% | 89.47% | 94.74% | 12.47% | 73.68% | 0.8082 | **1.16 ms** |
+| **Dense Semantic (Sentence-BERT)** | 71.93% | 87.72% | 89.47% | 94.74% | 10.65% | 71.93% | 0.7946 | 16.15 ms |
+
+*Note on Retrieval Metrics:* `Recall@k` represents **HitRate@k (Success@k)**: the proportion of queries with at least one matching category incident retrieved in the top-$k$. **True Recall@k** evaluates the fraction of all matching incidents in the 268-incident training corpus retrieved in the top-$k$ (mean ~27 per class in train split).
 
 ### 7.3 Stage 5 Grounding & Safety Audit
 - **Total Evaluated Scenarios:** 7
 - **Passed Scenarios:** 7 (100% pass rate)
 - Verified: Non-substitution of `[E99]`, remediation grounding invariant enforcement, diagnostic remediation, prompt injection neutralization, and 90s timeout handling.
+- **Provider Resilience:** If Ollama is offline, the API honestly returns `status="provider_unavailable"` without fabricating hallucinated reports, while Stage 1-3 ML classifiers and Stage 4 RAG retrieval continue operating uninterrupted.
 
 Full metrics manifests are available in `backend/data/*.json` and analyzed in [docs/MODEL_EVALUATION.md](docs/MODEL_EVALUATION.md).
 
@@ -240,29 +243,37 @@ For detailed instructions, see [docs/INSTALLATION.md](docs/INSTALLATION.md).
 
 ### Quickstart (Windows PowerShell)
 
+#### Automated Setup (Recommended)
+Clone the repository and run the automated setup script, which creates the Python virtual environment, installs backend and frontend dependencies, configures `.env`, and initializes the database and ML model artifacts:
 ```powershell
-# 1. Clone the repository
 git clone https://github.com/ManikSalaria/automated-log-analysis-root-cause-detection.git
 cd automated-log-analysis-root-cause-detection
+powershell -ExecutionPolicy Bypass -File .\scripts\setup_windows.ps1
+```
 
-# 2. Set up Python virtual environment (Python 3.11 required)
+#### Manual Setup
+```powershell
+# 1. Set up Python virtual environment (Python 3.11 required)
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 
-# 3. Install backend dependencies
+# 2. Install backend dependencies
 python -m pip install --upgrade pip setuptools wheel
 pip install -r backend/requirements.txt
 
-# 4. Configure environment
+# 3. Configure environment
 Copy-Item .env.example .env
 
-# 5. Install frontend dependencies
+# 4. Install frontend dependencies
 cd frontend
 npm install
 npm run build
 cd ..
 
-# 6. Pull Ollama model (ensure Ollama is installed and running)
+# 5. Bootstrap database and ML models (TF-IDF, XGBoost, GraphSAGE, BM25 Index)
+python scripts/bootstrap_models.py
+
+# 6. Optional: Pull Ollama model for Stage 5 LLM synthesis (if Ollama is installed)
 ollama pull llama3.2:3b
 ```
 
@@ -270,9 +281,11 @@ ollama pull llama3.2:3b
 
 ## 10. Running the Application
 
-### Option A: Automated Launch Script
-Run the provided batch file from the root directory:
+### Option A: Automated Launch Script (Recommended)
+Run the PowerShell launcher (or batch script) from the root directory:
 ```powershell
+.\scripts\start_trace.ps1
+# OR
 .\scripts\start_servers.bat
 ```
 
@@ -281,17 +294,18 @@ Run the provided batch file from the root directory:
 **Terminal 1 — FastAPI Backend:**
 ```powershell
 .\.venv\Scripts\Activate.ps1
-uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
+uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-- API Base URL: `http://127.0.0.1:8000`
-- Interactive Swagger UI: `http://127.0.0.1:8000/docs`
+- API Base URL: `http://localhost:8000`
+- Interactive Swagger UI: `http://localhost:8000/docs`
+- Health Endpoint: `http://localhost:8000/api/v1/health`
 
 **Terminal 2 — React Dashboard Frontend:**
 ```powershell
 cd frontend
 npm run dev
 ```
-- Web Dashboard: `http://localhost:5173`
+- Web Dashboard: `http://localhost:3000` (proxies `/api` calls to `http://localhost:8000`)
 
 ---
 
@@ -313,15 +327,20 @@ TRACE integrates with Jenkins pipelines via HTTP REST or raw console log ingesti
 
 | Endpoint | Method | Description |
 |:---|:---:|:---|
-| `/api/v1/health` | `GET` | Health check, DB state, and Ollama provider connectivity |
+| `/api/v1/health` | `GET` | Health check, DB state, and live Ollama provider connectivity |
 | `/api/v1/ingest/upload` | `POST` | Upload and sanitize raw log file (`multipart/form-data`) |
 | `/api/v1/ingest/jenkins` | `POST` | Ingest raw Jenkins build console text with build metadata |
 | `/api/v1/incidents` | `GET` | Paginated incident list with severity/component filters |
 | `/api/v1/incidents/{incident_id}` | `GET` | Incident detail view with chronological context lines |
-| `/api/v1/classify` | `POST` | Classify incident using Stage 1, Stage 2, or Stage 3 |
+| `/api/v1/analysis/analyze` | `POST` | Full analysis with secret sanitization, parsing, and ML classification |
+| `/api/v1/classify` (or `/api/v1/classification/classify`) | `POST` | Direct ML inference using Stage 1, Stage 2, or Stage 3 |
 | `/api/v1/rag/retrieve` | `POST` | Hybrid RAG retrieval (BM25 + SBERT + RRF $k=60$) |
-| `/api/v1/rag/synthesize` | `POST` | LLM root-cause synthesis with `CitationValidator` |
+| `/api/v1/analysis/synthesize` (or `/api/v1/rag/synthesize`) | `POST` | Stage 5 LLM root-cause synthesis with `CitationValidator` |
+| `/api/v1/analysis/llm-provider-status` | `GET` | Diagnostic check of active LLM provider (Ollama / offline) |
+| `/api/v1/rag/corpus-stats` | `GET` | RAG indexed corpus diagnostic statistics |
+| `/api/v1/rag/evaluation-metrics` | `GET` | Canonical RAG retrieval benchmark manifest |
 | `/api/v1/metrics/comparison` | `GET` | Canonical evaluation metrics across all 5 stages |
+| `/api/v1/metrics/audit` | `GET` | Leakage audit manifest and empirical baseline metrics |
 
 For complete request schemas, curl examples, and response JSON payloads, see [docs/API_GUIDE.md](docs/API_GUIDE.md).
 
@@ -330,9 +349,9 @@ For complete request schemas, curl examples, and response JSON payloads, see [do
 ## 13. Security, Privacy & Responsible AI
 
 1. **Air-Gapped & Local Guarantee:** All models and the Ollama LLM sidecar run strictly on local infrastructure. No incident data or telemetry is sent to public cloud endpoints.
-2. **Zero-PII SecretMasker:** AWS credentials, GitHub PATs, JWT tokens, and private IPs are redacted in-memory prior to persistence or model ingestion.
+2. **Zero-PII SecretMasker:** AWS credentials, GitHub PATs, JWT tokens, Bearer headers, and private IPs are redacted in-memory prior to persistence or model ingestion. Raw logs are not retained in SQLite unless `ALLOW_RAW_LOG_RETENTION=True` is explicitly configured.
 3. **Prompt Injection Delimiters:** Log text is isolated in non-executable `<log_evidence>` XML tags with explicit instructions to ignore instructions contained within logs.
-4. **Non-Substitution Citation Rule:** Hallucinated evidence citations (`[E99]`) are rejected, never silently replaced.
+4. **Non-Substitution Citation Rule:** Hallucinated evidence citations (`[E99]`) are rejected, never silently replaced with unrelated citations.
 5. **Diagnostic First:** Prioritizes identifying root-cause sources over blanket try-catch suppression.
 
 For detailed security regexes and governance principles, see [docs/SECURITY_AND_PRIVACY.md](docs/SECURITY_AND_PRIVACY.md).
@@ -344,7 +363,7 @@ For detailed security regexes and governance principles, see [docs/SECURITY_AND_
 TRACE maintains comprehensive test coverage across all components:
 
 ```powershell
-# 1. Run full backend pytest test suite (91 passing tests)
+# 1. Run full backend pytest test suite (94 passing tests)
 .\.venv\Scripts\python.exe -m pytest backend/tests -v
 
 # 2. Run Stage 4 Hybrid RAG evaluation benchmark
@@ -358,8 +377,8 @@ cd frontend; npm run build; cd ..
 ```
 
 **Verification Results:**
-- `pytest`: **91 passed** in ~66 seconds.
-- `evaluate_rag_retrieval.py`: **MRR: 0.9532, Recall@5: 0.9474**.
+- `pytest`: **94 passed** in ~66 seconds (including privacy persistence regression suite).
+- `evaluate_rag_retrieval.py`: **MRR: 0.9532, HitRate@5: 94.74%, True Recall@5: 15.64%**.
 - `evaluate_stage5_synthesis.py`: **7/7 scenarios passed** (100% pass rate).
 - `frontend build`: **0 errors**, production bundle compiled in ~2.3 seconds.
 

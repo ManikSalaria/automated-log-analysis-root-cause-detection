@@ -66,5 +66,5 @@
     "Stage 5 does not claim improved classification accuracy over Stages 1-3.",
     "Semantic claim-to-evidence verification relies on heuristic token overlap and diagnostic keyword analysis; it does NOT claim formal natural language inference (NLI) entailment or mathematical proof."
   ],
-  "generated_at": "2026-10-15 22:02:23 UTC"
+  "generated_at": "2026-10-15 23:22:49 UTC"
 }

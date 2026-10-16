@@ -14,6 +14,7 @@ Where:
 
 import math
 import re
+from pathlib import Path
 from typing import List, Dict, Tuple, Optional
 from collections import Counter
 import numpy as np
@@ -150,6 +151,14 @@ class BM25Retriever:
 
         scores.sort(key=lambda x: x[1], reverse=True)
         return scores[:top_k]
+
+    def save(self, path: Optional[Path] = None) -> None:
+        """Serialize BM25 index to disk using joblib."""
+        import joblib
+        from app.core.config import settings
+        p = path or settings.RAG_BM25_INDEX_PATH
+        p.parent.mkdir(parents=True, exist_ok=True)
+        joblib.dump(self, p)
 
     def get_stats(self) -> Dict:
         """Return index statistics for diagnostic purposes."""

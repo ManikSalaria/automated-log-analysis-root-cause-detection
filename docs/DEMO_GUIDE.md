@@ -9,20 +9,20 @@ This document provides a structured, 10-to-12-minute live demonstration script f
 Before inviting the audience or starting your screen share, verify that all components are running cleanly:
 
 - [ ] **Python Virtual Environment:** Activated in terminal.
-- [ ] **FastAPI Backend:** Running on `http://127.0.0.1:8000` (`uvicorn backend.app.main:app`).
-- [ ] **React Frontend:** Running on `http://localhost:5173` (`npm run dev`).
+- [ ] **FastAPI Backend:** Running on `http://127.0.0.1:8000` (`uvicorn backend.main:app` or `.\scripts\start_trace.ps1`).
+- [ ] **React Frontend:** Running on `http://localhost:3000` (`npm run dev`).
 - [ ] **Ollama LLM Engine:** Running with `llama3.2:3b` available (`ollama run llama3.2:3b`).
 - [ ] **Browser Tabs Open:**
-  1. `http://localhost:5173` (TRACE Dashboard)
+  1. `http://localhost:3000` (TRACE Dashboard)
   2. `http://127.0.0.1:8000/docs` (Swagger API Docs)
-- [ ] **Sample Log Files Ready:** `backend/data/raw/Jenkins_Log_Under_1MB.txt` and `1130.txt`.
+- [ ] **Sample Log Files Ready:** `backend/data/raw/demo_jenkins_build.log` and `backend/data/raw/Jenkins_Log_Under_1MB.txt`.
 
 ---
 
 ## 2. Minute-by-Minute Demonstration Script
 
 ### [00:00 - 02:00] Introduction & Problem Statement
-- **Action:** Open the TRACE Dashboard (`http://localhost:5173`) on the Ingest Logs tab.
+- **Action:** Open the TRACE Dashboard (`http://localhost:3000`) on the Ingest Logs tab.
 - **Narrative:**
   > "Modern CI/CD pipelines generate tens of thousands of lines of unstructured logs per build. When a failure occurs, Site Reliability Engineers spend hours manually parsing stack traces to find root causes. Furthermore, developers frequently leak API keys, AWS credentials, and JWT tokens directly into console output, creating severe security risks.
   >
@@ -67,7 +67,7 @@ Before inviting the audience or starting your screen share, verify that all comp
   >
   > Stage 4 runs a dual-channel retrieval: dense semantic search using Sentence-BERT cosine similarity, and sparse lexical search using Okapi BM25. These rankings are merged using Reciprocal Rank Fusion ($k=60$) with a metadata category prior.
   >
-  > On our held-out test set of 57 incidents across 268 corpus incidents, this hybrid approach achieves a Mean Reciprocal Rank (MRR) of 0.9532 and a Recall@5 of 94.74%, significantly outperforming either single modality alone."
+  > On our held-out test set of 57 incidents across 268 corpus incidents, this hybrid approach achieves a Mean Reciprocal Rank (MRR) of 0.9532, a HitRate@5 of 94.74%, and a True Recall@5 of 15.64%, significantly outperforming either single modality alone."
 - **Action:** Point out evidence cards `[E1]` and `[E2]` showing source files, line spans, and chronological context events.
 
 ---

@@ -79,3 +79,14 @@ def get_evaluation_metrics():
             status_code=500,
             detail=f"Failed to load RAG evaluation manifest: {str(e)}"
         )
+
+
+from app.schemas.synthesis_schema import SynthesizeRequest, SynthesizeResponse
+from app.ml.stage5_llm.synthesis_service import execute_synthesis_pipeline
+
+
+@router.post("/synthesize", response_model=SynthesizeResponse)
+def synthesize_incident_report_alias(request: SynthesizeRequest):
+    """Stage 5 LLM Synthesis endpoint alias for /api/v1/analysis/synthesize."""
+    return execute_synthesis_pipeline(request)
+

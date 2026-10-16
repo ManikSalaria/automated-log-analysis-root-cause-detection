@@ -165,11 +165,23 @@ curl http://localhost:11434/api/tags
 ```
 
 > [!NOTE]
-> If Ollama is not installed or unavailable, TRACE automatically falls back to an offline deterministic synthesis engine so all other application features remain fully operational.
+> If Ollama is not installed or unavailable, TRACE honestly reports `status="provider_unavailable"` with clear diagnostic guidance rather than fabricating synthetic or hallucinated reports. All other platform capabilities—including context-aware parsing, Stage 1-3 ML classification, and Stage 4 Hybrid RAG retrieval—remain 100% operational.
 
 ---
 
-## 8. Verifying the Setup
+## 8. Bootstrapping Database & Model Artifacts
+
+Before running tests or starting the servers, initialize the SQLite database schema and generate the baseline, XGBoost, GraphSAGE, and BM25 index artifacts:
+
+```powershell
+python scripts/bootstrap_models.py
+```
+
+This script is idempotent: it initializes the SQLite WAL database, trains the models using the canonical group-aware train partition (`backend/data/processed/group_train_incidents.csv`), builds the BM25 retrieval index, and saves all artifacts to `backend/data/models_cache/` in approximately 30 seconds.
+
+---
+
+## 9. Verifying the Setup
 
 Run the automated backend test suite and verification scripts to confirm that your environment is fully functional:
 
@@ -185,18 +197,20 @@ Run the automated backend test suite and verification scripts to confirm that yo
 ```
 
 Expected output:
-- `backend/tests`: **91 passed** in ~60-70 seconds.
-- `evaluate_rag_retrieval.py`: **MRR: 0.9532, Recall@5: 0.9474**.
+- `backend/tests`: **94 passed** in ~60-70 seconds (including privacy persistence regression tests).
+- `evaluate_rag_retrieval.py`: **MRR: 0.9532, HitRate@5: 94.74%, True Recall@5: 15.64%**.
 - `evaluate_stage5_synthesis.py`: **7/7 scenarios passed** (Grounding invariant, E99 hallucination rejection, diagnostic remediation, injection safety).
 
 ---
 
-## 9. Launching TRACE
+## 10. Launching TRACE
 
 To run the complete platform, start both the FastAPI backend and the React frontend development servers.
 
-### Option A: Using the Automated Batch Script
+### Option A: Using the Automated Launch Scripts (Recommended)
 ```powershell
+.\scripts\start_trace.ps1
+# OR
 .\scripts\start_servers.bat
 ```
 
@@ -205,16 +219,17 @@ To run the complete platform, start both the FastAPI backend and the React front
 **Terminal 1 — FastAPI Backend:**
 ```powershell
 .\.venv\Scripts\Activate.ps1
-uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
+uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-- API Base URL: `http://127.0.0.1:8000`
-- Interactive Swagger UI: `http://127.0.0.1:8000/docs`
+- API Base URL: `http://localhost:8000`
+- Interactive Swagger UI: `http://localhost:8000/docs`
+- Health Endpoint: `http://localhost:8000/api/v1/health`
 
 **Terminal 2 — React Dashboard Frontend:**
 ```powershell
 cd frontend
 npm run dev
 ```
-- Dashboard URL: `http://localhost:5173`
+- Dashboard URL: `http://localhost:3000`
 
-Open your browser and navigate to `http://localhost:5173` to explore the TRACE workbench.
+Open your browser and navigate to `http://localhost:3000` to explore the TRACE workbench.

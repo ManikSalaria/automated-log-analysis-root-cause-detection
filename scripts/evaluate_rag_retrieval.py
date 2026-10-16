@@ -44,12 +44,14 @@ def evaluate_mode(
     retriever: HybridRetriever,
     test_queries: List[CorpusIncident],
     mode: str = "hybrid",
-    top_k_list: List[int] = [1, 3, 5, 10]
+    top_k_list: List[int] = [1, 3, 5, 10],
+    category_counts: Dict[str, int] = None
 ) -> Dict[str, Any]:
     """Evaluate retrieval quality across queries for a specific mode."""
     max_k = max(top_k_list)
-    recalls = {k: 0 for k in top_k_list}
+    hit_rates = {k: 0 for k in top_k_list}
     precisions = {k: [] for k in top_k_list}
+    true_recalls = {k: [] for k in top_k_list}
     reciprocal_ranks = []
     top1_similarities = []
     latencies_ms = []
@@ -102,22 +104,35 @@ def evaluate_mode(
                 break
         reciprocal_ranks.append(rr)
 
-        # Recall@k (HitRate) and Precision@k
+        total_cat_corpus = (category_counts or {}).get(query.failure_category, 1)
+
+        # HitRate@k (Success@k), Precision@k, and True Recall@k
         for k in top_k_list:
             k_rel = relevance[:k]
-            if sum(k_rel) > 0:
-                recalls[k] += 1
-            precisions[k].append(sum(k_rel) / k if k > 0 else 0.0)
+            k_rel_sum = sum(k_rel)
+            if k_rel_sum > 0:
+                hit_rates[k] += 1
+            precisions[k].append(k_rel_sum / k if k > 0 else 0.0)
+            true_recalls[k].append(k_rel_sum / total_cat_corpus if total_cat_corpus > 0 else 0.0)
 
     n_queries = len(test_queries)
     return {
         "mode": mode,
         "sample_count": n_queries,
         "metrics": {
-            "recall_at_1": round(recalls[1] / n_queries, 4),
-            "recall_at_3": round(recalls[3] / n_queries, 4),
-            "recall_at_5": round(recalls[5] / n_queries, 4),
-            "recall_at_10": round(recalls[10] / n_queries, 4),
+            "hit_rate_at_1": round(hit_rates[1] / n_queries, 4),
+            "hit_rate_at_3": round(hit_rates[3] / n_queries, 4),
+            "hit_rate_at_5": round(hit_rates[5] / n_queries, 4),
+            "hit_rate_at_10": round(hit_rates[10] / n_queries, 4),
+            # Maintain recall_at_k aliases for backward compatibility with frontend/API schemas
+            "recall_at_1": round(hit_rates[1] / n_queries, 4),
+            "recall_at_3": round(hit_rates[3] / n_queries, 4),
+            "recall_at_5": round(hit_rates[5] / n_queries, 4),
+            "recall_at_10": round(hit_rates[10] / n_queries, 4),
+            "true_recall_at_1": round(float(np.mean(true_recalls[1])), 4),
+            "true_recall_at_3": round(float(np.mean(true_recalls[3])), 4),
+            "true_recall_at_5": round(float(np.mean(true_recalls[5])), 4),
+            "true_recall_at_10": round(float(np.mean(true_recalls[10])), 4),
             "precision_at_1": round(float(np.mean(precisions[1])), 4),
             "precision_at_3": round(float(np.mean(precisions[3])), 4),
             "precision_at_5": round(float(np.mean(precisions[5])), 4),
@@ -143,6 +158,10 @@ def main():
     print(f"Leakage protection:        Group-disjoint + Self-incident exclusion")
     print("-" * 70)
 
+    category_counts = {}
+    for doc in train_corpus:
+        category_counts[doc.failure_category] = category_counts.get(doc.failure_category, 0) + 1
+
     # Initialize shared SBERT embedder and build index
     embedder = SentenceBertEmbedder()
     retriever = HybridRetriever(alpha=0.5, beta=0.3, gamma=0.2, embedder=embedder)
@@ -158,11 +177,11 @@ def main():
 
     for mode in modes:
         print(f"Evaluating mode: '{mode}'...")
-        eval_res = evaluate_mode(retriever, test_queries, mode=mode)
+        eval_res = evaluate_mode(retriever, test_queries, mode=mode, category_counts=category_counts)
         results_by_mode[mode] = eval_res["metrics"]
         m = eval_res["metrics"]
-        print(f"  Recall@1:    {m['recall_at_1']:.4f}  |  Recall@3: {m['recall_at_3']:.4f}  |  Recall@5: {m['recall_at_5']:.4f}")
-        print(f"  Precision@1: {m['precision_at_1']:.4f}  |  MRR:      {m['mrr']:.4f}  |  Latency:  {m['avg_latency_ms']:.2f}ms")
+        print(f"  HitRate@1 (Recall@1): {m['hit_rate_at_1']:.4f}  |  HitRate@3: {m['hit_rate_at_3']:.4f}  |  HitRate@5: {m['hit_rate_at_5']:.4f}")
+        print(f"  True Recall@5:        {m['true_recall_at_5']:.4f}  |  Precision@1: {m['precision_at_1']:.4f}  |  MRR: {m['mrr']:.4f}  |  Latency: {m['avg_latency_ms']:.2f}ms")
         print()
 
     # Build final evaluation manifest
@@ -187,25 +206,37 @@ def main():
         "comparison_table": [
             {
                 "modality": "Hybrid (BM25 + SBERT + Category Prior)",
+                "hit_rate_at_1": results_by_mode["hybrid"]["hit_rate_at_1"],
+                "hit_rate_at_3": results_by_mode["hybrid"]["hit_rate_at_3"],
+                "hit_rate_at_5": results_by_mode["hybrid"]["hit_rate_at_5"],
                 "recall_at_1": results_by_mode["hybrid"]["recall_at_1"],
                 "recall_at_3": results_by_mode["hybrid"]["recall_at_3"],
                 "recall_at_5": results_by_mode["hybrid"]["recall_at_5"],
+                "true_recall_at_5": results_by_mode["hybrid"]["true_recall_at_5"],
                 "mrr": results_by_mode["hybrid"]["mrr"],
                 "avg_latency_ms": results_by_mode["hybrid"]["avg_latency_ms"]
             },
             {
                 "modality": "Dense Semantic (Sentence-BERT all-MiniLM-L6-v2)",
+                "hit_rate_at_1": results_by_mode["semantic_only"]["hit_rate_at_1"],
+                "hit_rate_at_3": results_by_mode["semantic_only"]["hit_rate_at_3"],
+                "hit_rate_at_5": results_by_mode["semantic_only"]["hit_rate_at_5"],
                 "recall_at_1": results_by_mode["semantic_only"]["recall_at_1"],
                 "recall_at_3": results_by_mode["semantic_only"]["recall_at_3"],
                 "recall_at_5": results_by_mode["semantic_only"]["recall_at_5"],
+                "true_recall_at_5": results_by_mode["semantic_only"]["true_recall_at_5"],
                 "mrr": results_by_mode["semantic_only"]["mrr"],
                 "avg_latency_ms": results_by_mode["semantic_only"]["avg_latency_ms"]
             },
             {
                 "modality": "Sparse Lexical (Okapi BM25)",
+                "hit_rate_at_1": results_by_mode["bm25_only"]["hit_rate_at_1"],
+                "hit_rate_at_3": results_by_mode["bm25_only"]["hit_rate_at_3"],
+                "hit_rate_at_5": results_by_mode["bm25_only"]["hit_rate_at_5"],
                 "recall_at_1": results_by_mode["bm25_only"]["recall_at_1"],
                 "recall_at_3": results_by_mode["bm25_only"]["recall_at_3"],
                 "recall_at_5": results_by_mode["bm25_only"]["recall_at_5"],
+                "true_recall_at_5": results_by_mode["bm25_only"]["true_recall_at_5"],
                 "mrr": results_by_mode["bm25_only"]["mrr"],
                 "avg_latency_ms": results_by_mode["bm25_only"]["avg_latency_ms"]
             }
@@ -213,6 +244,8 @@ def main():
         "limitations_and_disclosures": [
             "Relevance is evaluated using weak heuristic category ground-truth labels from RootCauseCandidateAnalyzer.",
             "Group-aware split ensures query incidents originate from independent log files/builds, preventing template leakage.",
+            "HitRate@k (reported also as recall_at_k for backward compatibility) measures the fraction of queries with at least one matching category incident in top-k.",
+            "True Recall@k measures the fraction of all available matching incidents in the 268-document training corpus retrieved in top-k.",
             "Stage 4 implements evidence and incident retrieval only; LLM generation and report synthesis are deferred to Stage 5.",
             "Surrounding chronological events are fetched from SQLite on-demand via indexed line spans."
         ],

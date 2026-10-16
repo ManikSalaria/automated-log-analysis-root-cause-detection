@@ -22,12 +22,18 @@ The table below outlines the deterministic regex patterns applied across all ing
 | **Password Assignment** | `(?i)(password\|passwd\|pwd\|secret\|client_secret)\s*[:=]\s*["']?([^"' \r\n]+)` | `$1=[REDACTED_PASSWORD]` |
 | **Private IPv4 Address** | `\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}\|172\.(?:1[6-9]\|2[0-9]\|3[01])\.\d{1,3}\.\d{1,3}\|192\.168\.\d{1,3}\.\d{1,3})\b` | `[REDACTED_IP]` |
 
-### 1.2 Pipeline Integration
+### 1.2 Pipeline Integration & Raw Log Retention Control
 Redaction occurs at the earliest possible stage:
 ```
-Raw Network Stream -> SecretMasker.mask() -> Context-Aware Parser -> SQLite WAL / ML Features
+Raw Network Stream -> SecretMasker.sanitize() -> Context-Aware Parser -> SQLite WAL / ML Features
 ```
-This guarantees that unredacted credentials never enter the database, vector embeddings, training sets, or LLM prompts.
+
+**Storage and Persistence Governance (`ALLOW_RAW_LOG_RETENTION`):**
+- By default, `ALLOW_RAW_LOG_RETENTION=False`.
+- In this default state, raw log strings containing credentials are never inserted into the database. Both `parsed_events.raw_message` and `incidents.raw_text` store sanitized strings where credentials and private IP addresses are replaced with redaction tokens.
+- API endpoints (e.g. `/api/v1/analysis/analyze`) return sanitized text in both `original_input_snippet` and `sanitized_input`.
+- In air-gapped environments requiring exact raw log preservation for forensics, operators may explicitly set `ALLOW_RAW_LOG_RETENTION=True` in `.env`. This opt-in configuration is disabled by default to uphold zero-leakage security.
+- This guarantees that unredacted credentials never enter vector embeddings, model training sets, or LLM prompts.
 
 ---
 

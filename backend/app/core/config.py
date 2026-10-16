@@ -1,11 +1,23 @@
 import os
 from pathlib import Path
 from pydantic import BaseModel
+from dotenv import load_dotenv
+
+# Automatically load .env from project root or backend directory
+_root_env = Path(__file__).resolve().parent.parent.parent.parent / ".env"
+_backend_env = Path(__file__).resolve().parent.parent.parent / ".env"
+if _root_env.exists():
+    load_dotenv(dotenv_path=_root_env)
+elif _backend_env.exists():
+    load_dotenv(dotenv_path=_backend_env)
+else:
+    load_dotenv()
 
 class Settings(BaseModel):
     PROJECT_NAME: str = "TRACE — AI-Powered CI/CD Log Intelligence Platform"
     PROJECT_VERSION: str = "1.0.0-REVIEW1"
     API_V1_STR: str = "/api/v1"
+    ALLOW_RAW_LOG_RETENTION: bool = os.getenv("TRACE_ALLOW_RAW_LOG_RETENTION", "false").lower() in ("true", "1", "yes")
     
     # Paths
     BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent

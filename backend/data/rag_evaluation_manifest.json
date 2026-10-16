@@ -13,76 +13,114 @@
   },
   "evaluation_summary": {
     "hybrid": {
+      "hit_rate_at_1": 0.9474,
+      "hit_rate_at_3": 0.9474,
+      "hit_rate_at_5": 0.9474,
+      "hit_rate_at_10": 1.0,
       "recall_at_1": 0.9474,
       "recall_at_3": 0.9474,
       "recall_at_5": 0.9474,
       "recall_at_10": 1.0,
+      "true_recall_at_1": 0.0317,
+      "true_recall_at_3": 0.0946,
+      "true_recall_at_5": 0.1564,
+      "true_recall_at_10": 0.2748,
       "precision_at_1": 0.9474,
       "precision_at_3": 0.9357,
       "precision_at_5": 0.9193,
       "mrr": 0.9532,
       "mean_top1_similarity": 0.7626,
-      "avg_latency_ms": 31.63,
-      "p95_latency_ms": 49.96
+      "avg_latency_ms": 17.98,
+      "p95_latency_ms": 21.42
     },
     "semantic_only": {
+      "hit_rate_at_1": 0.7193,
+      "hit_rate_at_3": 0.8772,
+      "hit_rate_at_5": 0.8947,
+      "hit_rate_at_10": 0.9474,
       "recall_at_1": 0.7193,
       "recall_at_3": 0.8772,
       "recall_at_5": 0.8947,
       "recall_at_10": 0.9474,
+      "true_recall_at_1": 0.0218,
+      "true_recall_at_3": 0.067,
+      "true_recall_at_5": 0.1065,
+      "true_recall_at_10": 0.2046,
       "precision_at_1": 0.7193,
       "precision_at_3": 0.6842,
       "precision_at_5": 0.6491,
       "mrr": 0.7946,
       "mean_top1_similarity": 0.7742,
-      "avg_latency_ms": 27.47,
-      "p95_latency_ms": 36.36
+      "avg_latency_ms": 16.15,
+      "p95_latency_ms": 20.95
     },
     "bm25_only": {
+      "hit_rate_at_1": 0.7368,
+      "hit_rate_at_3": 0.8947,
+      "hit_rate_at_5": 0.8947,
+      "hit_rate_at_10": 0.9298,
       "recall_at_1": 0.7368,
       "recall_at_3": 0.8947,
       "recall_at_5": 0.8947,
       "recall_at_10": 0.9298,
+      "true_recall_at_1": 0.0269,
+      "true_recall_at_3": 0.0817,
+      "true_recall_at_5": 0.1247,
+      "true_recall_at_10": 0.2089,
       "precision_at_1": 0.7368,
       "precision_at_3": 0.7661,
       "precision_at_5": 0.7193,
       "mrr": 0.8082,
       "mean_top1_similarity": 0.0,
-      "avg_latency_ms": 1.38,
-      "p95_latency_ms": 1.76
+      "avg_latency_ms": 1.16,
+      "p95_latency_ms": 1.18
     }
   },
   "comparison_table": [
     {
       "modality": "Hybrid (BM25 + SBERT + Category Prior)",
+      "hit_rate_at_1": 0.9474,
+      "hit_rate_at_3": 0.9474,
+      "hit_rate_at_5": 0.9474,
       "recall_at_1": 0.9474,
       "recall_at_3": 0.9474,
       "recall_at_5": 0.9474,
+      "true_recall_at_5": 0.1564,
       "mrr": 0.9532,
-      "avg_latency_ms": 31.63
+      "avg_latency_ms": 17.98
     },
     {
       "modality": "Dense Semantic (Sentence-BERT all-MiniLM-L6-v2)",
+      "hit_rate_at_1": 0.7193,
+      "hit_rate_at_3": 0.8772,
+      "hit_rate_at_5": 0.8947,
       "recall_at_1": 0.7193,
       "recall_at_3": 0.8772,
       "recall_at_5": 0.8947,
+      "true_recall_at_5": 0.1065,
       "mrr": 0.7946,
-      "avg_latency_ms": 27.47
+      "avg_latency_ms": 16.15
     },
     {
       "modality": "Sparse Lexical (Okapi BM25)",
+      "hit_rate_at_1": 0.7368,
+      "hit_rate_at_3": 0.8947,
+      "hit_rate_at_5": 0.8947,
       "recall_at_1": 0.7368,
       "recall_at_3": 0.8947,
       "recall_at_5": 0.8947,
+      "true_recall_at_5": 0.1247,
       "mrr": 0.8082,
-      "avg_latency_ms": 1.38
+      "avg_latency_ms": 1.16
     }
   ],
   "limitations_and_disclosures": [
     "Relevance is evaluated using weak heuristic category ground-truth labels from RootCauseCandidateAnalyzer.",
     "Group-aware split ensures query incidents originate from independent log files/builds, preventing template leakage.",
+    "HitRate@k (reported also as recall_at_k for backward compatibility) measures the fraction of queries with at least one matching category incident in top-k.",
+    "True Recall@k measures the fraction of all available matching incidents in the 268-document training corpus retrieved in top-k.",
     "Stage 4 implements evidence and incident retrieval only; LLM generation and report synthesis are deferred to Stage 5.",
     "Surrounding chronological events are fetched from SQLite on-demand via indexed line spans."
   ],
-  "generated_at": "2026-10-15 22:02:56 UTC"
+  "generated_at": "2026-10-15 23:08:03 UTC"
 }

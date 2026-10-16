@@ -22,7 +22,7 @@ def get_baseline_model() -> BaselineTfidfRandomForest:
         if not model.load():
             raise HTTPException(
                 status_code=503,
-                detail="Baseline model (TF-IDF + Random Forest) is not loaded. Train the baseline model first."
+                detail="Baseline model (TF-IDF + Random Forest) is not loaded. Run 'python scripts/bootstrap_models.py' to initialize model artifacts."
             )
         _baseline_instance = model
     return _baseline_instance
@@ -34,7 +34,7 @@ def get_xgboost_model() -> TraceXGBoostClassifier:
         if not model.load():
             raise HTTPException(
                 status_code=503,
-                detail="Stage 2 model (Sentence-BERT + XGBoost) is not loaded. Train the XGBoost model first."
+                detail="Stage 2 model (Sentence-BERT + XGBoost) is not loaded. Run 'python scripts/bootstrap_models.py' to initialize model artifacts."
             )
         _xgboost_instance = model
     return _xgboost_instance
@@ -46,7 +46,7 @@ def get_graphsage_model() -> TraceGraphSAGEPipeline:
         if not model.load():
             raise HTTPException(
                 status_code=503,
-                detail="Stage 3 model (GraphSAGE) is not loaded. Train the GraphSAGE model first."
+                detail="Stage 3 model (GraphSAGE) is not loaded. Run 'python scripts/bootstrap_models.py' to initialize model artifacts."
             )
         _graphsage_instance = model
     return _graphsage_instance

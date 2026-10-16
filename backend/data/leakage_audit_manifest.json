@@ -12,8 +12,9 @@
     "precision_macro": 0.7235,
     "recall_macro": 0.7589,
     "f1_macro": 0.7281,
-    "mean_latency_ms": 32.65,
-    "training_time_sec": 0.244,
+    "mean_latency_ms": 27.8,
+    "p95_latency_ms": 31.27,
+    "training_time_sec": 0.288,
     "confusion_matrix": [
       [
         0,
@@ -142,8 +143,9 @@
     "precision_macro": 0.6417,
     "recall_macro": 0.7158,
     "f1_macro": 0.6531,
-    "mean_latency_ms": 34.98,
-    "training_time_sec": 4.021,
+    "mean_latency_ms": 22.0,
+    "p95_latency_ms": 27.19,
+    "training_time_sec": 2.785,
     "confusion_matrix": [
       [
         0,
@@ -437,5 +439,5 @@
     "Baseline outperforms XGBoost on this dataset because the ground-truth labels are rule-derived keyword matches (e.g. status=502, kafka, storage), which bag-of-words captures directly.",
     "Neither model generalizes to unseen AUTHENTICATION_SECURITY_ERROR formats (F1=0.0%), proving that genuine multi-run out-of-distribution evaluation is essential."
   ],
-  "evaluated_at": "2026-10-15 19:47:41 UTC"
+  "evaluated_at": "2026-10-16 04:36:28 UTC"
 }

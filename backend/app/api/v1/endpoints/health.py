@@ -35,6 +35,14 @@ def get_system_health():
     except Exception:
         db_stats["connected"] = False
 
+    llm_info = {"provider": settings.TRACE_LLM_PROVIDER, "is_available": False}
+    try:
+        from app.ml.stage5_llm.providers import get_llm_provider
+        provider = get_llm_provider()
+        llm_info = provider.get_provider_info()
+    except Exception:
+        pass
+
     return {
         "status": "HEALTHY" if db_stats["connected"] and model_loaded else "DEGRADED",
         "service": settings.PROJECT_NAME,
@@ -46,5 +54,6 @@ def get_system_health():
             "feature_dimension": len(baseline_model.vectorizer.vocabulary_) if model_loaded else 0,
             "classes_count": len(baseline_model.classes_) if model_loaded else 0
         },
-        "database": db_stats
+        "database": db_stats,
+        "llm_provider": llm_info
     }

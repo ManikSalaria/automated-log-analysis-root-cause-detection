@@ -41,3 +41,13 @@ def predict_failure_category(
         rationale=res["rationale"],
         requested_model=selected_model
     )
+
+
+@router.post("/classify", response_model=ModelPrediction)
+def classify_failure_category(
+    request: PredictRequest,
+    model: Optional[str] = Query(None, description="Model selection: 'baseline', 'xgboost', or 'graphsage'")
+):
+    """Alias for /api/v1/classification/predict."""
+    return predict_failure_category(request, model)
+

@@ -1,6 +1,6 @@
 # TRACE User & Operator Guide
 
-This guide walks you through the interactive **TRACE** web dashboard (`http://localhost:5173`), detailing how to ingest logs, inspect parsed telemetry, classify incidents across ML models, retrieve historical evidence, and synthesize grounded remediation reports.
+This guide walks you through the interactive **TRACE** web dashboard (`http://localhost:3000`), detailing how to ingest logs, inspect parsed telemetry, classify incidents across ML models, retrieve historical evidence, and synthesize grounded remediation reports.
 
 ---
 
@@ -22,7 +22,7 @@ The TRACE frontend is organized into cohesive functional tabs accessible from th
 
 ### 2.1 File Upload
 1. Click the **Ingest Logs** tab.
-2. Drag and drop any raw log file (e.g. `backend/data/raw/Jenkins_Log_Under_1MB.txt` or `1130.txt`) into the drop zone, or click to browse.
+2. Drag and drop any raw log file (e.g. `backend/data/raw/demo_jenkins_build.log` or `backend/data/raw/Jenkins_Log_Under_1MB.txt`) into the drop zone, or click to browse.
 3. Click **Process & Sanitize Log**.
 4. The system automatically redacts AWS credentials, GitHub PATs, JWT tokens, passwords, and private IP addresses in-memory.
 5. The **Ingestion Summary** banner displays:
@@ -121,5 +121,5 @@ The TRACE frontend is organized into cohesive functional tabs accessible from th
 2. Review the **Canonical Group-Aware Evaluation Matrix**:
    - Compares Stage 1 (80.70% Acc / 72.81% F1), Stage 2 (77.19% Acc / 65.31% F1), and Stage 3 (73.68% Acc / 64.90% F1).
    - Explains the data leakage audit and why naive splits produced artificially high results.
-3. Review **Stage 4 RAG Metrics**: MRR (0.9532), Recall@1, Recall@5, and latency.
+3. Review **Stage 4 RAG Metrics**: MRR (0.9532), HitRate@1 (94.74%), HitRate@5 (94.74%), True Recall@5 (15.64%), and latency.
 4. Review **Stage 5 Grounding Audit Results**: 7/7 test scenarios passing (E99 rejection, non-substitution, injection safety).
