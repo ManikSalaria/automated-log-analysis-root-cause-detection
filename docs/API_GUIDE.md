@@ -76,6 +76,9 @@ curl -X POST "http://127.0.0.1:8000/api/v1/ingest/jenkins" \
   -d '{
     "job_name": "trace-pipeline-build",
     "build_number": 42,
+    "build_status": "FAILURE",
+    "build_url": "http://127.0.0.1:8080/job/trace-pipeline-build/42/",
+    "repo_url": "https://github.com/ManikSalaria/automated-log-analysis-root-cause-detection",
     "git_commit": "a1b2c3d4e5f6",
     "git_branch": "main",
     "console_log": "2026-10-15 14:22:01 [ERROR] [auth-service] Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-ID Invalid JWT signature\n2026-10-15 14:22:02 [FATAL] [auth-service] Authentication failed for user root"
@@ -85,13 +88,16 @@ curl -X POST "http://127.0.0.1:8000/api/v1/ingest/jenkins" \
 #### Example Response (200 OK)
 ```json
 {
-  "status": "success",
   "file_id": 2,
+  "filename": "jenkins-trace-pipeline-build-42.log",
+  "source_type": "JENKINS_BUILD_LOG",
   "job_name": "trace-pipeline-build",
   "build_number": 42,
-  "sanitized": true,
-  "events_extracted": 2,
-  "incidents_detected": 1
+  "build_status": "FAILURE",
+  "events_inserted": 2,
+  "incidents_detected": 1,
+  "commit_sha": "a1b2c3d4e5f6",
+  "git_branch": "main"
 }
 ```
 

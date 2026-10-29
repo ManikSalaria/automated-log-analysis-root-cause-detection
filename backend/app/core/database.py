@@ -46,7 +46,8 @@ def migrate_database(conn: sqlite3.Connection):
         ("build_status", "TEXT"),
         ("build_url", "TEXT"),
         ("repo_url", "TEXT"),
-        ("commit_sha", "TEXT")
+        ("commit_sha", "TEXT"),
+        ("git_branch", "TEXT")
     ]
     for col_name, col_type in new_source_cols:
         if col_name not in source_cols:
@@ -87,7 +88,8 @@ def init_database(db_path: Optional[Path] = None):
                 build_status TEXT,
                 build_url TEXT,
                 repo_url TEXT,
-                commit_sha TEXT
+                commit_sha TEXT,
+                git_branch TEXT
             );
             """)
 

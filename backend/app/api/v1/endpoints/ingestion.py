@@ -1,9 +1,8 @@
 import re
-import uuid
+import io
 import sqlite3
 import hashlib
 from datetime import datetime
-from pathlib import Path
 from typing import Optional, List, Dict, Any
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from app.core.config import settings
@@ -12,7 +11,7 @@ from app.core.database import get_connection
 from app.parsers.regex_parser import LogParserEngine
 from app.analysis.root_cause_candidate import RootCauseCandidateAnalyzer
 from app.ml.baseline.tfidf_rf import BaselineTfidfRandomForest
-from app.schemas.log_schema import IngestionUploadResponse
+from app.schemas.log_schema import IngestionUploadResponse, JenkinsIngestionRequest
 
 router = APIRouter()
 baseline_model = BaselineTfidfRandomForest()
@@ -26,7 +25,8 @@ async def upload_log_file(
     build_status: Optional[str] = Form(None),
     build_url: Optional[str] = Form(None),
     repo_url: Optional[str] = Form(None),
-    commit_sha: Optional[str] = Form(None)
+    commit_sha: Optional[str] = Form(None),
+    git_branch: Optional[str] = Form(None)
 ):
     """
     Ingest an authentic CI/CD build log or microservice telemetry file (.log / .txt).
@@ -47,6 +47,7 @@ async def upload_log_file(
     clean_build_url = build_url.strip() if build_url and build_url.strip() else None
     clean_repo_url = repo_url.strip() if repo_url and repo_url.strip() else None
     clean_commit_sha = commit_sha.strip() if commit_sha and commit_sha.strip() else None
+    clean_git_branch = git_branch.strip() if git_branch and git_branch.strip() else None
 
     raw_text = content.decode("utf-8", errors="replace")
     lines = raw_text.splitlines()
@@ -155,23 +156,23 @@ async def upload_log_file(
                 cursor.execute("""
                     UPDATE source_files SET
                         source_type = ?, byte_size = ?, line_count = ?, sha256_hash = ?, ingested_at = ?,
-                        job_name = ?, build_number = ?, build_status = ?, build_url = ?, repo_url = ?, commit_sha = ?
+                        job_name = ?, build_number = ?, build_status = ?, build_url = ?, repo_url = ?, commit_sha = ?, git_branch = ?
                     WHERE id = ?;
                 """, (
                     source_type, len(content), len(lines), sha256_hash, ingested_at,
-                    clean_job_name, clean_build_number, clean_build_status, clean_build_url, clean_repo_url, clean_commit_sha,
+                    clean_job_name, clean_build_number, clean_build_status, clean_build_url, clean_repo_url, clean_commit_sha, clean_git_branch,
                     file_id
                 ))
             else:
                 cursor.execute("""
                     INSERT INTO source_files (
                         filename, source_type, byte_size, line_count, sha256_hash, ingested_at,
-                        job_name, build_number, build_status, build_url, repo_url, commit_sha
+                        job_name, build_number, build_status, build_url, repo_url, commit_sha, git_branch
                     )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                 """, (
                     file.filename, source_type, len(content), len(lines), sha256_hash, ingested_at,
-                    clean_job_name, clean_build_number, clean_build_status, clean_build_url, clean_repo_url, clean_commit_sha
+                    clean_job_name, clean_build_number, clean_build_status, clean_build_url, clean_repo_url, clean_commit_sha, clean_git_branch
                 ))
                 file_id = cursor.lastrowid
 
@@ -244,5 +245,30 @@ async def upload_log_file(
         build_status=clean_build_status,
         build_url=clean_build_url,
         repo_url=clean_repo_url,
-        commit_sha=clean_commit_sha
+        commit_sha=clean_commit_sha,
+        git_branch=clean_git_branch
+    )
+
+
+@router.post("/jenkins", response_model=IngestionUploadResponse)
+async def ingest_jenkins_console(payload: JenkinsIngestionRequest):
+    """Ingest a Jenkins console log and its build/repository provenance as JSON."""
+    console_bytes = payload.console_log.encode("utf-8")
+    if len(console_bytes) > 20 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="Jenkins console logs may not exceed 20 MB.")
+
+    safe_job_name = re.sub(r"[^A-Za-z0-9._-]+", "-", payload.job_name).strip(".-_") or "job"
+    safe_build_number = re.sub(r"[^A-Za-z0-9._-]+", "-", payload.build_number).strip(".-_") or "build"
+    filename = f"jenkins-{safe_job_name[:80]}-{safe_build_number[:50]}.log"
+    upload = UploadFile(filename=filename, file=io.BytesIO(console_bytes))
+
+    return await upload_log_file(
+        file=upload,
+        job_name=payload.job_name,
+        build_number=payload.build_number,
+        build_status=payload.build_status,
+        build_url=payload.build_url,
+        repo_url=payload.repo_url,
+        commit_sha=payload.git_commit,
+        git_branch=payload.git_branch,
     )

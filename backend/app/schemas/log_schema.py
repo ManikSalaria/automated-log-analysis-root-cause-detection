@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional, List, Dict, Any
 
 class LogEntry(BaseModel):
@@ -72,6 +72,22 @@ class IngestionUploadResponse(BaseModel):
     build_url: Optional[str] = None
     repo_url: Optional[str] = None
     commit_sha: Optional[str] = None
+    git_branch: Optional[str] = None
+
+class JenkinsIngestionRequest(BaseModel):
+    job_name: str = Field(..., min_length=1, max_length=200)
+    build_number: str = Field(..., min_length=1, max_length=50)
+    console_log: str = Field(..., min_length=1, max_length=20 * 1024 * 1024)
+    build_status: Optional[str] = "UNKNOWN"
+    build_url: Optional[str] = None
+    repo_url: Optional[str] = None
+    git_commit: Optional[str] = None
+    git_branch: Optional[str] = None
+
+    @field_validator("build_number", mode="before")
+    @classmethod
+    def coerce_build_number(cls, value):
+        return str(value) if value is not None else value
 
 class IncidentSummaryItem(BaseModel):
     id: int
@@ -91,6 +107,7 @@ class IncidentSummaryItem(BaseModel):
     build_url: Optional[str] = None
     repo_url: Optional[str] = None
     commit_sha: Optional[str] = None
+    git_branch: Optional[str] = None
 
 class EvaluationMetricsResponse(BaseModel):
     model_name: str

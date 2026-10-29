@@ -28,7 +28,7 @@ def get_recent_incidents(
                    i.detected_signature, i.created_at,
                    COALESCE(i.job_name, f.job_name) as job_name,
                    COALESCE(i.build_number, f.build_number) as build_number,
-                   f.build_status, f.build_url, f.repo_url, f.commit_sha
+                   f.build_status, f.build_url, f.repo_url, f.commit_sha, f.git_branch
             FROM incidents i
             JOIN source_files f ON i.file_id = f.id
             WHERE 1=1
@@ -75,7 +75,8 @@ def get_recent_incidents(
                 build_status=row["build_status"],
                 build_url=row["build_url"],
                 repo_url=row["repo_url"],
-                commit_sha=row["commit_sha"]
+                commit_sha=row["commit_sha"],
+                git_branch=row["git_branch"]
             )
             for row in rows
         ]
@@ -94,7 +95,7 @@ def get_incident_by_code(incident_code: str):
             SELECT i.*, f.filename as source_file, f.source_type,
                    COALESCE(i.job_name, f.job_name) as job_name,
                    COALESCE(i.build_number, f.build_number) as build_number,
-                   f.build_status, f.build_url, f.repo_url, f.commit_sha
+                   f.build_status, f.build_url, f.repo_url, f.commit_sha, f.git_branch
             FROM incidents i
             JOIN source_files f ON i.file_id = f.id
             WHERE i.incident_code = ?;
