@@ -6,7 +6,7 @@
 [![PyTorch Geometric](https://img.shields.io/badge/PyG-2.5+-3C2179.svg)](https://pyg.org/)
 [![React 18](https://img.shields.io/badge/React-18.3-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF.svg)](https://vitejs.dev/)
+[![Vite](https://img.shields.io/badge/Vite-6.4-646CFF.svg)](https://vitejs.dev/)
 [![SQLite WAL](https://img.shields.io/badge/SQLite-WAL--Mode-003B57.svg)](https://www.sqlite.org/wal.html)
 [![Ollama](https://img.shields.io/badge/Ollama-Llama--3.2--3B-black.svg)](https://ollama.com/)
 [![Tests](https://img.shields.io/badge/Pytest-94%20Passed-brightgreen.svg)](#14-automated-testing--verification-suite)
@@ -133,7 +133,7 @@ For in-depth mathematical formulations and architecture specifications, see [doc
   - Rank-BM25 (Okapi BM25 sparse scoring)
 - **Local LLM Engine:** Ollama for Windows running `llama3.2:3b`
 - **Database:** SQLite 3 configured in WAL (Write-Ahead Logging) mode
-- **Frontend Workbench:** React 18.3, TypeScript 5.5, Vite 5.4, Tailwind CSS, Lucide React icons
+- **Frontend Workbench:** React 18.3, TypeScript 5.5, Vite 6.4, Tailwind CSS, Lucide React icons
 - **Automated Testing:** Pytest 8.0+, HTTPX, Scikit-Learn evaluation suites
 
 ---
@@ -312,14 +312,10 @@ npm run dev
 ## 11. Jenkins CI/CD Integration
 
 TRACE integrates with Jenkins pipelines via HTTP REST or raw console log ingestion:
-- **Direct Upload:** Upload raw console logs (`consoleText`) via `POST /api/v1/ingest/upload`.
-- **JSON Endpoint:** Stream logs programmatically via `POST /api/v1/ingest/jenkins` with build metadata (`job_name`, `build_number`, `git_commit`, `git_branch`).
-- **Post-Build Script Example:**
-  ```bash
-  curl -X POST "http://localhost:8000/api/v1/ingest/jenkins" \
-    -H "Content-Type: application/json" \
-    -d "{\"job_name\": \"$JOB_NAME\", \"build_number\": $BUILD_NUMBER, \"console_log\": \"$(cat console.log)\"}"
-  ```
+- **Pipeline setup:** Configure a Jenkins Pipeline job to use this repository, select the branch to build, and set the script path to `Jenkinsfile`. The pipeline builds the React dashboard and posts its Jenkins `consoleText` with build status and provenance to TRACE after each run.
+- **JSON Endpoint:** `POST /api/v1/ingest/jenkins` accepts `job_name`, `build_number`, `build_status`, `console_log`, and optional `build_url`, `repo_url`, `git_commit`, and `git_branch` values.
+- **Direct Upload:** Upload raw console logs (`consoleText`) through `POST /api/v1/ingest/upload` with optional Jenkins metadata fields.
+- **Run locally:** Keep TRACE running at `http://127.0.0.1:8000`; the repository's `scripts/jenkins_post_build.ps1` posts the build log to this local endpoint and reports a warning if TRACE is unavailable.
 
 ---
 
