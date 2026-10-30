@@ -6,6 +6,7 @@ try {
     }
 
     $consoleUrl = $env:BUILD_URL.TrimEnd('/') + '/consoleText'
+    Write-Output "TRACE is capturing the complete current Jenkins console for $($env:JOB_NAME) #$($env:BUILD_NUMBER)."
     $consoleLog = (Invoke-WebRequest -Uri $consoleUrl -TimeoutSec 90 -UseBasicParsing).Content
     if ([string]::IsNullOrWhiteSpace($consoleLog)) {
         throw 'Jenkins returned an empty console log; refusing to replace the console with build metadata.'
@@ -32,7 +33,8 @@ try {
     } | ConvertTo-Json -Depth 5 -Compress
     $target = if ($env:TRACE_INGEST_URL) { $env:TRACE_INGEST_URL } else { 'http://127.0.0.1:8000/api/v1/ingest/jenkins' }
     $response = Invoke-RestMethod -Uri $target -Method Post -ContentType 'application/json; charset=utf-8' -Body ([System.Text.Encoding]::UTF8.GetBytes($payload)) -TimeoutSec 240
-    Write-Host "TRACE accepted $($env:JOB_NAME) #$($env:BUILD_NUMBER): file $($response.file_id), $($response.incidents_detected) incident(s), analysis $($response.analysis_status)."
+    # Keep the captured log identical to the content posted. Any success output
+    # after the consoleText fetch would otherwise be present only in Jenkins.
     exit 0
 } catch {
     Write-Warning "Could not send this build log to TRACE: $($_.Exception.Message)"
