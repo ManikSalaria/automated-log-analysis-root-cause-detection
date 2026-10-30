@@ -146,6 +146,42 @@ def test_jenkins_json_ingestion_runs_same_pipeline_with_all_console_lines(monkey
     assert source["build_status"] == "FAILURE"
 
 
+def test_privacy_and_log_registry_views_follow_the_selected_ingestion(monkeypatch):
+    seen = {}
+    _install_fast_pipeline_fakes(monkeypatch, seen)
+    filename = f"privacy-view-{uuid.uuid4().hex}.log"
+    source = "[ERROR] connect to 10.20.30.40 failed\nUser: demo.person@example.test\npassword=private-value-123"
+    response = client.post(
+        "/api/v1/ingest/upload",
+        files={"file": (filename, source.encode(), "text/plain")},
+    )
+    assert response.status_code == 200, response.text
+    file_id = response.json()["file_id"]
+
+    listed = client.get("/api/v1/ingest?limit=5")
+    assert listed.status_code == 200
+    assert any(item["id"] == file_id and item["filename"] == filename for item in listed.json()["logs"])
+
+    privacy = client.get(f"/api/v1/ingest/{file_id}/privacy")
+    assert privacy.status_code == 200, privacy.text
+    data = privacy.json()
+    assert data["raw_log_exposed"] is False
+    assert data["privacy_audit"]["available"] is True
+    assert {finding["pattern"] for finding in data["privacy_audit"]["findings"]} == {"EMAIL_ADDRESS", "PASSWORD_KV"}
+    assert "demo.person@example.test" not in data["sanitized_log"]
+    assert "private-value-123" not in data["sanitized_log"]
+    assert "<REDACTED:EMAIL>" in data["sanitized_log"]
+    assert "<REDACTED:SECRET>" in data["sanitized_log"]
+    assert "10.20.30.40" not in data["sanitized_log"]
+    assert len(data["sanitized_log"].splitlines()) == len(source.splitlines())
+
+    events = client.get(f"/api/v1/events?file_id={file_id}&limit=20")
+    assert events.status_code == 200
+    serialized_events = str(events.json())
+    assert "demo.person@example.test" not in serialized_events
+    assert "<REDACTED:EMAIL>" in serialized_events
+
+
 def test_validator_flagged_llm_claim_is_not_marked_as_clean_success(monkeypatch):
     seen = {}
     _install_fast_pipeline_fakes(monkeypatch, seen, grounding_passed=False)

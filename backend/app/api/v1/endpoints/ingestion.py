@@ -21,6 +21,78 @@ router = APIRouter()
 baseline_model = BaselineTfidfRandomForest()
 baseline_model.load()
 
+
+@router.get("")
+def list_ingested_logs(limit: int = 100, offset: int = 0):
+    """List uploaded files and Jenkins builds, newest first, without exposing log contents."""
+    if limit < 1 or limit > 500 or offset < 0:
+        raise HTTPException(status_code=400, detail="limit must be 1-500 and offset must be non-negative.")
+    conn = get_connection(timeout=10.0)
+    try:
+        rows = conn.execute(
+            """SELECT f.id, f.filename, f.source_type, f.byte_size, f.line_count, f.ingested_at,
+                      f.job_name, f.build_number, f.build_status, f.build_url, f.repo_url,
+                      f.commit_sha, f.git_branch, a.processing_status,
+                      (SELECT COUNT(*) FROM incidents i WHERE i.file_id = f.id) AS incident_count
+               FROM source_files f
+               LEFT JOIN ingestion_analyses a ON a.file_id = f.id
+               ORDER BY f.ingested_at DESC, f.id DESC LIMIT ? OFFSET ?""",
+            (limit, offset),
+        ).fetchall()
+        return {"logs": [dict(row) for row in rows], "limit": limit, "offset": offset}
+    finally:
+        conn.close()
+
+
+@router.get("/{file_id}/privacy")
+def read_ingested_log_privacy_view(file_id: int):
+    """Return a masked reconstruction and secret-type counts for an ingested log."""
+    conn = get_connection(timeout=10.0)
+    try:
+        source = conn.execute(
+            """SELECT id, filename, source_type, line_count, byte_size, ingested_at,
+                      job_name, build_number, build_status, build_url
+               FROM source_files WHERE id = ?""",
+            (file_id,),
+        ).fetchone()
+        if source is None:
+            raise HTTPException(status_code=404, detail=f"Ingested log {file_id} was not found.")
+
+        # Rebuild from persisted event rows only. Apply masking again at this boundary
+        # even when raw-log retention is enabled in the ingestion configuration.
+        lines = [""] * max(0, int(source["line_count"] or 0))
+        rows = conn.execute(
+            "SELECT line_number, raw_message, sanitized_message FROM parsed_events WHERE file_id = ? ORDER BY line_number",
+            (file_id,),
+        ).fetchall()
+        for row in rows:
+            index = int(row["line_number"]) - 1
+            if 0 <= index < len(lines):
+                content = row["raw_message"] or row["sanitized_message"] or ""
+                lines[index] = SecretMasker.sanitize(content, mask_ips=True)
+
+        analysis_row = conn.execute(
+            "SELECT analysis_json FROM ingestion_analyses WHERE file_id = ?", (file_id,)
+        ).fetchone()
+        audit = {"clean": None, "leak_count": None, "findings": [], "available": False}
+        if analysis_row and analysis_row["analysis_json"]:
+            try:
+                stored_analysis = json.loads(analysis_row["analysis_json"])
+                input_data = stored_analysis.get("input") or {}
+                stored_audit = input_data.get("privacy_audit")
+                if isinstance(stored_audit, dict):
+                    audit = {**stored_audit, "available": True}
+            except (TypeError, ValueError):
+                pass
+        return {
+            "file": dict(source),
+            "privacy_audit": audit,
+            "sanitized_log": "\n".join(lines),
+            "raw_log_exposed": False,
+        }
+    finally:
+        conn.close()
+
 @router.post("/upload", response_model=IngestionUploadResponse)
 async def upload_log_file(
     file: UploadFile = File(...),

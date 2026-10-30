@@ -1,6 +1,7 @@
 from typing import Optional, List
 from fastapi import APIRouter, Query
 from app.core.database import get_connection
+from app.core.security import SecretMasker
 
 router = APIRouter()
 
@@ -68,7 +69,13 @@ def get_parsed_events(
             "total": total_count,
             "limit": limit,
             "offset": offset,
-            "events": [dict(r) for r in rows]
+            "events": [
+                {
+                    **dict(r),
+                    "sanitized_message": SecretMasker.sanitize(r["sanitized_message"] or "", mask_ips=True),
+                }
+                for r in rows
+            ]
         }
     finally:
         conn.close()

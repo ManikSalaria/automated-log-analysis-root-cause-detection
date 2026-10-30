@@ -317,6 +317,7 @@ TRACE integrates with Jenkins pipelines via HTTP REST or raw console log ingesti
 - **Direct Upload:** Upload raw console logs (`consoleText`) through `POST /api/v1/ingest/upload` with optional Jenkins metadata fields.
 - **Automatic analysis:** Both ingestion routes sanitize and parse every log line, run the full log through baseline, XGBoost, and GraphSAGE classifiers, calculate root-cause candidates, retrieve related historical incidents, and generate a cited Stage 5 report when the configured LLM is available. Results are stored against that exact ingestion and shown in the dashboard's **Latest Ingestion Analysis** card; citation validation warnings are surfaced for human review.
 - **Per-ingestion results:** `GET /api/v1/ingest/latest/analysis` returns the latest ingestion's processing stages and report; `GET /api/v1/ingest/{file_id}/analysis` returns results for a specific upload/build.
+- **Dashboard log selection:** `GET /api/v1/ingest?limit=500` lists uploaded files and Jenkins builds. `GET /api/v1/ingest/{file_id}/privacy` returns the saved audit counts and a re-sanitized reconstruction of persisted log lines (never raw credential values). Privacy View, Parser View, and Incident & RCA use these ingestion records instead of a fixed demo log.
 - **Pipeline smoke test:** Run the Jenkins job with `TRACE_INGESTION_SMOKE_TEST=true` to emit a controlled payment-dependency failure signature and verify the complete ingestion path. It is disabled by default.
 - **Run locally:** Keep TRACE running at `http://127.0.0.1:8000`; the finalizer uses that local endpoint by default. Set `TRACE_INGEST_URL` in the Jenkins agent environment to use another TRACE server.
 
@@ -329,6 +330,8 @@ TRACE integrates with Jenkins pipelines via HTTP REST or raw console log ingesti
 | `/api/v1/health` | `GET` | Health check, DB state, and live Ollama provider connectivity |
 | `/api/v1/ingest/upload` | `POST` | Upload and sanitize raw log file (`multipart/form-data`) |
 | `/api/v1/ingest/jenkins` | `POST` | Ingest raw Jenkins build console text with build metadata |
+| `/api/v1/ingest` | `GET` | List recent uploads and Jenkins builds for dashboard selection |
+| `/api/v1/ingest/{file_id}/privacy` | `GET` | Return audit counts and a re-sanitized stored-log reconstruction |
 | `/api/v1/ingest/latest/analysis` | `GET` | Latest ingestion's model, RAG, and LLM processing results |
 | `/api/v1/ingest/{file_id}/analysis` | `GET` | Processing results tied to one exact ingestion |
 | `/api/v1/incidents` | `GET` | Paginated incident list with severity/component filters |
@@ -350,7 +353,7 @@ For complete request schemas, curl examples, and response JSON payloads, see [do
 ## 13. Security, Privacy & Responsible AI
 
 1. **Air-Gapped & Local Guarantee:** All models and the Ollama LLM sidecar run strictly on local infrastructure. No incident data or telemetry is sent to public cloud endpoints.
-2. **Zero-PII SecretMasker:** AWS credentials, GitHub PATs, JWT tokens, Bearer headers, and private IPs are redacted in-memory prior to persistence or model ingestion. Raw logs are not retained in SQLite unless `ALLOW_RAW_LOG_RETENTION=True` is explicitly configured.
+2. **Zero-PII SecretMasker:** AWS credentials, GitHub PATs, JWT tokens, Bearer headers, passwords, email addresses, and private IPs are masked in-memory prior to persistence or model ingestion. Raw logs are not retained in SQLite unless `ALLOW_RAW_LOG_RETENTION=True` is explicitly configured. Privacy View returns only re-sanitized stored lines and the type/count audit recorded during ingestion; it never exposes the original credential values.
 3. **Prompt Injection Delimiters:** Log text is isolated in non-executable `<log_evidence>` XML tags with explicit instructions to ignore instructions contained within logs.
 4. **Non-Substitution Citation Rule:** Hallucinated evidence citations (`[E99]`) are rejected, never silently replaced with unrelated citations.
 5. **Diagnostic First:** Prioritizes identifying root-cause sources over blanket try-catch suppression.
