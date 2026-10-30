@@ -21,7 +21,7 @@ from main import app  # noqa: E402
 client = TestClient(app)
 
 
-def _install_fast_pipeline_fakes(monkeypatch, seen):
+def _install_fast_pipeline_fakes(monkeypatch, seen, grounding_passed=True):
     monkeypatch.setattr(ingestion_endpoint, "process_ingested_log", ingestion_pipeline.process_ingested_log)
 
     def fake_predict(text, model_name="baseline"):
@@ -49,7 +49,10 @@ def _install_fast_pipeline_fakes(monkeypatch, seen):
             "report": {"incident_summary": "Payment dependency refused the connection."},
             "classifier_output": {"predicted_category": "NETWORK_DEPENDENCY_FAILURE"},
             "retrieval_results": [{"incident_code": "INC-HIST-1"}],
-            "validation_details": {"passed": True},
+            "validation_details": {
+                "grounding_passed": grounding_passed,
+                "unsupported_claims_count": 0 if grounding_passed else 1,
+            },
         }
 
     monkeypatch.setattr(ingestion_pipeline, "predict_with_model", fake_predict)
@@ -141,6 +144,23 @@ def test_jenkins_json_ingestion_runs_same_pipeline_with_all_console_lines(monkey
     assert record["processing_status"] == "success"
     assert source["line_count"] == len(console.splitlines())
     assert source["build_status"] == "FAILURE"
+
+
+def test_validator_flagged_llm_claim_is_not_marked_as_clean_success(monkeypatch):
+    seen = {}
+    _install_fast_pipeline_fakes(monkeypatch, seen, grounding_passed=False)
+    filename = f"validation-warning-{uuid.uuid4().hex}.log"
+    response = client.post(
+        "/api/v1/ingest/upload",
+        files={"file": (filename, b"[ERROR] synthetic test failure", "text/plain")},
+    )
+    assert response.status_code == 200, response.text
+    result = response.json()
+
+    assert result["analysis_status"] == "validation_warning"
+    assert result["analysis"]["synthesis_status"] == "success"
+    assert result["analysis"]["synthesis"]["validation_details"]["grounding_passed"] is False
+    assert client.get(f"/api/v1/ingest/{result['file_id']}/analysis").json()["processing_status"] == "validation_warning"
 
 
 def test_stage5_evidence_selects_failure_from_late_in_full_log():

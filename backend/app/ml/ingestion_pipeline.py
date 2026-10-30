@@ -103,6 +103,13 @@ def process_ingested_log(file_id: int, raw_text: str) -> Dict[str, Any]:
         "updated_at": now,
     }
     status = synthesis_data.get("status", "error")
+    validation = synthesis_data.get("validation_details") or {}
+    if synthesis_data.get("report") and validation.get("grounding_passed") is False:
+        # Keep the report and evidence for review, but never label a report with
+        # validator-flagged claims as a clean success in the ingestion workflow.
+        status = "validation_warning"
+        analysis["synthesis_status"] = synthesis_data.get("status", "error")
+        analysis["status"] = status
     conn = get_connection(timeout=30.0)
     try:
         with conn:

@@ -114,6 +114,8 @@ curl -X POST "http://127.0.0.1:8000/api/v1/ingest/jenkins" \
 ### `GET /api/v1/ingest/latest/analysis` and `GET /api/v1/ingest/{file_id}/analysis`
 Retrieve analysis snapshots for the newest or a specific ingestion. The snapshot includes the source filename/build provenance, privacy audit counts, all classifier results, the rule-based root-cause candidate, historical retrieval results, and the LLM synthesis response. These endpoints are keyed to a source `file_id`, so a report cannot silently drift to a different historical incident.
 
+When Stage 5 returns a report but citation validation flags unsupported claims, the ingestion's `processing_status` is `validation_warning`; the report remains available with its validator details and must be reviewed by an engineer.
+
 ---
 
 ## 3. Incidents & Events Endpoints

@@ -401,6 +401,9 @@ export default function App() {
                 {latestIngestion.analysis.synthesis?.report && (
                   <div className="bg-slate-950/70 rounded-lg p-3 space-y-2">
                     <p className="text-xs font-semibold text-cyan-300">LLM incident report · {latestIngestion.analysis.synthesis.status} · {latestIngestion.analysis.rag?.retrieved_count || 0} historical cases retrieved</p>
+                    {latestIngestion.analysis.synthesis.validation_details?.grounding_passed === false && (
+                      <p className="text-xs text-amber-300">Human review required: the citation validator flagged {latestIngestion.analysis.synthesis.validation_details.unsupported_claims_count || 0} unsupported claim(s). Treat those claims as unverified.</p>
+                    )}
                     <p className="text-sm text-slate-200">{latestIngestion.analysis.synthesis.report.incident_summary}</p>
                     <p className="text-xs text-slate-400">Predicted category: {latestIngestion.analysis.synthesis.report.predicted_failure_category}</p>
                     {latestIngestion.analysis.synthesis.report.likely_root_causes?.[0] && (
@@ -560,6 +563,9 @@ export default function App() {
                       <p>Analysis ID: {uploadStatus.analysis?.file_id} · Complete log passed to the selected classifier, RAG, and LLM stages.</p>
                       {uploadStatus.analysis?.synthesis?.report?.incident_summary && (
                         <p className="text-cyan-300">Report: {uploadStatus.analysis.synthesis.report.incident_summary}</p>
+                      )}
+                      {uploadStatus.analysis?.synthesis?.validation_details?.grounding_passed === false && (
+                        <p className="text-amber-300">Human review required: citation validation flagged {uploadStatus.analysis.synthesis.validation_details.unsupported_claims_count || 0} unsupported claim(s).</p>
                       )}
                     </>
                   )}
