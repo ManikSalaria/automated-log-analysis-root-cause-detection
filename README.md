@@ -312,9 +312,12 @@ npm run dev
 ## 11. Jenkins CI/CD Integration
 
 TRACE integrates with Jenkins pipelines via HTTP REST or raw console log ingestion:
-- **Pipeline setup:** Configure a Jenkins Pipeline job to use this repository, select the branch to build, and set the script path to `Jenkinsfile`. The pipeline builds the React dashboard and posts its Jenkins `consoleText` with build status and provenance to TRACE after each run.
+- **Pipeline setup:** Configure a Jenkins Pipeline job to use this repository, select the branch to build, and set the script path to `Jenkinsfile`. The pipeline builds the React dashboard and posts its complete Jenkins `consoleText` with build status and provenance to TRACE after each run. Empty logs are rejected instead of being replaced with status-only text; logs over 20 MB are rejected rather than truncated.
 - **JSON Endpoint:** `POST /api/v1/ingest/jenkins` accepts `job_name`, `build_number`, `build_status`, `console_log`, and optional `build_url`, `repo_url`, `git_commit`, and `git_branch` values.
 - **Direct Upload:** Upload raw console logs (`consoleText`) through `POST /api/v1/ingest/upload` with optional Jenkins metadata fields.
+- **Automatic analysis:** Both ingestion routes sanitize and parse every log line, run the full log through baseline, XGBoost, and GraphSAGE classifiers, calculate root-cause candidates, retrieve related historical incidents, and generate a cited Stage 5 report when the configured LLM is available. Results are stored against that exact ingestion and shown in the dashboard's **Latest Ingestion Analysis** card.
+- **Per-ingestion results:** `GET /api/v1/ingest/latest/analysis` returns the latest ingestion's processing stages and report; `GET /api/v1/ingest/{file_id}/analysis` returns results for a specific upload/build.
+- **Pipeline smoke test:** Run the Jenkins job with `TRACE_INGESTION_SMOKE_TEST=true` to emit a controlled payment-dependency failure signature and verify the complete ingestion path. It is disabled by default.
 - **Run locally:** Keep TRACE running at `http://127.0.0.1:8000`; the repository's `scripts/jenkins_post_build.ps1` posts the build log to this local endpoint and reports a warning if TRACE is unavailable.
 
 ---
@@ -326,6 +329,8 @@ TRACE integrates with Jenkins pipelines via HTTP REST or raw console log ingesti
 | `/api/v1/health` | `GET` | Health check, DB state, and live Ollama provider connectivity |
 | `/api/v1/ingest/upload` | `POST` | Upload and sanitize raw log file (`multipart/form-data`) |
 | `/api/v1/ingest/jenkins` | `POST` | Ingest raw Jenkins build console text with build metadata |
+| `/api/v1/ingest/latest/analysis` | `GET` | Latest ingestion's model, RAG, and LLM processing results |
+| `/api/v1/ingest/{file_id}/analysis` | `GET` | Processing results tied to one exact ingestion |
 | `/api/v1/incidents` | `GET` | Paginated incident list with severity/component filters |
 | `/api/v1/incidents/{incident_id}` | `GET` | Incident detail view with chronological context lines |
 | `/api/v1/analysis/analyze` | `POST` | Full analysis with secret sanitization, parsing, and ML classification |

@@ -51,7 +51,7 @@ def get_recent_incidents(
             query += " AND (f.build_number = ? OR i.build_number = ?)"
             params.extend([str(build_number), str(build_number)])
 
-        query += " ORDER BY i.id DESC LIMIT ? OFFSET ?;"
+        query += " ORDER BY i.created_at DESC, i.id DESC LIMIT ? OFFSET ?;"
         params.extend([limit, offset])
 
         cursor.execute(query, params)

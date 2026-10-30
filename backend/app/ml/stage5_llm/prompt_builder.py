@@ -6,6 +6,7 @@ evidence package with strict prompt-injection isolation boundaries.
 """
 
 from typing import List, Dict, Any, Tuple, Optional
+import re
 from app.core.security import SecretMasker
 from app.core.config import settings
 from app.schemas.synthesis_schema import EvidenceItem
@@ -27,6 +28,46 @@ Your task is to analyze the provided CI/CD and microservice failure evidence and
 
 You MUST respond strictly with a valid JSON object matching the requested schema. Do not include markdown code fences or conversational prose outside the JSON.
 """
+
+
+def _current_log_evidence(log_text: str, max_chars: int = 5000) -> Tuple[str, str]:
+    """Select a bounded, chronological excerpt that retains failures anywhere in a log.
+
+    The complete sanitized log is still analyzed by the classifier and RCA stages;
+    this excerpt is the LLM evidence view, constrained by the model context window.
+    """
+    lines = log_text.splitlines()
+    if not lines:
+        return "", "1-1"
+
+    failure_pattern = re.compile(
+        r"(?i)\b(error|fatal|severe|failed|failure|exception|traceback|caused by:|"
+        r"assertionerror|timed?\s*out|connection refused|oom|out of memory|build failure)\b"
+    )
+    selected = set(range(min(3, len(lines))))
+    selected.update(range(max(0, len(lines) - 3), len(lines)))
+    for index, line in enumerate(lines):
+        if failure_pattern.search(line):
+            selected.update(range(max(0, index - 1), min(len(lines), index + 3)))
+
+    ordered = sorted(selected)
+    kept: List[int] = []
+    current_len = 0
+    # Keep diagnostic lines first, then restore chronological ordering.
+    priority = sorted(ordered, key=lambda i: (0 if failure_pattern.search(lines[i]) else 1, i))
+    for index in priority:
+        rendered = f"L{index + 1}: {lines[index]}"
+        needed = len(rendered) + 1
+        if current_len + needed <= max_chars:
+            kept.append(index)
+            current_len += needed
+    if not kept:
+        kept = [0]
+    kept.sort()
+    excerpt_lines = [f"L{index + 1}: {lines[index]}" for index in kept]
+    if len(kept) < len(lines):
+        excerpt_lines.insert(0, f"[Selected {len(kept)} diagnostic/context lines from {len(lines)} total log lines]")
+    return "\n".join(excerpt_lines), f"{kept[0] + 1}-{kept[-1] + 1}"
 
 
 def format_evidence_package(
@@ -52,15 +93,16 @@ def format_evidence_package(
 
     # 1. Primary Current Incident (E1)
     sanitized_current = SecretMasker.sanitize(current_log, mask_ips=True, normalize_identifiers=False)
-    # Truncate current snippet if excessive
-    clipped_current = sanitized_current[:1500]
+    # Prefer failure signatures throughout the log instead of truncating at the
+    # beginning, where real build failures are often absent.
+    clipped_current, selected_line_span = _current_log_evidence(sanitized_current)
 
     e1 = EvidenceItem(
         evidence_id="E1",
         source_type="CURRENT_INCIDENT",
         incident_code=incident_code or "INC-CURRENT",
         source_file=source_file or "current_input.log",
-        line_span=line_span or "1-1",
+        line_span=line_span or selected_line_span,
         failure_category=classifier_prediction.get("predicted_category") if classifier_prediction else None,
         snippet=clipped_current
     )

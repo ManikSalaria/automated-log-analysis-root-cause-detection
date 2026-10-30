@@ -6,9 +6,13 @@ try {
     }
 
     $consoleUrl = $env:BUILD_URL.TrimEnd('/') + '/consoleText'
-    $consoleLog = (Invoke-WebRequest -Uri $consoleUrl -TimeoutSec 20 -UseBasicParsing).Content
+    $consoleLog = (Invoke-WebRequest -Uri $consoleUrl -TimeoutSec 90 -UseBasicParsing).Content
     if ([string]::IsNullOrWhiteSpace($consoleLog)) {
-        $consoleLog = "Jenkins job $($env:JOB_NAME) build $($env:BUILD_NUMBER) completed with status $($env:TRACE_BUILD_RESULT)."
+        throw 'Jenkins returned an empty console log; refusing to replace the console with build metadata.'
+    }
+    $consoleByteCount = [System.Text.Encoding]::UTF8.GetByteCount($consoleLog)
+    if ($consoleByteCount -gt 20MB) {
+        throw "Jenkins console log is $consoleByteCount bytes, above TRACE's 20 MB ingestion limit. No content was truncated."
     }
 
     $branch = $env:BRANCH_NAME
@@ -26,10 +30,9 @@ try {
         git_branch = $branch
         console_log = $consoleLog
     } | ConvertTo-Json -Depth 5 -Compress
-
     $target = if ($env:TRACE_INGEST_URL) { $env:TRACE_INGEST_URL } else { 'http://127.0.0.1:8000/api/v1/ingest/jenkins' }
-    $response = Invoke-RestMethod -Uri $target -Method Post -ContentType 'application/json; charset=utf-8' -Body ([System.Text.Encoding]::UTF8.GetBytes($payload)) -TimeoutSec 60
-    Write-Host "TRACE accepted $($env:JOB_NAME) #$($env:BUILD_NUMBER): file $($response.file_id), $($response.incidents_detected) incident(s)."
+    $response = Invoke-RestMethod -Uri $target -Method Post -ContentType 'application/json; charset=utf-8' -Body ([System.Text.Encoding]::UTF8.GetBytes($payload)) -TimeoutSec 240
+    Write-Host "TRACE accepted $($env:JOB_NAME) #$($env:BUILD_NUMBER): file $($response.file_id), $($response.incidents_detected) incident(s), analysis $($response.analysis_status)."
     exit 0
 } catch {
     Write-Warning "Could not send this build log to TRACE: $($_.Exception.Message)"

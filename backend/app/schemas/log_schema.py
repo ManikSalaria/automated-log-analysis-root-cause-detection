@@ -73,6 +73,8 @@ class IngestionUploadResponse(BaseModel):
     repo_url: Optional[str] = None
     commit_sha: Optional[str] = None
     git_branch: Optional[str] = None
+    analysis_status: str = "pending"
+    analysis: Optional[Dict[str, Any]] = None
 
 class JenkinsIngestionRequest(BaseModel):
     job_name: str = Field(..., min_length=1, max_length=200)

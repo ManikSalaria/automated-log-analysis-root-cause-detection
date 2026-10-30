@@ -40,7 +40,7 @@ curl -X GET http://127.0.0.1:8000/api/v1/health
 ## 2. Ingestion & Privacy Endpoints
 
 ### `POST /api/v1/ingest/upload`
-Uploads a raw log file (`.txt`, `.log`). Automatically redacts credentials in-memory, parses multiline events, and extracts incidents.
+Uploads a raw log file (`.txt`, `.log`, up to 20 MB). Every line is inspected by the parser and privacy masker; the complete sanitized log is then sent to the classifier ensemble and Stage 5 (root-cause analysis, hybrid RAG, and LLM synthesis). Results are persisted against this upload's `file_id`.
 
 #### Example Request
 ```bash
@@ -50,24 +50,32 @@ curl -X POST "http://127.0.0.1:8000/api/v1/ingest/upload" \
   -F "file=@backend/data/raw/Jenkins_Log_Under_1MB.txt"
 ```
 
-#### Example Response (200 OK)
+#### Example Response (200 OK; abbreviated)
 ```json
 {
-  "status": "success",
   "file_id": 1,
   "filename": "Jenkins_Log_Under_1MB.txt",
-  "total_lines": 3120,
-  "sanitized_tokens_count": 14,
-  "events_extracted": 1845,
+  "line_count": 3120,
+  "events_inserted": 1845,
   "incidents_detected": 18,
-  "processing_time_ms": 342.5
+  "analysis_status": "success",
+  "analysis": {
+    "input": { "complete_log_processed": true, "line_count": 3120 },
+    "classifiers": {
+      "baseline": { "status": "success", "predicted_category": "NETWORK_DEPENDENCY_FAILURE" },
+      "xgboost": { "status": "success", "predicted_category": "NETWORK_DEPENDENCY_FAILURE" },
+      "graphsage": { "status": "success", "predicted_category": "NETWORK_DEPENDENCY_FAILURE" }
+    },
+    "rag": { "retrieved_count": 4 },
+    "synthesis": { "status": "success", "report": { "incident_summary": "..." } }
+  }
 }
 ```
 
 ---
 
 ### `POST /api/v1/ingest/jenkins`
-Ingests a Jenkins CI/CD console log directly from raw text with optional build metadata.
+Ingests a complete Jenkins CI/CD console log directly from raw text with build metadata, then runs the same parser, privacy, classifier, RCA, RAG, and synthesis pipeline as manual uploads. Empty console output is rejected instead of being replaced with build status text.
 
 #### Example Request
 ```bash
@@ -92,14 +100,19 @@ curl -X POST "http://127.0.0.1:8000/api/v1/ingest/jenkins" \
   "filename": "jenkins-trace-pipeline-build-42.log",
   "source_type": "JENKINS_BUILD_LOG",
   "job_name": "trace-pipeline-build",
-  "build_number": 42,
+  "build_number": "42",
   "build_status": "FAILURE",
   "events_inserted": 2,
   "incidents_detected": 1,
+  "analysis_status": "success",
+  "analysis": { "...": "per-ingestion stage results and report" },
   "commit_sha": "a1b2c3d4e5f6",
   "git_branch": "main"
 }
 ```
+
+### `GET /api/v1/ingest/latest/analysis` and `GET /api/v1/ingest/{file_id}/analysis`
+Retrieve analysis snapshots for the newest or a specific ingestion. The snapshot includes the source filename/build provenance, privacy audit counts, all classifier results, the rule-based root-cause candidate, historical retrieval results, and the LLM synthesis response. These endpoints are keyed to a source `file_id`, so a report cannot silently drift to a different historical incident.
 
 ---
 

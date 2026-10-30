@@ -2,9 +2,12 @@ import re
 import io
 import sqlite3
 import hashlib
+import json
+import uuid
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi.concurrency import run_in_threadpool
 from app.core.config import settings
 from app.core.security import SecretMasker
 from app.core.database import get_connection
@@ -12,6 +15,7 @@ from app.parsers.regex_parser import LogParserEngine
 from app.analysis.root_cause_candidate import RootCauseCandidateAnalyzer
 from app.ml.baseline.tfidf_rf import BaselineTfidfRandomForest
 from app.schemas.log_schema import IngestionUploadResponse, JenkinsIngestionRequest
+from app.ml.ingestion_pipeline import process_ingested_log, get_ingestion_analysis
 
 router = APIRouter()
 baseline_model = BaselineTfidfRandomForest()
@@ -32,7 +36,8 @@ async def upload_log_file(
     Ingest an authentic CI/CD build log or microservice telemetry file (.log / .txt).
     Supports optional Jenkins build metadata (job_name, build_number, build_status,
     build_url, repo_url, commit_sha), computes SHA-256 hash, masks credentials,
-    persists events and incident associations to SQLite, and performs baseline ML classification.
+    persists all parsed events and incident associations, then runs the complete-log
+    classifier ensemble, root-cause heuristics, hybrid retrieval, and evidence-grounded synthesis.
     """
     if not file.filename.endswith((".log", ".txt")):
         raise HTTPException(status_code=400, detail="Only .log and .txt files are supported for ingestion.")
@@ -40,6 +45,8 @@ async def upload_log_file(
     content = await file.read()
     if not content:
         raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+    if len(content) > 20 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="Log files may not exceed 20 MB.")
 
     clean_job_name = job_name.strip() if job_name and job_name.strip() else None
     clean_build_number = str(build_number).strip() if build_number and str(build_number).strip() else None
@@ -50,6 +57,7 @@ async def upload_log_file(
     clean_git_branch = git_branch.strip() if git_branch and git_branch.strip() else None
 
     raw_text = content.decode("utf-8", errors="replace")
+    stored_filename = file.filename
     lines = raw_text.splitlines()
     sha256_hash = hashlib.sha256(content).hexdigest()
     ingested_at = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
@@ -145,11 +153,26 @@ async def upload_log_file(
             cursor = conn.cursor()
 
             # Manage source_files record idempotently
-            cursor.execute("SELECT id FROM source_files WHERE filename = ?;", (file.filename,))
+            cursor.execute("SELECT id, job_name, build_number FROM source_files WHERE filename = ?;", (stored_filename,))
             existing_row = cursor.fetchone()
+
+            same_jenkins_build = bool(
+                existing_row and clean_job_name and clean_build_number
+                and existing_row["job_name"] == clean_job_name
+                and str(existing_row["build_number"] or "") == clean_build_number
+            )
+            if existing_row and not same_jenkins_build:
+                path_parts = stored_filename.rsplit(".", 1)
+                suffix = f".{path_parts[1]}" if len(path_parts) == 2 else ""
+                stem = path_parts[0] if suffix else stored_filename
+                stored_filename = f"{stem}-{sha256_hash[:10]}-{uuid.uuid4().hex[:6]}{suffix}"
+                while cursor.execute("SELECT 1 FROM source_files WHERE filename = ?", (stored_filename,)).fetchone():
+                    stored_filename = f"{stem}-{uuid.uuid4().hex[:12]}{suffix}"
+                existing_row = None
 
             if existing_row:
                 file_id = existing_row["id"]
+                cursor.execute("DELETE FROM ingestion_analyses WHERE file_id = ?", (file_id,))
                 # Cleanly purge prior parsed events and incidents for this file to ensure zero duplicates
                 cursor.execute("DELETE FROM parsed_events WHERE file_id = ?;", (file_id,))
                 cursor.execute("DELETE FROM incidents WHERE file_id = ?;", (file_id,))
@@ -171,7 +194,7 @@ async def upload_log_file(
                     )
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                 """, (
-                    file.filename, source_type, len(content), len(lines), sha256_hash, ingested_at,
+                    stored_filename, source_type, len(content), len(lines), sha256_hash, ingested_at,
                     clean_job_name, clean_build_number, clean_build_status, clean_build_url, clean_repo_url, clean_commit_sha, clean_git_branch
                 ))
                 file_id = cursor.lastrowid
@@ -230,9 +253,36 @@ async def upload_log_file(
     finally:
         conn.close()
 
+    analysis = None
+    analysis_status = "processing_failed"
+    try:
+        analysis = await run_in_threadpool(process_ingested_log, file_id, raw_text)
+        analysis_status = analysis.get("status", "error")
+    except Exception as exc:
+        safe_error = SecretMasker.sanitize(str(exc), mask_ips=True)[:500]
+        analysis = {"file_id": file_id, "status": "processing_failed", "error": safe_error}
+        conn = get_connection(timeout=30.0)
+        try:
+            with conn:
+                conn.execute(
+                    """INSERT INTO ingestion_analyses
+                       (file_id, processing_status, analysis_json, synthesis_json, error_message, updated_at)
+                       VALUES (?, ?, ?, NULL, ?, ?)
+                       ON CONFLICT(file_id) DO UPDATE SET
+                         processing_status=excluded.processing_status,
+                         analysis_json=excluded.analysis_json,
+                         synthesis_json=NULL,
+                         error_message=excluded.error_message,
+                         updated_at=excluded.updated_at""",
+                    (file_id, analysis_status, json.dumps(analysis), safe_error,
+                     datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")),
+                )
+        finally:
+            conn.close()
+
     return IngestionUploadResponse(
         file_id=file_id,
-        filename=file.filename,
+        filename=stored_filename,
         source_type=source_type,
         byte_size=len(content),
         line_count=len(lines),
@@ -246,7 +296,9 @@ async def upload_log_file(
         build_url=clean_build_url,
         repo_url=clean_repo_url,
         commit_sha=clean_commit_sha,
-        git_branch=clean_git_branch
+        git_branch=clean_git_branch,
+        analysis_status=analysis_status,
+        analysis=analysis
     )
 
 
@@ -272,3 +324,28 @@ async def ingest_jenkins_console(payload: JenkinsIngestionRequest):
         commit_sha=payload.git_commit,
         git_branch=payload.git_branch,
     )
+
+
+@router.get("/latest/analysis")
+def read_latest_ingestion_analysis():
+    """Return results for the most recently ingested source file."""
+    conn = get_connection(timeout=10.0)
+    try:
+        row = conn.execute("SELECT id FROM source_files ORDER BY ingested_at DESC, id DESC LIMIT 1").fetchone()
+        if row is None:
+            raise HTTPException(status_code=404, detail="No ingested logs are available.")
+        result = get_ingestion_analysis(row["id"])
+        if result is None:
+            return {"file_id": row["id"], "processing_status": "pending", "analysis": None}
+        return result
+    finally:
+        conn.close()
+
+
+@router.get("/{file_id}/analysis")
+def read_ingestion_analysis(file_id: int):
+    """Return the complete processing trace and report for one exact ingestion."""
+    result = get_ingestion_analysis(file_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail=f"No analysis found for ingestion {file_id}.")
+    return result

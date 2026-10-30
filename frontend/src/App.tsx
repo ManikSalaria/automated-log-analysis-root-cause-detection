@@ -32,6 +32,7 @@ export default function App() {
   const [healthData, setHealthData] = useState<any>(null);
   const [metricsData, setMetricsData] = useState<any>(null);
   const [incidents, setIncidents] = useState<any[]>([]);
+  const [latestIngestion, setLatestIngestion] = useState<any>(null);
   const [eventsData, setEventsData] = useState<any>({ total: 0, events: [] });
   const [backendError, setBackendError] = useState<string | null>(null);
 
@@ -88,7 +89,7 @@ export default function App() {
   const fetchHealthAndMetrics = async () => {
     try {
       setBackendError(null);
-      const [hRes, mRes, iRes, cRes, aRes, rStatsRes, rBenchRes, pStatusRes] = await Promise.all([
+      const [hRes, mRes, iRes, cRes, aRes, rStatsRes, rBenchRes, pStatusRes, latestRes] = await Promise.all([
         fetch(`${API_BASE}/health`),
         fetch(`${API_BASE}/metrics`),
         fetch(`${API_BASE}/incidents?limit=15`),
@@ -96,7 +97,8 @@ export default function App() {
         fetch(`${API_BASE}/metrics/audit`),
         fetch(`${API_BASE}/rag/corpus-stats`),
         fetch(`${API_BASE}/rag/evaluation-metrics`),
-        fetch(`${API_BASE}/analysis/llm-provider-status`)
+        fetch(`${API_BASE}/analysis/llm-provider-status`),
+        fetch(`${API_BASE}/ingest/latest/analysis`)
       ]);
       if (hRes.ok) setHealthData(await hRes.json());
       if (mRes.ok) setMetricsData(await mRes.json());
@@ -112,6 +114,7 @@ export default function App() {
       if (rStatsRes.ok) setRagStats(await rStatsRes.json());
       if (rBenchRes.ok) setRagBenchmark(await rBenchRes.json());
       if (pStatusRes.ok) setProviderStatus(await pStatusRes.json());
+      if (latestRes.ok) setLatestIngestion(await latestRes.json());
     } catch (err: any) {
       setBackendError(`Cannot connect to FastAPI backend at ${API_BASE}. Ensure server is running: scripts\\start_servers.bat`);
     }
@@ -375,6 +378,43 @@ export default function App() {
             </div>
 
             {/* Recent Authentic Incidents Table */}
+            {latestIngestion?.analysis && (
+              <div className="bg-slate-900 border border-cyan-500/30 rounded-xl p-5 space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <div>
+                    <h3 className="text-sm font-semibold text-white">Latest Ingestion Analysis</h3>
+                    <p className="text-xs text-slate-400">File #{latestIngestion.file_id} · {latestIngestion.updated_at || latestIngestion.analysis.updated_at} · {latestIngestion.processing_status}</p>
+                  </div>
+                  <button onClick={fetchHealthAndMetrics} className="px-2.5 py-1.5 rounded border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs">Refresh</button>
+                </div>
+                {latestIngestion.analysis.input && (
+                  <p className="text-xs text-slate-400">Processed {latestIngestion.analysis.input.line_count} complete log lines · {latestIngestion.analysis.input.raw_byte_count?.toLocaleString()} bytes · privacy findings: {latestIngestion.analysis.input.privacy_audit?.leak_count ?? 0}</p>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(latestIngestion.analysis.classifiers || {}).map(([name, result]: [string, any]) => (
+                    <span key={name} className={`text-[11px] px-2 py-1 rounded border ${result.status === 'success' ? 'border-emerald-700 text-emerald-300' : 'border-amber-700 text-amber-300'}`}>
+                      {name}: {result.status === 'success' ? `${result.predicted_category} (${(result.confidence * 100).toFixed(1)}%)` : result.status}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-xs text-slate-300"><span className="text-indigo-300 font-semibold">Root cause candidate:</span> {latestIngestion.analysis.root_cause_candidate?.root_cause_candidate || latestIngestion.analysis.error}</p>
+                {latestIngestion.analysis.synthesis?.report && (
+                  <div className="bg-slate-950/70 rounded-lg p-3 space-y-2">
+                    <p className="text-xs font-semibold text-cyan-300">LLM incident report · {latestIngestion.analysis.synthesis.status} · {latestIngestion.analysis.rag?.retrieved_count || 0} historical cases retrieved</p>
+                    <p className="text-sm text-slate-200">{latestIngestion.analysis.synthesis.report.incident_summary}</p>
+                    <p className="text-xs text-slate-400">Predicted category: {latestIngestion.analysis.synthesis.report.predicted_failure_category}</p>
+                    {latestIngestion.analysis.synthesis.report.likely_root_causes?.[0] && (
+                      <p className="text-xs text-slate-300">Likely cause: {latestIngestion.analysis.synthesis.report.likely_root_causes[0].hypothesis}</p>
+                    )}
+                  </div>
+                )}
+                {!latestIngestion.analysis.synthesis?.report && latestIngestion.analysis.synthesis?.error_message && (
+                  <p className="text-xs text-amber-300">Report status: {latestIngestion.analysis.synthesis.status} — {latestIngestion.analysis.synthesis.error_message}</p>
+                )}
+              </div>
+            )}
+
+            {/* Recent Authentic Incidents Table */}
             <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div>
@@ -504,7 +544,7 @@ export default function App() {
                     <p>Error: {uploadStatus.error}</p>
                   ) : (
                     <>
-                      <p className="text-emerald-400 font-semibold font-sans">✓ Ingestion & Persistence Successful</p>
+                      <p className="text-emerald-400 font-semibold font-sans">✓ Log ingested and analyzed · {uploadStatus.analysis_status}</p>
                       <p>Filename: {uploadStatus.filename}</p>
                       {uploadStatus.job_name && (
                         <p className="text-cyan-400 font-semibold">
@@ -517,6 +557,10 @@ export default function App() {
                       <p>SHA-256: {uploadStatus.sha256_hash}</p>
                       <p>Structured Events Persisted: {uploadStatus.events_inserted.toLocaleString()}</p>
                       <p>Failures Detected: {uploadStatus.incidents_detected}</p>
+                      <p>Analysis ID: {uploadStatus.analysis?.file_id} · Complete log passed to the selected classifier, RAG, and LLM stages.</p>
+                      {uploadStatus.analysis?.synthesis?.report?.incident_summary && (
+                        <p className="text-cyan-300">Report: {uploadStatus.analysis.synthesis.report.incident_summary}</p>
+                      )}
                     </>
                   )}
                 </div>

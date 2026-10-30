@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    parameters {
+        booleanParam(
+            name: 'TRACE_INGESTION_SMOKE_TEST',
+            defaultValue: false,
+            description: 'Emit a controlled failure signature to verify end-to-end TRACE ingestion.'
+        )
+    }
+
     options {
         disableConcurrentBuilds()
     }
@@ -18,6 +26,16 @@ pipeline {
                     bat 'npm ci'
                     bat 'npm run build'
                 }
+            }
+        }
+
+        stage('TRACE ingestion smoke fixture') {
+            when {
+                expression { params.TRACE_INGESTION_SMOKE_TEST }
+            }
+            steps {
+                echo '[ERROR] TRACE_INGESTION_SMOKE: synthetic payment dependency failure; Connection refused to payment-db.test:5432'
+                echo 'Caused by: java.net.ConnectException: Connection refused'
             }
         }
     }
