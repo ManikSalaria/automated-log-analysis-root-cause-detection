@@ -6,7 +6,7 @@
 [![PyTorch Geometric](https://img.shields.io/badge/PyG-2.5+-3C2179.svg)](https://pyg.org/)
 [![React 18](https://img.shields.io/badge/React-18.3-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF.svg)](https://vitejs.dev/)
+[![Vite](https://img.shields.io/badge/Vite-6.4-646CFF.svg)](https://vitejs.dev/)
 [![SQLite WAL](https://img.shields.io/badge/SQLite-WAL--Mode-003B57.svg)](https://www.sqlite.org/wal.html)
 [![Ollama](https://img.shields.io/badge/Ollama-Llama--3.2--3B-black.svg)](https://ollama.com/)
 [![Tests](https://img.shields.io/badge/Pytest-94%20Passed-brightgreen.svg)](#14-automated-testing--verification-suite)
@@ -133,7 +133,7 @@ For in-depth mathematical formulations and architecture specifications, see [doc
   - Rank-BM25 (Okapi BM25 sparse scoring)
 - **Local LLM Engine:** Ollama for Windows running `llama3.2:3b`
 - **Database:** SQLite 3 configured in WAL (Write-Ahead Logging) mode
-- **Frontend Workbench:** React 18.3, TypeScript 5.5, Vite 5.4, Tailwind CSS, Lucide React icons
+- **Frontend Workbench:** React 18.3, TypeScript 5.5, Vite 6.4, Tailwind CSS, Lucide React icons
 - **Automated Testing:** Pytest 8.0+, HTTPX, Scikit-Learn evaluation suites
 
 ---
@@ -312,14 +312,14 @@ npm run dev
 ## 11. Jenkins CI/CD Integration
 
 TRACE integrates with Jenkins pipelines via HTTP REST or raw console log ingestion:
-- **Direct Upload:** Upload raw console logs (`consoleText`) via `POST /api/v1/ingest/upload`.
-- **JSON Endpoint:** Stream logs programmatically via `POST /api/v1/ingest/jenkins` with build metadata (`job_name`, `build_number`, `git_commit`, `git_branch`).
-- **Post-Build Script Example:**
-  ```bash
-  curl -X POST "http://localhost:8000/api/v1/ingest/jenkins" \
-    -H "Content-Type: application/json" \
-    -d "{\"job_name\": \"$JOB_NAME\", \"build_number\": $BUILD_NUMBER, \"console_log\": \"$(cat console.log)\"}"
-  ```
+- **Pipeline setup:** Configure a Jenkins Pipeline job to use this repository, select the branch to build, and set the script path to `Jenkinsfile`. After each normal run, Jenkins queues a finalizer run of the same job. Once the source build has fully completed, the finalizer fetches its final `consoleText` (including Jenkins post-actions and the `Finished:` line) and posts it with build status and provenance to TRACE. Empty logs are rejected instead of being replaced with status-only text; logs over 20 MB are rejected rather than truncated. The source build result is not changed if TRACE delivery fails.
+- **JSON Endpoint:** `POST /api/v1/ingest/jenkins` accepts `job_name`, `build_number`, `build_status`, `console_log`, and optional `build_url`, `repo_url`, `git_commit`, and `git_branch` values.
+- **Direct Upload:** Upload raw console logs (`consoleText`) through `POST /api/v1/ingest/upload` with optional Jenkins metadata fields.
+- **Automatic analysis:** Both ingestion routes sanitize and parse every log line, run the full log through baseline, XGBoost, and GraphSAGE classifiers, calculate root-cause candidates, retrieve related historical incidents, and generate a cited Stage 5 report when the configured LLM is available. Results are stored against that exact ingestion and shown in the dashboard's **Latest Ingestion Analysis** card; citation validation warnings are surfaced for human review.
+- **Per-ingestion results:** `GET /api/v1/ingest/latest/analysis` returns the latest ingestion's processing stages and report; `GET /api/v1/ingest/{file_id}/analysis` returns results for a specific upload/build.
+- **Dashboard log selection:** `GET /api/v1/ingest?limit=500` lists uploaded files and Jenkins builds. `GET /api/v1/ingest/{file_id}/privacy` returns the saved audit counts and a re-sanitized reconstruction of persisted log lines (never raw credential values). Privacy View, Parser View, and Incident & RCA use these ingestion records instead of a fixed demo log.
+- **Pipeline smoke test:** Run the Jenkins job with `TRACE_INGESTION_SMOKE_TEST=true` to emit a controlled payment-dependency failure signature and verify the complete ingestion path. It is disabled by default.
+- **Run locally:** Keep TRACE running at `http://127.0.0.1:8000`; the finalizer uses that local endpoint by default. Set `TRACE_INGEST_URL` in the Jenkins agent environment to use another TRACE server.
 
 ---
 
@@ -330,6 +330,10 @@ TRACE integrates with Jenkins pipelines via HTTP REST or raw console log ingesti
 | `/api/v1/health` | `GET` | Health check, DB state, and live Ollama provider connectivity |
 | `/api/v1/ingest/upload` | `POST` | Upload and sanitize raw log file (`multipart/form-data`) |
 | `/api/v1/ingest/jenkins` | `POST` | Ingest raw Jenkins build console text with build metadata |
+| `/api/v1/ingest` | `GET` | List recent uploads and Jenkins builds for dashboard selection |
+| `/api/v1/ingest/{file_id}/privacy` | `GET` | Return audit counts and a re-sanitized stored-log reconstruction |
+| `/api/v1/ingest/latest/analysis` | `GET` | Latest ingestion's model, RAG, and LLM processing results |
+| `/api/v1/ingest/{file_id}/analysis` | `GET` | Processing results tied to one exact ingestion |
 | `/api/v1/incidents` | `GET` | Paginated incident list with severity/component filters |
 | `/api/v1/incidents/{incident_id}` | `GET` | Incident detail view with chronological context lines |
 | `/api/v1/analysis/analyze` | `POST` | Full analysis with secret sanitization, parsing, and ML classification |
@@ -349,7 +353,7 @@ For complete request schemas, curl examples, and response JSON payloads, see [do
 ## 13. Security, Privacy & Responsible AI
 
 1. **Air-Gapped & Local Guarantee:** All models and the Ollama LLM sidecar run strictly on local infrastructure. No incident data or telemetry is sent to public cloud endpoints.
-2. **Zero-PII SecretMasker:** AWS credentials, GitHub PATs, JWT tokens, Bearer headers, and private IPs are redacted in-memory prior to persistence or model ingestion. Raw logs are not retained in SQLite unless `ALLOW_RAW_LOG_RETENTION=True` is explicitly configured.
+2. **Zero-PII SecretMasker:** AWS credentials, GitHub PATs, JWT tokens, Bearer headers, passwords, email addresses, and private IPs are masked in-memory prior to persistence or model ingestion. Raw logs are not retained in SQLite unless `ALLOW_RAW_LOG_RETENTION=True` is explicitly configured. Privacy View returns only re-sanitized stored lines and the type/count audit recorded during ingestion; it never exposes the original credential values.
 3. **Prompt Injection Delimiters:** Log text is isolated in non-executable `<log_evidence>` XML tags with explicit instructions to ignore instructions contained within logs.
 4. **Non-Substitution Citation Rule:** Hallucinated evidence citations (`[E99]`) are rejected, never silently replaced with unrelated citations.
 5. **Diagnostic First:** Prioritizes identifying root-cause sources over blanket try-catch suppression.

@@ -46,7 +46,8 @@ def migrate_database(conn: sqlite3.Connection):
         ("build_status", "TEXT"),
         ("build_url", "TEXT"),
         ("repo_url", "TEXT"),
-        ("commit_sha", "TEXT")
+        ("commit_sha", "TEXT"),
+        ("git_branch", "TEXT")
     ]
     for col_name, col_type in new_source_cols:
         if col_name not in source_cols:
@@ -87,7 +88,8 @@ def init_database(db_path: Optional[Path] = None):
                 build_status TEXT,
                 build_url TEXT,
                 repo_url TEXT,
-                commit_sha TEXT
+                commit_sha TEXT,
+                git_branch TEXT
             );
             """)
 
@@ -137,7 +139,22 @@ def init_database(db_path: Optional[Path] = None):
             """)
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_incidents_file ON incidents(file_id);")
 
-            # 4. Model Evaluation & Benchmark Metrics
+            # 4. Per-ingestion end-to-end processing snapshot. Results are tied to
+            # the exact source file/build so the dashboard cannot accidentally show
+            # a report generated for a different (historical) incident.
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS ingestion_analyses (
+                file_id INTEGER PRIMARY KEY,
+                processing_status TEXT NOT NULL,
+                analysis_json TEXT,
+                synthesis_json TEXT,
+                error_message TEXT,
+                updated_at TEXT NOT NULL,
+                FOREIGN KEY (file_id) REFERENCES source_files(id) ON DELETE CASCADE
+            );
+            """)
+
+            # 5. Model Evaluation & Benchmark Metrics
             cursor.execute("""
             CREATE TABLE IF NOT EXISTS model_evaluations (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

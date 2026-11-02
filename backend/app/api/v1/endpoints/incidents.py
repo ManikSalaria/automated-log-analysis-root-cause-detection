@@ -1,6 +1,7 @@
 from typing import Optional, List
 from fastapi import APIRouter, HTTPException, Query
 from app.core.database import get_connection
+from app.core.security import SecretMasker
 from app.schemas.log_schema import IncidentSummaryItem
 
 router = APIRouter()
@@ -28,7 +29,7 @@ def get_recent_incidents(
                    i.detected_signature, i.created_at,
                    COALESCE(i.job_name, f.job_name) as job_name,
                    COALESCE(i.build_number, f.build_number) as build_number,
-                   f.build_status, f.build_url, f.repo_url, f.commit_sha
+                   f.build_status, f.build_url, f.repo_url, f.commit_sha, f.git_branch
             FROM incidents i
             JOIN source_files f ON i.file_id = f.id
             WHERE 1=1
@@ -51,7 +52,7 @@ def get_recent_incidents(
             query += " AND (f.build_number = ? OR i.build_number = ?)"
             params.extend([str(build_number), str(build_number)])
 
-        query += " ORDER BY i.id DESC LIMIT ? OFFSET ?;"
+        query += " ORDER BY i.created_at DESC, i.id DESC LIMIT ? OFFSET ?;"
         params.extend([limit, offset])
 
         cursor.execute(query, params)
@@ -68,14 +69,15 @@ def get_recent_incidents(
                 failure_category=row["failure_category"],
                 confidence=row["confidence"],
                 root_cause_candidate=row["root_cause_candidate"],
-                detected_signature=row["detected_signature"],
+                detected_signature=SecretMasker.sanitize(row["detected_signature"] or "", mask_ips=True),
                 created_at=row["created_at"],
                 job_name=row["job_name"],
                 build_number=row["build_number"],
                 build_status=row["build_status"],
                 build_url=row["build_url"],
                 repo_url=row["repo_url"],
-                commit_sha=row["commit_sha"]
+                commit_sha=row["commit_sha"],
+                git_branch=row["git_branch"]
             )
             for row in rows
         ]
@@ -94,7 +96,7 @@ def get_incident_by_code(incident_code: str):
             SELECT i.*, f.filename as source_file, f.source_type,
                    COALESCE(i.job_name, f.job_name) as job_name,
                    COALESCE(i.build_number, f.build_number) as build_number,
-                   f.build_status, f.build_url, f.repo_url, f.commit_sha
+                   f.build_status, f.build_url, f.repo_url, f.commit_sha, f.git_branch
             FROM incidents i
             JOIN source_files f ON i.file_id = f.id
             WHERE i.incident_code = ?;
@@ -104,6 +106,10 @@ def get_incident_by_code(incident_code: str):
         if not row:
             raise HTTPException(status_code=404, detail=f"Incident '{incident_code}' not found.")
 
-        return dict(row)
+        result = dict(row)
+        for field in ("detected_signature", "evidence_text"):
+            if result.get(field):
+                result[field] = SecretMasker.sanitize(result[field], mask_ips=True)
+        return result
     finally:
         conn.close()

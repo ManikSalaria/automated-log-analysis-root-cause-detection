@@ -26,6 +26,8 @@ class SecretMasker:
         ("API_KEY_FIELD", re.compile(r"""(?i)(apiKey\s*[:=]\s*['"])([a-f0-9\-]{16,64})(['"])"""), r"\1<REDACTED:API_KEY>\3"),
         # JWT Tokens
         ("JWT_TOKEN", re.compile(r"\beyJ[A-Za-z0-9-_=]+\.eyJ[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=]+\b"), "<REDACTED:JWT>"),
+        # Email addresses are personal data that can appear in build metadata and logs.
+        ("EMAIL_ADDRESS", re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"), "<REDACTED:EMAIL>"),
     ]
 
     # Operational normalizers (for ML feature stabilization)
